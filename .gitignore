@@ -39,4 +39,8 @@ node_modules
 
 # Project specific files #
 ###########################
-.env
+*.env
+.vscode
+logs
+data
+cert
