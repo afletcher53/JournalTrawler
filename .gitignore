@@ -44,3 +44,4 @@ node_modules
 logs
 data
 cert
+app/scripts/print-access-token.js
