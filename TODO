@@ -1,0 +1,6 @@
+
+Todo: 
+  ensure error messages are correct
+  get Crossref data into the database
+  ensure graceful crossref requests
+  Make tests work properly
