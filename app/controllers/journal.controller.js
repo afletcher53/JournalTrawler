@@ -1,6 +1,6 @@
 const db = require('../models');
 const Journal = db.journals;
-const {journalPostValidation, journalSingleValidation} =
+const {journalPostValidation, journalSingleValidation, journalISSNSingleValidation, journalMultipleValidation} =
 require('../validation/journal.validation');
 const serializer = require('../validation/json.validation');
 const {checkExists, getJournalData} =
@@ -15,7 +15,7 @@ const {createErrorExists, createErrorExistsCrossRef,
 async function getJournalByISSN(data) {
   // const docCount = await Journal.countDocuments({issn_print: data, issn_electronic: data}).exec();
   // const docCount = await Journal.countDocuments({issn_electronic: data, issn_print: data}).exec();
-  const docCount = await Journal.countDocuments({$or:[{issn_electronic: data},{issn_print: data}]}).exec();
+  const docCount = await Journal.countDocuments({$or: [{issn_electronic: data}, {issn_print: data}]}).exec();
   let value = false;
   if (docCount != 0) value = true;
   return value;
@@ -89,8 +89,36 @@ exports.findAll = (req, res) => {
 
 // Find a single Journal with an id
 exports.findOne = (req, res) => {
+  // check to see if has ISSN format OR mongoDBID format
+  const issn = req.params.id
+  const isISSN = /\b\d{3}[0-9]-\d{3}[0-9]\b/.test(issn);
+
+  if (isISSN) {
+    try {
+      Journal.find({$or: [{issn_electronic: issn}, {issn_print: issn}]})
+          .then((data) => {
+            console.log(data.length)
+            if (data.length == 0) {
+              res.status(404).send({message: 'Not found Journal with issn ' + issn});
+            } else res.send(serializer.serialize('journal', data));
+          })
+          .catch((err) => {
+            res
+                .status(500)
+                .send({message: 'Error retrieving Journal with id=' + id});
+          });
+    } catch (e) {
+      res.status(400).send({
+        message:
+         createErrorGeneric(),
+      });
+    }
+  } else {
+  // MongoDB format
   const {error} = journalSingleValidation(req.params);
+  // const isISSN = /\b\d{3}[0-9]-\d{3}[0-9]\b/.test(req.params.id);
   if (error) return res.status(400).send(error.details[0].message);
+
   try {
     Journal.findById(req.params.id)
         .then((data) => {
@@ -109,6 +137,7 @@ exports.findOne = (req, res) => {
       err.message || createErrorGeneric(),
     });
   }
+}
 };
 
 // Update a Journal by the id in the request
@@ -226,13 +255,17 @@ exports.findAllCRUnscraped = (req, res) => {
       });
 };
 
-exports.bulkAdd = (req, res) => {
 
-  // TODO : Validate a list of ISSNS through bulk adding
- console.log(req.body.issns)
- const {error} = journalSingleValidation(req.body.issns);
-console.log(error)
- res.status(500).send({
-  message: 'Some error occurred while retrieving Journals.',
-});
-}
+const postJournalByISSN = require('../requests/internal.functions.requests');
+exports.bulkAdd = async (req, res) => {
+  const {error} = journalMultipleValidation(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  req.body.issns.forEach((e)=> {
+    postJournalByISSN(e);
+  },
+  );
+  res.status(200).send({
+    message: 'These journals have been added, you cannot see the status of these journals',
+  });
+};

@@ -32,10 +32,6 @@ module.exports = (app) => {
   // Create a new journal
   router.delete('/', journals.deleteAll);
 
-  // TODO: Head and OPTIONS route
-  // Head route
-  // router.head('/', journals.findAllHead);
-
   // Add multiple journals at once
   router.post('/multi', journals.bulkAdd);
   app.use('/api/journals', router);

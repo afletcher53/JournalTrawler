@@ -25,7 +25,10 @@ Serializer.register('article', {
 
 Serializer.register('journal', {
   id: 'id', // The attributes to use as the reference. Default = 'id'.
-  whitelist: ['title', 'journal', 'issn', 'issn_electronic','issn_print', 'publisher', 'subject', 'asjc', 'counts_totaldois', 'counts_currentdois', 'counts_backfiledois', 'createdAt','updatedAt', 'cr_parsed'],
+  whitelist: ['title', 'journal',
+    'issn', 'issn_electronic', 'issn_print', 'publisher', 'subject',
+    'asjc', 'counts_totaldois', 'counts_currentdois', 'counts_backfiledois',
+    'createdAt', 'updatedAt', 'cr_parsed'],
   links: {
     // An object or a function that describes links.
     self: function(data) {
