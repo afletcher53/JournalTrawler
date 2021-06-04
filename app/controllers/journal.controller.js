@@ -13,8 +13,6 @@ const {createErrorExists, createErrorExistsCrossRef,
  * @return {boolean} - True = journal exists, false it doesnt exist.
  */
 async function getJournalByISSN(data) {
-  // const docCount = await Journal.countDocuments({issn_print: data, issn_electronic: data}).exec();
-  // const docCount = await Journal.countDocuments({issn_electronic: data, issn_print: data}).exec();
   const docCount = await Journal.countDocuments({$or: [{issn_electronic: data}, {issn_print: data}]}).exec();
   let value = false;
   if (docCount != 0) value = true;
@@ -90,23 +88,12 @@ exports.findAll = (req, res) => {
 // Find a single Journal with an id
 exports.findOne = (req, res) => {
   // check to see if has ISSN format OR mongoDBID format
-  const issn = req.params.id
+  const issn = req.params.id;
   const isISSN = /\b\d{3}[0-9]-\d{3}[0-9]\b/.test(issn);
 
   if (isISSN) {
     try {
-      Journal.find({$or: [{issn_electronic: issn}, {issn_print: issn}]})
-          .then((data) => {
-            console.log(data.length)
-            if (data.length == 0) {
-              res.status(404).send({message: 'Not found Journal with issn ' + issn});
-            } else res.send(serializer.serialize('journal', data));
-          })
-          .catch((err) => {
-            res
-                .status(500)
-                .send({message: 'Error retrieving Journal with id=' + id});
-          });
+      findJournal(issn, res);
     } catch (e) {
       res.status(400).send({
         message:
@@ -115,29 +102,29 @@ exports.findOne = (req, res) => {
     }
   } else {
   // MongoDB format
-  const {error} = journalSingleValidation(req.params);
-  // const isISSN = /\b\d{3}[0-9]-\d{3}[0-9]\b/.test(req.params.id);
-  if (error) return res.status(400).send(error.details[0].message);
+    const {error} = journalSingleValidation(req.params);
+    // const isISSN = /\b\d{3}[0-9]-\d{3}[0-9]\b/.test(req.params.id);
+    if (error) return res.status(400).send(error.details[0].message);
 
-  try {
-    Journal.findById(req.params.id)
-        .then((data) => {
-          if (!data) {
-            res.status(404).send({message: 'Not found Journal with id ' + id});
-          } else res.send(serializer.serialize('journal', data));
-        })
-        .catch((err) => {
-          res
-              .status(500)
-              .send({message: 'Error retrieving Journal with id=' + id});
-        });
-  } catch (e) {
-    res.status(400).send({
-      message:
+    try {
+      Journal.findById(req.params.id)
+          .then((data) => {
+            if (!data) {
+              res.status(404).send({message: 'Not found Journal with id ' + req.params.id});
+            } else res.send(serializer.serialize('journal', data));
+          })
+          .catch((err) => {
+            res
+                .status(500)
+                .send({message: 'Error retrieving Journal with id=' + req.params.id});
+          });
+    } catch (e) {
+      res.status(400).send({
+        message:
       err.message || createErrorGeneric(),
-    });
+      });
+    }
   }
-}
 };
 
 // Update a Journal by the id in the request
@@ -269,3 +256,25 @@ exports.bulkAdd = async (req, res) => {
     message: 'These journals have been added, you cannot see the status of these journals',
   });
 };
+
+/**
+ * function to find a journal based on ISSN string
+ * @param {String} issn of the journal to be found
+ * @param {axios} res res to be sent
+ */
+function findJournal(issn, res) {
+  Journal.find({$or: [{issn_electronic: issn}, {issn_print: issn}]})
+      .then((data) => {
+        if (data.length == 0) {
+          res.status(404).send({message: 'Not found Journal with issn ' + issn});
+        } else {
+          res.send(serializer.serialize('journal', data));
+        }
+      })
+      .catch((err) => {
+        res
+            .status(500)
+            .send({message: 'Error retrieving Journal with id=' + id});
+      });
+}
+

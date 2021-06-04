@@ -15,6 +15,7 @@ const httpsServer = https.createServer({
   cert: fs.readFileSync(path.join(__dirname, 'cert', 'cert.pem')),
 }, app);
 
+
 try {
   httpServer.listen(PORT, () => {
     console.log(`Server running at: http://localhost:${PORT}`);

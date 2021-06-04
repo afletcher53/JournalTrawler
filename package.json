@@ -4,10 +4,14 @@
   "description": "Node.js Restful CRUD API with Node.Js, Express and MongoDB",
   "main": "server.js",
   "scripts": {
-    "test": "set NODE_ENV=test&&jest",
+    "test": "set NODE_ENV=test&&jest --silent",
     "test:routes": "set NODE_ENV=test&&jest -i tests/routes.test.js -t",
+    "test:journals": "set NODE_ENV=test&&jest -i tests/journal.test.js -t",
     "test:watch": "set NODE_ENV=test&&jest --watchAll",
+
+
     "start:production": "set NODE_ENV=production&&nodemon server.js",
+    "start:dev": "set NODE_ENV=dev&&nodemon server.js",
     "start:test": "set NODE_ENV=test&&nodemon server.js"
   },
   "keywords": [
@@ -48,6 +52,9 @@
     "supertest": "^6.1.3"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "testPathIgnorePatterns" : [
+      "__tests__/functions" 
+    ]
   }
 }
