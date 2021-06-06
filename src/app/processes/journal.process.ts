@@ -7,9 +7,6 @@ import { getJournalMetaData } from '../validation/crossref.validation';
 
 
 const journalProcess = async (job: Job) => {
-  // get the journal data and add here
-
-  // get all the DOIS and add
   getDOIs(job.data.issn)
 
 };
@@ -20,7 +17,7 @@ async function getDOIs(issn: String) {
 
   const journalData = await getJournalMetaData(issn);
 
-  getISSNSingle(issn)
+  getISSN(issn)
   .then((data: any[]) => {
       data.forEach((element: { [x: string]: any; }) => {
         console.log("Added Document")
@@ -34,7 +31,7 @@ async function getDOIs(issn: String) {
   })
 }
 
-async function getISSN(issn: String, rows?: Number, cursor?: string, data: any = []) {
+async function getISSN(issn: String, rows?: Number, cursor?: string, data: any = []) { //TODO document this
   if (cursor == undefined) {
     cursor = '*'
   }
@@ -60,17 +57,17 @@ async function getISSN(issn: String, rows?: Number, cursor?: string, data: any =
 }
 
 
-async function getISSNSingle(issn: String, data: any = []) {
+// async function getISSNSingle(issn: String, data: any = []) {
 
-  let url = 'https://api.crossref.org/journals/' + issn + '/works?sample=10'
-  console.log(url)
-  try {
-    const response = await axios.get(url);
-    data.push(...response.data.message.items);
+//   let url = 'https://api.crossref.org/journals/' + issn + '/works?sample=10'
+//   console.log(url)
+//   try {
+//     const response = await axios.get(url);
+//     data.push(...response.data.message.items);
   
-    return data;
-  } catch (error) {
-    // // handle error
-    console.log(error);
-  }
-}
+//     return data;
+//   } catch (error) {
+//     // // handle error
+//     console.log(error);
+//   }
+// }

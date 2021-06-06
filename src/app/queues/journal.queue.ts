@@ -1,10 +1,10 @@
 import Bull from "bull";
 import journalProcess from '../processes/journal.process';
-
+import * as redis from '../config/redis.config'
 const journalQueue = new Bull('journalQueue', {
   redis: {
-    host: '127.0.0.1',
-    port: 6379
+    host: String(redis.config.host),
+    port: Number(redis.config.port)
   }
 });
 

@@ -1,10 +1,11 @@
 import Bull from "bull";
 import articleProcess from '../processes/article.process';
+import * as redis from '../config/redis.config'
 
-const articleQueue = new Bull('articleQueue', { //TODO Set up configuration for this in ENV
+const articleQueue = new Bull('articleQueue', { 
   redis: {
-    host: '127.0.0.1',
-    port: 6379
+    host: String(redis.config.host),
+    port: Number(redis.config.port)
   }
 });
 
