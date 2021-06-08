@@ -1,12 +1,15 @@
 import db from '../models';
 const Journal = db.journals;
-import { journalPostValidation, journalSingleValidation, journalISSNSingleValidation, journalMultipleValidation } from '../validation/journal.validation';
+import {journalPostValidation,
+  journalSingleValidation,
+  journalMultipleValidation} from '../validation/journal.validation';
 import serializer from '../validation/json.validation';
-import { checkExists, getJournalData } from '../validation/crossref.validation';
-import { createErrorExists, createErrorExistsCrossRef, createErrorGeneric } from '../validation/error.validation';
+import {checkExists, getJournalData} from '../validation/crossref.validation';
+import {createErrorExists, createErrorExistsCrossRef, createErrorGeneric}
+  from '../validation/error.validation';
 
 import postJournalByISSN from '../requests/internal.functions.requests';
-import { addJournal } from '../queues/journal.queue';
+import {addJournal} from '../queues/journal.queue';
 
 /**
  * Determines if a Journal already exists (via ISSN numer)
@@ -120,13 +123,13 @@ exports.findOne = (req, res) => {
       Journal.findById(req.params.id)
           .then((data) => {
             if (!data) {
-              res.status(404).send({message: 'Not found Journal with id ' + req.params.id});
+              res.status(404).send(
+                  {message: 'Not found Journal with id ' + req.params.id});
             } else res.send(serializer.serialize('journal', data));
           })
           .catch((err) => {
-            res
-                .status(500)
-                .send({message: 'Error retrieving Journal with id=' + req.params.id});
+            res.status(500).send(
+                {message: 'Error retrieving Journal with id=' + req.params.id});
           });
     } catch (e) {
       res.status(400).send({
@@ -262,7 +265,9 @@ exports.bulkAdd = async (req, res) => {
   },
   );
   res.status(200).send({
-    message: 'These journals have been added, you cannot see the status of these journals',
+    message:
+    // eslint-disable-next-line max-len
+    'These journals have been added, you cannot see the status of these journals',
   });
 };
 
@@ -275,7 +280,8 @@ function findJournal(issn, res) {
   Journal.find({$or: [{issn_electronic: issn}, {issn_print: issn}]})
       .then((data) => {
         if (data.length == 0) {
-          res.status(404).send({message: 'Not found Journal with issn ' + issn});
+          res.status(404).send(
+              {message: 'Not found Journal with issn ' + issn});
         } else {
           res.send(serializer.serialize('journal', data));
         }

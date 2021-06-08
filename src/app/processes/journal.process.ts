@@ -18,9 +18,9 @@ export default journalProcess;
  * Create Article jobs for all DOIS in ISSN 
  * @param {String} issn to be searched on crossref
  */
-const generateJobsFromISSN = async(issn: String) => {
-  const journalData = await fetchJournalMetadataByISSN(issn);
-  fetchDOIsFromISSN(issn)
+const generateJobsFromISSN = async(issn: string) => {
+
+  fetchDOIsFromISSN(encodeURI(issn))
   .then((data: any[]) => {
       data.forEach((element: { [x: string]: any; }) => {
         const {printISSN, electronicISSN} = getPrintAndElectronicISSN(element);

@@ -26,6 +26,7 @@
   "dependencies": {
     "@hapi/joi": "^17.1.1",
     "@types/hapi__joi": "^17.1.6",
+    "@types/mongoose": "^5.11.97",
     "auth0": "^2.35.0",
     "axios": "^0.21.1",
     "axios-request-throttle": "^1.0.0",

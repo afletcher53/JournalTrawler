@@ -9,7 +9,6 @@ const articleQueue = new Bull('articleQueue', {
   }
 });
 
-articleQueue.empty()
 
 const options = {
   attempts: 2,

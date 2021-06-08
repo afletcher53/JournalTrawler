@@ -1,8 +1,13 @@
-// const rateLimiterUsingThirdParty = require('./rateLimiter.middleware');
-const requestLogger = require('./logrequests.middleware');
-const helmet = require('helmet');
-const express = require('express');
-const cors = require('cors');
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+// import rateLimiterUsingThirdParty from './rateLimiter.middleware';
+const logrequests_middleware_1 = __importDefault(require("./logrequests.middleware"));
+const helmet_1 = __importDefault(require("helmet"));
+const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
 // const jwt = require('express-jwt');
 // const jwks = require('jwks-rsa');
 // const jwtCheck = jwt({
@@ -20,12 +25,12 @@ const corsOptions = {
     origin: 'http://localhost:8081',
 };
 module.exports = [
-    requestLogger,
-    helmet(),
-    express.json(),
-    express.urlencoded({ extended: true }),
-    cors(corsOptions),
+    logrequests_middleware_1.default,
+    helmet_1.default(),
+    express_1.default.json(),
+    express_1.default.urlencoded({ extended: true }),
+    cors_1.default(corsOptions),
     //   jwtCheck,
-    //   rateLimiterUsingThirdParty,
+    // rateLimiterUsingThirdParty,
 ];
 //TODO: Middlewear to check connection to the REDIS database

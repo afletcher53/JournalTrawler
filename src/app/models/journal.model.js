@@ -1,4 +1,3 @@
-const { number } = require("@hapi/joi");
 
 module.exports = (mongoose) => {
   // eslint-disable-next-line new-cap

@@ -1,5 +1,10 @@
-const chalk = require('chalk');
-const { systemLogger } = require('../logger');
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const chalk_1 = __importDefault(require("chalk"));
+const logger_1 = require("../logger");
 /* eslint-disable camelcase */
 const getActualRequestDurationInMilliseconds = (start) => {
     const NS_PER_SEC = 1e9; // convert to nanoseconds
@@ -25,11 +30,9 @@ const logRequests = (req, res, next) => {
     const status = res.statusCode;
     const start = process.hrtime();
     const durationInMilliseconds = getActualRequestDurationInMilliseconds(start);
-    const log = `[${chalk.blue(formatted_date)}] ${method}:${url} ${status} ${chalk.red(durationInMilliseconds.toLocaleString() + 'ms')}`;
+    const log = `[${chalk_1.default.blue(formatted_date)}] ${method}:${url} ${status} ${chalk_1.default.red(durationInMilliseconds.toLocaleString() + 'ms')}`;
     const textlog = `[${method}:${url} ${status}] ${durationInMilliseconds.toLocaleString() + 'ms'}`;
-    // Output to terminal and logging files.
-    console.log(log);
-    systemLogger.info(textlog);
+    logger_1.systemLogger.info(textlog);
     next();
 };
-module.exports = logRequests;
+exports.default = logRequests;

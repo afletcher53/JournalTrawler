@@ -33,6 +33,7 @@ class Http {
         return response},
       (error) => {
         const { response } = error;
+        console.log(error)
         return this.handleError(response);
       }
     );
@@ -69,6 +70,7 @@ class Http {
   // We can handle generic app errors depending on the status code
   private handleError(error) {
     const { status } = error;
+  
 
     switch (status) {
       case StatusCode.InternalServerError: {
@@ -92,6 +94,7 @@ class Http {
   }
 
   private generateError(error) {
+    console.log(error)
     return crossRefLogger.error(`[${error.status}: ${error.config.method} ${error.config.url}:]`);
   }
 }

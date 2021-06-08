@@ -23,6 +23,29 @@ Serializer.register('article', {
   },
 });
 
+Serializer.register('integrity', {
+  id: 'id', // The attributes to use as the reference. Default = 'id'.
+  whitelist: ['data', 'issn', 'message', 'createdAt', 'updatedAt'],
+  links: {
+    // An object or a function that describes links.
+    self: function(data) {
+      // Can be a function or a string value ex: { self: '/articles/1'}
+      return '/api/integrities/' + data.id;
+    },
+  },
+  topLevelMeta: function(data, extraData) {
+    // An object or a function that describes top level meta.
+    return {
+      count: extraData.count,
+      total: data.length,
+    };
+  },
+  topLevelLinks: {
+    // An object or a function that describes top level links.
+    self: '/api/integrities',
+  },
+});
+
 Serializer.register('journal', {
   id: 'id', // The attributes to use as the reference. Default = 'id'.
   whitelist: ['title', 'journal',

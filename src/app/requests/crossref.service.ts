@@ -31,7 +31,9 @@ export const fetchJournalByISSN = async (issn: String): Promise<any> => {
 }
 
 export const fetchDOIsFromISSN = async (issn: String): Promise<Article[]> => {
-  const data = await getDOIsfromISSNSample(issn, 20)
+  console.log(issn)
+  // const data = await getDOIsfromISSNSample(issn, 20)
+  const data = await getDOIsfromISSN(issn)
   return data
 };
 

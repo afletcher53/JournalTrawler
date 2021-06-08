@@ -28,7 +28,8 @@ const fetchJournalByISSN = async (issn) => {
 };
 exports.fetchJournalByISSN = fetchJournalByISSN;
 const fetchDOIsFromISSN = async (issn) => {
-    const data = await getDOIsfromISSNSample(issn, 20);
+    // const data = await getDOIsfromISSNSample(issn, 20)
+    const data = await getDOIsfromISSN(issn);
     return data;
 };
 exports.fetchDOIsFromISSN = fetchDOIsFromISSN;

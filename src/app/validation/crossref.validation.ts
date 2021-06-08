@@ -40,7 +40,6 @@ const options = {
 
 // Article Post Validation
 export const articleCrossRefResponseValidation = (data) => {
-  console.log(typeof data.message.title)
   const schema = Joi.object({
     message: 
          Joi.object().keys({

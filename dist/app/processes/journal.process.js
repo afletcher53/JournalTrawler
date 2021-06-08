@@ -13,8 +13,8 @@ const journalProcess = async (job) => {
 };
 exports.default = journalProcess;
 /**
- *
- * @param {String} issn
+ * Create Article jobs for all DOIS in ISSN
+ * @param {String} issn to be searched on crossref
  */
 const generateJobsFromISSN = async (issn) => {
     const journalData = await crossref_service_1.fetchJournalMetadataByISSN(issn);
