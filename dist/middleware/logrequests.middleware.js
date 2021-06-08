@@ -1,4 +1,3 @@
-"use strict";
 const chalk = require('chalk');
 const { systemLogger } = require('../logger');
 /* eslint-disable camelcase */

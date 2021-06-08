@@ -1,9 +1,8 @@
-"use strict";
 const JSONAPISerializer = require('json-api-serializer');
 const Serializer = new JSONAPISerializer();
 Serializer.register('article', {
     id: 'id',
-    whitelist: ['doi', 'title', 'journal', 'abstract'],
+    whitelist: ['doi', 'title', 'journal', 'abstract', 'license'],
     links: {
         // An object or a function that describes links.
         self: function (data) {

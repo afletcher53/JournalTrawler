@@ -1,4 +1,3 @@
-"use strict";
 const Service = require('../vendors/axios.vendors');
 const internalConfig = require('../config/internal.config');
 const { systemLogger } = require('../../logger');

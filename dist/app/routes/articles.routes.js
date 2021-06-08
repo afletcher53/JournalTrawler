@@ -1,4 +1,3 @@
-"use strict";
 module.exports = (app) => {
     const articles = require('../controllers/article.controller.js');
     // eslint-disable-next-line new-cap

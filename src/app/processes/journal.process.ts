@@ -1,73 +1,56 @@
 
-import axios from 'axios';
-import { Job } from 'bull';
-import { underline } from 'chalk';
+import { Job } from 'bull';;
 import { addArticle } from '../queues/article.queue';
-import { getJournalMetaData } from '../validation/crossref.validation';
+import { DOILogger } from '../../logger';
+import { fetchDOIsFromISSN, fetchJournalMetadataByISSN } from '../requests/crossref.service';
 
-
+/**
+ * Starts a Journal Process Job using Bull
+ * @param job Incoming Job data
+ */
 const journalProcess = async (job: Job) => {
-  getDOIs(job.data.issn)
-
+  generateJobsFromISSN(job.data.issn)
 };
 
 export default journalProcess;
 
-async function getDOIs(issn: String) {
-
-  const journalData = await getJournalMetaData(issn);
-
-  getISSN(issn)
+/**
+ * Create Article jobs for all DOIS in ISSN 
+ * @param {String} issn to be searched on crossref
+ */
+const generateJobsFromISSN = async(issn: String) => {
+  const journalData = await fetchJournalMetadataByISSN(issn);
+  fetchDOIsFromISSN(issn)
   .then((data: any[]) => {
       data.forEach((element: { [x: string]: any; }) => {
-        console.log("Added Document")
+        const {printISSN, electronicISSN} = getPrintAndElectronicISSN(element);
         const doi = {
           doi: element['DOI'],
-          print_issn: element['ISSN'][0],
-          online_issn: element['ISSN'][0]
+          print_issn: printISSN,
+          electronic_issn: electronicISSN
         };
         addArticle(doi)
+        const logText = "["+element['DOI'] +"] added to articleQueue"
+        DOILogger.info(logText)
       });
   })
 }
 
-async function getISSN(issn: String, rows?: Number, cursor?: string, data: any = []) { //TODO document this
-  if (cursor == undefined) {
-    cursor = '*'
-  }
 
-  if (rows == undefined) {
-    rows = 1000
-  }
+/**
+ * Return print / electronic ISSN.
+ * @param issnObject Object given by CrossRef API
+ * @returns issn of Print/Electronic, null if not available - String
+ */
+const getPrintAndElectronicISSN = (issnObject: Object)  => {
+  let printISSN: string, electronicISSN: string
+  issnObject['issn-type'].forEach((element: { type: string; value: any; }) => {
+    if(printISSN == undefined) printISSN =  element.type =='print' ? printISSN = String(element.value) : null
+    if(electronicISSN == undefined) electronicISSN =  element.type =='electronic' ? electronicISSN = String(element.value) : null
 
-  cursor = cursor.toString()
-  let url = 'https://api.crossref.org/journals/' + issn + '/works?rows=' + rows + '&cursor=' + encodeURIComponent(cursor)
-  console.log(url)
-  try {
-    const response = await axios.get(url);
-    if (response.data.message['next-cursor'] == cursor)
-      return data;
-    data.push(...response.data.message.items);
-    console.log(data.length)
-    return getISSN(issn, rows, response.data.message['next-cursor'], data);
-  } catch (error) {
-    // // handle error
-    console.log(error);
+  });
+  return { 
+    printISSN,
+    electronicISSN
   }
 }
-
-
-// async function getISSNSingle(issn: String, data: any = []) {
-
-//   let url = 'https://api.crossref.org/journals/' + issn + '/works?sample=10'
-//   console.log(url)
-//   try {
-//     const response = await axios.get(url);
-//     data.push(...response.data.message.items);
-  
-//     return data;
-//   } catch (error) {
-//     // // handle error
-//     console.log(error);
-//   }
-// }

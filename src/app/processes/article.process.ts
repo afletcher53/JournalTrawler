@@ -1,52 +1,56 @@
 
-import { AxiosResponse } from 'axios';
 import {Job} from 'bull';
+import { DOILogger } from '../../logger';
 import db from '../models';
-import crossrefaxiosts from  '../requests/crossrefts.requests';
+import { fetchArticleByDOI } from '../requests/crossref.service';
+import { articleCrossRefResponseValidation } from '../validation/crossref.validation';
 export const Article = db.articles;
 
-// TODO: clean up code and JSDOC it
+/**
+ * Add Article Job to the redis queue
+ * @param job from the queue calling it.
+ */
 const articleProcess = async (job:Job) => {
-  
-   // check if article exists in database first
-  const a = await getArticleByDOI(job.data.doi);
-  console.log(job.data)
-  if (a) throw new Error('Article Already Exists in the database');
-  var articleData = await getArticle(job.data.doi)
+  await getArticleByDOI(job.data.doi);
+  var articleData: any = await fetchArticleByDOI(job.data.doi)
+ 
+  //Validate the data. 
+  const {error} =  articleCrossRefResponseValidation(articleData);
+  if (error) throw Error(error.details[0].message);
+  //Generate the article Object.
+  const article = setArticleDetails(job.data.doi, job.data.print_issn, job.data.electronic_issn, articleData);
 
-  // Create Dates from given data
-  var { ppdatum, podatum } = getDate(articleData);
-  const article = setArticleDetails(job.data.doi, job.data.issn_print, job.data['issn_print'], articleData, podatum, ppdatum);
-
-  // save article
   article
       .save(article)
       .catch((err: Error) => {
-        console.log(err)
+        const logText = "["+job.data.doi+"] Error processing " + err
+        DOILogger.error(logText)
       });
 };
 
 export default articleProcess;
 
-function setArticleDetails(doi: String, print_issn: string, online_issn: String,articleData: AxiosResponse<any>, podatum: Date, ppdatum: Date) {  //TODO give podatum/ppdatum a better name
-  // TODO: Need to add the print/online issn to the article, currently reading as UNDEFINED for some reason
-
-  console.log(print_issn) //TODO this is returning undefined for some reason?
+const setArticleDetails = (doi: String, printISSN: string, electronicISSN: string, articleData: any) => {
+  let data = articleData.message;
+  let license: String
+  if(articleData.message.hasOwnProperty('license')) license = articleData.message.license[0]['URL']
+  var { publishedPrintDate, publishedOnlineDate } = getDate(articleData);
 
   return new Article({
     crossref_url: encodeURI('https://api.crossref.org/works/' + doi),
-    journal_issn_print: print_issn ? print_issn : null,
-    journal_issn_online: online_issn ? online_issn : null,
-    publisher: articleData.data.message.publisher ? articleData.data.message.publisher : 0,
-    reference_count: articleData.data.message['reference-count'] ? articleData.data.message['reference-count'] : 0,
-    is_referenced_by_count: articleData.data.message['is-referenced-by-count'] ? articleData.data.message['is-referenced-by-count'] : 0,
-    published_online: podatum ? podatum : null,
-    published_print: ppdatum ? ppdatum : null,
-    type: articleData.data.message.type ? articleData.data.message.type : null,
-    abstract: articleData.data.message.abstract ? articleData.data.message.abstract : null,
-    title: articleData.data.message.title ? String(articleData.data.message.title) : null,
-    url: articleData.data.message['URL'] ? articleData.data.message['URL'] : null,
-    doi: articleData.data.message['DOI'] ? articleData.data.message['DOI'] : null,
+    journal_issn_electronic: electronicISSN ? electronicISSN : null,
+    journal_issn_print: printISSN ? printISSN : null,
+    publisher: data.hasOwnProperty('publisher') ? data.publisher : 0,
+    reference_count: data['reference-count'] ? data['reference-count'] : 0,
+    is_referenced_by_count: data['is-referenced-by-count'] ? data['is-referenced-by-count'] : 0,
+    published_online: publishedOnlineDate ? publishedOnlineDate : null,
+    published_print: publishedPrintDate ? publishedPrintDate : null,
+    type: data.type ? data.type : null,
+    abstract: data.abstract ? data.abstract : null,
+    title: data.title ? String(data.title) : null,
+    url: data['URL'] ? data['URL'] : null,
+    doi: data['DOI'] ? data['DOI'] : null,
+    license: license ? license  : null,
     cr_parsed: false
   });
 }
@@ -56,55 +60,43 @@ function setArticleDetails(doi: String, print_issn: string, online_issn: String,
  * @param articleData 
  * @returns Two strings
  */
-function getDate(articleData: AxiosResponse<any>) {
-  if (typeof articleData.data.message['published-online'] !== 'undefined') {
+function getDate(articleData) {
+  if (typeof articleData.message['published-online'] !== 'undefined') {
     //Set day to one if not provided
-    if (!articleData.data.message['published-online']['date-parts'][0][2]) {
+    if (!articleData.message['published-online']['date-parts'][0][2]) {
       var daytum = 1;
     } else {
-      daytum = articleData.data.message['published-online']['date-parts'][0][2];
+      daytum = articleData.message['published-online']['date-parts'][0][2];
     }
-    var podatum = new Date(Date.UTC(articleData.data.message['published-online']['date-parts'][0][0], (articleData.data.message['published-online']['date-parts'][0][1] - 1), daytum));
+    var  publishedOnlineDate = new Date(Date.UTC(articleData.message['published-online']['date-parts'][0][0], (articleData.message['published-online']['date-parts'][0][1] - 1), daytum));
   }
 
-  if (typeof articleData.data.message['published-print'] !== 'undefined') {
-    if (!articleData.data.message['published-print']['date-parts'][0][2]) {
+  if (typeof articleData.message['published-print'] !== 'undefined') {
+    if (!articleData.message['published-print']['date-parts'][0][2]) {
       var ppdaytum = 1;
     } else {
-      ppdaytum = articleData.data.message['published-print']['date-parts'][0][2];
+      ppdaytum = articleData.message['published-print']['date-parts'][0][2];
     }
-    var ppdatum = new Date(Date.UTC(articleData.data.message['published-print']['date-parts'][0][0], (articleData.data.message['published-print']['date-parts'][0][1] - 1), ppdaytum));
+    var publishedPrintDate = new Date(Date.UTC(articleData.message['published-print']['date-parts'][0][0], (articleData.message['published-print']['date-parts'][0][1] - 1), ppdaytum));
   }
-  return { ppdatum, podatum };
+  return { publishedPrintDate, publishedOnlineDate};
 }
 
 /**
- * Determines if a Journal already exists (via ISSN numer)
+ * Determines if a Journal already exists with MongoDB (via ISSN numer)
  * @param {string} data - The ISSN number of the Journal to be checked
  * @return {Promise<boolean>} - True = journal exists, false it doesnt exist.
  */
  async function getArticleByDOI(data: String): Promise<boolean> {
   const docCount = await Article.countDocuments({doi: data}).exec();
   let value = false;
-  if (docCount != 0) value = true;
+  if (docCount != 0) { 
+    value = true;
+    const logText = "["+data+"] Already exists in database " 
+    DOILogger.error(logText)
+    throw new Error('Article Already Exists in the database');
+  }
+  
   return value;
 }
 
-
-
-/**
- * Function to get crossref data from API
- * @param {String} doi The doi to be searched on crossref 
- * @returns {Promise<AxiosResponse<any>>} 
- */
-async function getArticle(doi: String): Promise<AxiosResponse<any>> {
-
-  let url = encodeURI('https://api.crossref.org/works/' + doi )
-  try {
-    const response = await crossrefaxiosts.get(url);
-    return response
-  } catch (error) {
-    // // handle error
-    console.log(error);
-  }
-}

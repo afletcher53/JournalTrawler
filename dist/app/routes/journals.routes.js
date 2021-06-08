@@ -1,4 +1,3 @@
-"use strict";
 module.exports = (app) => {
     const journals = require('../controllers/journal.controller.js');
     const router = require('express').Router();

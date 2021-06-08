@@ -35,7 +35,7 @@ function modifyResponseBody(req, res, next) {
 
   const oldSend = res.send;
   res.send = function(data) {
-    serialisedData = data;
+    let serialisedData = data;
     if (modelName = 'Journal') {
       serialisedData = JSON
           .stringify(JournalSerializer.serialize(data));

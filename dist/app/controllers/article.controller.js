@@ -1,4 +1,3 @@
-"use strict";
 const db = require('../models');
 const Article = db.articles;
 const { articleSingleValidation, articlePostValidation } = require('../validation/article.validation');

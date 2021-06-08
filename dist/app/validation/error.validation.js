@@ -1,17 +1,17 @@
-"use strict";
 const serializer = require('../validation/json.validation');
 function createErrorExists(value, name) {
-    error = new Error('A ' + name + ' already Exists with value = ' + value);
+    console.log(value, name);
+    var error = new Error('A ' + name + ' already Exists with value = ' + value);
     error = serializer.serializeError(error);
     return error;
 }
 function createErrorExistsCrossRef(value, name) {
-    error = new Error('A ' + name + ' doesnt exist in CrossRef with value = ' + value);
+    var error = new Error('A ' + name + ' doesnt exist in CrossRef with value = ' + value);
     error = serializer.serializeError(error);
     return error;
 }
 function createErrorGeneric() {
-    error = new Error('An unknown error occured');
+    var error = new Error('An unknown error occured');
     error = serializer.serializeError(error);
     return error;
 }

@@ -1,4 +1,3 @@
-"use strict";
 require('dotenv').config();
 module.exports = {
     url: process.env.DB_MONOGO_URL + process.env.DB_NAME,

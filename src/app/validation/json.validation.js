@@ -2,7 +2,7 @@ const JSONAPISerializer = require('json-api-serializer');
 const Serializer = new JSONAPISerializer();
 Serializer.register('article', {
   id: 'id', // The attributes to use as the reference. Default = 'id'.
-  whitelist: ['doi', 'title', 'journal', 'abstract'],
+  whitelist: ['doi', 'title', 'journal', 'abstract', 'license'],
   links: {
     // An object or a function that describes links.
     self: function(data) {

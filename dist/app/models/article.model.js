@@ -1,4 +1,3 @@
-"use strict";
 /* eslint-disable no-invalid-this */
 module.exports = (mongoose) => {
     // eslint-disable-next-line new-cap
@@ -6,8 +5,19 @@ module.exports = (mongoose) => {
         title: String,
         abstract: String,
         doi: String,
-        journal: String,
+        journal_issn_print: String,
+        journal_issn_electronic: String,
+        crossref_url: String,
         tags: String,
+        publisher: String,
+        reference_count: Number,
+        is_referenced_by_count: Number,
+        type: String,
+        url: String,
+        published_online: Date,
+        published_print: Date,
+        license: String,
+        cr_parsed: Boolean,
     }, { timestamps: true });
     schema.method('toJSON', function () {
         // eslint-disable-next-line no-unused-vars

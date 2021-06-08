@@ -1,5 +1,5 @@
-const chalk = require('chalk');
-const {systemLogger} = require('../logger');
+import chalk from 'chalk';
+import { systemLogger } from '../logger';
 /* eslint-disable camelcase */
 
 const getActualRequestDurationInMilliseconds = (start) => {
@@ -30,11 +30,8 @@ const logRequests = (req, res, next) => {
   const durationInMilliseconds = getActualRequestDurationInMilliseconds(start);
   const log = `[${chalk.blue(formatted_date)}] ${method}:${url} ${status} ${chalk.red(durationInMilliseconds.toLocaleString() + 'ms')}`;
   const textlog = `[${method}:${url} ${status}] ${durationInMilliseconds.toLocaleString() + 'ms'}`;
-  // Output to terminal and logging files.
-  console.log(log);
   systemLogger.info(textlog);
   next();
 };
 
-
-module.exports= logRequests;
+export default logRequests

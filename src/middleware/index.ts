@@ -1,8 +1,8 @@
-// const rateLimiterUsingThirdParty = require('./rateLimiter.middleware');
-const requestLogger = require('./logrequests.middleware');
-const helmet = require('helmet');
-const express = require('express');
-const cors = require('cors');
+// import rateLimiterUsingThirdParty from './rateLimiter.middleware';
+import logRequests from './logrequests.middleware';
+import helmet from 'helmet';
+import express from 'express';
+import cors from 'cors';
 // const jwt = require('express-jwt');
 // const jwks = require('jwks-rsa');
 // const jwtCheck = jwt({
@@ -22,13 +22,13 @@ const corsOptions = {
 
 
 module.exports = [
-  requestLogger,
+  logRequests,
   helmet(),
   express.json(),
   express.urlencoded({extended: true}),
   cors(corsOptions),
 //   jwtCheck,
-//   rateLimiterUsingThirdParty,
+  // rateLimiterUsingThirdParty,
 ];
 
 //TODO: Middlewear to check connection to the REDIS database

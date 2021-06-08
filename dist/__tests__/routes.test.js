@@ -1,4 +1,3 @@
-"use strict";
 require('dotenv').config();
 const databaseName = process.env.DB_NAME_TEST;
 const databaseMongoUrl = process.env.DB_MONOGO_URL;

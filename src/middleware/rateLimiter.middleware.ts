@@ -7,4 +7,4 @@ const rateLimiterUsingThirdParty = rateLimit({
   headers: true,
 });
 
-module.exports= rateLimiterUsingThirdParty;
+export default rateLimiterUsingThirdParty

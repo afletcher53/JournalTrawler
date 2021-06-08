@@ -1,14 +1,12 @@
-const db = require('../models');
+import db from '../models';
 const Journal = db.journals;
-const {journalPostValidation, journalSingleValidation, journalISSNSingleValidation, journalMultipleValidation} =
-require('../validation/journal.validation');
-const serializer = require('../validation/json.validation');
-const {checkExists, getJournalData} =
-require('../validation/crossref.validation');
-const {createErrorExists, createErrorExistsCrossRef,
-  createErrorGeneric} = require('../validation/error.validation');
+import { journalPostValidation, journalSingleValidation, journalISSNSingleValidation, journalMultipleValidation } from '../validation/journal.validation';
+import serializer from '../validation/json.validation';
+import { checkExists, getJournalData } from '../validation/crossref.validation';
+import { createErrorExists, createErrorExistsCrossRef, createErrorGeneric } from '../validation/error.validation';
 
-const {addJournal} = require('../queues/journal.queue')
+import postJournalByISSN from '../requests/internal.functions.requests';
+import { addJournal } from '../queues/journal.queue';
 
 /**
  * Determines if a Journal already exists (via ISSN numer)
@@ -16,7 +14,8 @@ const {addJournal} = require('../queues/journal.queue')
  * @return {boolean} - True = journal exists, false it doesnt exist.
  */
 async function getJournalByISSN(data) {
-  const docCount = await Journal.countDocuments({$or: [{issn_electronic: data}, {issn_print: data}]}).exec();
+  const docCount = await Journal.countDocuments(
+      {$or: [{issn_electronic: data}, {issn_print: data}]}).exec();
   let value = false;
   if (docCount != 0) value = true;
   return value;
@@ -24,34 +23,36 @@ async function getJournalByISSN(data) {
 
 // Create and Save a new Journal
 exports.create = async (req, res) => {
-
-  
   // Validate request
   const {error} = journalPostValidation(req.body);
-    if (error) {
+  if (error) {
     const errorJournalValidation = new Error(error.details[0].message);
     return res.status(400)
         .send(serializer.serializeError(errorJournalValidation));
   };
 
-  // // check to see if already exists
-  const a = await getJournalByISSN(req.body.issn);
-  if (a) return res.status(400).send(createErrorExists(req.body.issn, 'Journal'));
+  // check to see if already exists in MongooseDB
+  const checkJournalExistsMongoDB = await getJournalByISSN(req.body.issn);
+  if (checkJournalExistsMongoDB) {
+    return res.status(400)
+        .send(createErrorExists(req.body.issn, 'Journal'));
+  };
 
-  // // check to see if ISSN exists on crossref
+  // check to see if ISSN exists on crossref
   const checkCrossRefExists = await checkExists(req.body.issn);
-  if (!checkCrossRefExists) return res.status(400).send(createErrorExistsCrossRef(req.body.issn, 'Journal'));
 
+  if (!checkCrossRefExists) {
+    return res.status(400)
+        .send(createErrorExistsCrossRef(req.body.issn, 'Journal'));
+  }
   // get the data from crossref
   const journalData = await getJournalData(req.body.issn);
- 
-  // // save the journal
+
+  // save the journal
   try {
     const journal = new Journal(journalData);
-
-    // Save Journal in the database
     journal
-        .save(journal)
+        .save(journal.data)
         .then((data) => {
           res.send(serializer.serialize('journal', data));
         })
@@ -62,12 +63,11 @@ exports.create = async (req, res) => {
           });
         });
 
-  // spawn a job that will parse the article for DOIs. 
-  const journalISSN = {
-    issn: req.body.issn,
-  };
-  addJournal(journalISSN)
-
+    // spawn a job that will parse the article for DOIs.
+    const journalISSN = {
+      issn: req.body.issn,
+    };
+    addJournal(journalISSN);
   } catch (e) {
     res.status(400).send({
       message:
@@ -253,7 +253,6 @@ exports.findAllCRUnscraped = (req, res) => {
 };
 
 
-const postJournalByISSN = require('../requests/internal.functions.requests');
 exports.bulkAdd = async (req, res) => {
   const {error} = journalMultipleValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);

@@ -1,35 +1,33 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
 // load ENV file
 require('dotenv').config();
-const { systemLogger } = require('./logger');
-const express = require('express');
-const app = express();
-const db = require('./app/models');
-const { addArticle } = require('./app/queues/article.queue');
+const logger_1 = require("./logger");
+const express_1 = __importDefault(require("express"));
+const app = express_1.default();
+const models_1 = __importDefault(require("./app/models"));
 // Middlewares
 app.use(require('./middleware'));
-db.mongoose
-    .connect(db.url, {
+models_1.default.mongoose
+    .connect(models_1.default.url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 })
     .then(() => {
-    systemLogger.info('Connected to the database!');
+    logger_1.systemLogger.info('Connected to the database!');
 })
     .catch((err) => {
-    systemLogger.error('Cannot connect to the database!', err);
+    logger_1.systemLogger.error('Cannot connect to the database!', err);
     process.exit();
 });
 // Main route
 app.get('/', (req, res) => {
-    res.json({ message: 'Welcome to Internal MongoDB API application.' });
-});
-// Main route
-app.get('/add-article', async (req, res) => {
-    await addArticle('hello');
-    res.send({ status: 'ok' });
+    res.json({ "message": "Welcome to the server" });
 });
 // Other routes
 require('./app/routes/journals.routes')(app);
 require('./app/routes/articles.routes')(app);
-module.exports = app;
+exports.default = app;

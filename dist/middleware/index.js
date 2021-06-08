@@ -1,4 +1,3 @@
-"use strict";
 // const rateLimiterUsingThirdParty = require('./rateLimiter.middleware');
 const requestLogger = require('./logrequests.middleware');
 const helmet = require('helmet');
@@ -29,3 +28,4 @@ module.exports = [
     //   jwtCheck,
     //   rateLimiterUsingThirdParty,
 ];
+//TODO: Middlewear to check connection to the REDIS database

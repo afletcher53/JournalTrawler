@@ -1,4 +1,3 @@
-"use strict";
 const internal = require('../requests/internal.requests');
 /**
  * Function which adds a journal using the interal API

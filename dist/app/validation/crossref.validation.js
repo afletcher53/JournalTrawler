@@ -1,21 +1,75 @@
 "use strict";
-const db = require('../models');
-const Journal = db.journals;
-const crossrefaxios = require('../requests/crossref.requests');
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getJournalData = exports.articleSingleValidation = exports.articleCrossRefResponseValidation = exports.checkExists = void 0;
+const joi_1 = __importDefault(require("@hapi/joi"));
+const models_1 = __importDefault(require("../models"));
+const Journal = models_1.default.journals;
+const crossref_service_1 = require("../requests/crossref.service");
+/**
+ * Checks if a valid journal exists from crossref API
+ * @param {String} issn to be searched
+ * @returns {Promise<Boolean>} true = exists on api, false = doesnt exist
+ */
 async function checkExists(issn) {
-    const res = await crossrefaxios.head('journals/' + issn).catch((err) => { console.log(err); });
-    console.log(res);
-    if (typeof res !== 'undefined') {
-        if (res.status == 200) {
-            return true;
+    console.log(issn);
+    try {
+        const res = await crossref_service_1.fetchJournalHeadByISSN(issn);
+        if (typeof res !== 'undefined') {
+            if (res.status == 200) {
+                return true;
+            }
+        }
+        else {
+            return false;
         }
     }
-    else {
-        return false;
+    catch (e) {
+        console.log(e);
     }
 }
+exports.checkExists = checkExists;
+const options = {
+    abortEarly: false,
+    allowUnknown: true,
+    errors: {
+        wrap: {
+            label: '',
+        },
+    },
+};
+// Article Post Validation
+const articleCrossRefResponseValidation = (data) => {
+    console.log(typeof data.message.title);
+    const schema = joi_1.default.object({
+        message: joi_1.default.object().keys({
+            title: joi_1.default.required(),
+            DOI: joi_1.default.required(),
+            abstract: joi_1.default.string(),
+            publisher: joi_1.default.required(),
+            'reference-count': joi_1.default.required(),
+            'is-referenced-by-count': joi_1.default.required(),
+            type: joi_1.default.required(),
+            URL: joi_1.default.required()
+        })
+    });
+    return schema.validate(data, options);
+};
+exports.articleCrossRefResponseValidation = articleCrossRefResponseValidation;
+const articleSingleValidation = (data) => {
+    const schema = joi_1.default.object({
+        id: joi_1.default
+            .string()
+            .required()
+            .min(6),
+    });
+    return schema.validate(data, options);
+};
+exports.articleSingleValidation = articleSingleValidation;
 const getJournalData = async (issn) => {
-    const data = await crossrefaxios.get('journals/' + issn);
+    const data = await crossref_service_1.fetchJournalByISSN(issn);
     let issnElectronic;
     let issnPrint;
     let crDate;
@@ -32,7 +86,7 @@ const getJournalData = async (issn) => {
         });
     }
     ;
-    //if not documented, assign the issn to issnPrint
+    // if not documented, assign the issn to issnPrint
     if (issnElectronic == undefined && issnPrint == undefined) {
         issnPrint = issn;
     }
@@ -54,5 +108,4 @@ const getJournalData = async (issn) => {
     });
     return journal;
 };
-module.exports.checkExists = checkExists;
-module.exports.getJournalData = getJournalData;
+exports.getJournalData = getJournalData;

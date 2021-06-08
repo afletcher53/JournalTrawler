@@ -11,7 +11,7 @@ const options = {
 
 
 // Article Post Validation
-const articlePostValidation = (data) => {
+export const articlePostValidation = (data) => {
   const schema = Joi.object({
     title:
             Joi.string()
@@ -32,7 +32,7 @@ const articlePostValidation = (data) => {
   return schema.validate(data, options);
 };
 
-const articleSingleValidation = (data) => {
+export const articleSingleValidation = (data) => {
   const schema = Joi.object({
     id:
           Joi
@@ -43,7 +43,3 @@ const articleSingleValidation = (data) => {
 
   return schema.validate(data, options);
 };
-
-
-module.exports.articlePostValidation = articlePostValidation;
-module.exports.articleSingleValidation = articleSingleValidation;

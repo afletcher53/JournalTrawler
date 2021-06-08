@@ -1,4 +1,4 @@
-const axios = require('axios');
+import axios from 'axios';
 
 
 module.exports = class Service {
@@ -7,7 +7,8 @@ module.exports = class Service {
 * @param {String} baseUrl base url for the axios object
 * @param {String} header header object for the axios object
 */
-  constructor(baseUrl, header) {
+
+  constructor(baseUrl: any, header: any) {
     const service = axios.create({
       baseURL: baseUrl,
       headers: header,

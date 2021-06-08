@@ -15,7 +15,6 @@ const options = {
 
 
 const addJournal = (data: any) => {
-  console.log(data)
   journalQueue.add(data, options);
 };
 

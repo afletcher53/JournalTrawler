@@ -4,13 +4,13 @@
   "description": "Node.js Restful CRUD API with Node.Js, Express and MongoDB",
   "main": "src/server.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn ./src/server.ts",
+    "dev": "ts-node-dev --respawn ./src/server.ts --trace-warnings",
     "test": "set NODE_ENV=test&&jest --silent",
     "test:routes": "set NODE_ENV=test&&jest -i tests/routes.test.js -t",
     "test:journals": "set NODE_ENV=test&&jest -i tests/journal.test.js -t",
     "test:watch": "set NODE_ENV=test&&jest --watchAll",
     "build": "tsc",
-    "start:production": "set NODE_ENV=production&&nodemon ./dist/server.js",
+    "start:production": "set NODE_ENV=production&&node ./dist/server.js",
     "start:dev": "set NODE_ENV=dev&&nodemon server.js",
     "start:test": "set NODE_ENV=test&&nodemon server.js"
   },
@@ -25,6 +25,7 @@
   "license": "ISC",
   "dependencies": {
     "@hapi/joi": "^17.1.1",
+    "@types/hapi__joi": "^17.1.6",
     "auth0": "^2.35.0",
     "axios": "^0.21.1",
     "axios-request-throttle": "^1.0.0",

@@ -1,4 +1,3 @@
-"use strict";
 const JSONAPISerializer = require('jsonapi-serializer').Serializer;
 const { createSchemaList } = require('../app/formatting/general');
 const db = require('../app/models');
@@ -31,7 +30,7 @@ function modifyResponseBody(req, res, next) {
     });
     const oldSend = res.send;
     res.send = function (data) {
-        serialisedData = data;
+        let serialisedData = data;
         if (modelName = 'Journal') {
             serialisedData = JSON
                 .stringify(JournalSerializer.serialize(data));

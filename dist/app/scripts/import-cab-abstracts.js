@@ -1,4 +1,3 @@
-"use strict";
 const db = require("../../app/models");
 const axios = require('axios');
 var count = 1;

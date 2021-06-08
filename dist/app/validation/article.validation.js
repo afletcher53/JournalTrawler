@@ -1,4 +1,6 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.articleSingleValidation = exports.articlePostValidation = void 0;
 const Joi = require('@hapi/joi');
 const options = {
     abortEarly: false,
@@ -25,6 +27,7 @@ const articlePostValidation = (data) => {
     });
     return schema.validate(data, options);
 };
+exports.articlePostValidation = articlePostValidation;
 const articleSingleValidation = (data) => {
     const schema = Joi.object({
         id: Joi
@@ -34,5 +37,4 @@ const articleSingleValidation = (data) => {
     });
     return schema.validate(data, options);
 };
-module.exports.articlePostValidation = articlePostValidation;
-module.exports.articleSingleValidation = articleSingleValidation;
+exports.articleSingleValidation = articleSingleValidation;

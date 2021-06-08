@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Function to return a models schema items as an array
  * @param {Model} Model - Mongoose model schema
