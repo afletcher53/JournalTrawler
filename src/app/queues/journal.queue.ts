@@ -18,6 +18,19 @@ const addJournal = (data: any) => {
   journalQueue.add(data, options);
 };
 
+import { logJobCompleted, logJobFailed } from "./JobLoggers";
+
+journalQueue.on('global:completed', async (job) => {
+  logJobCompleted('journal', job);
+});
+
+journalQueue.on('failed',  (job, error) => {
+  logJobFailed('journal', job, error);
+});
+
+
 journalQueue.process(journalProcess);
 
 export { addJournal }
+
+

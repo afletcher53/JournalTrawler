@@ -14,6 +14,7 @@ async function getArticleByDOI(data) {
         value = true;
     return value;
 }
+const { addArticle } = require('../queues/article.queue');
 exports.create = async (req, res) => {
     // Validate request
     const { error } = articlePostValidation(req.body);
@@ -34,29 +35,13 @@ exports.create = async (req, res) => {
         return res.status(400)
             .send(serializer.serializeError(errorArticleExists));
     }
-    // Try posting the article
-    try {
-        const article = new Article({
-            title: req.body.title,
-            doi: req.body.doi ? req.body.doi : null,
-            abstract: req.body.abstract ? req.body.abstract : null,
-            journal: req.body.journal,
-            tags: req.body.tags ? req.body.tags : null,
-        });
-        article
-            .save(article)
-            .then((data) => {
-            res.send(serializer.serialize('article', data));
-        })
-            .catch((err) => {
-            res.status(500).send({
-                message: serializer.serializeError(err.message || process.env.STRING_ERROR_ARTICLE_CREATED),
-            });
-        });
-    }
-    catch (e) {
-        res.status(400).send(serializer.serializeError(e));
-    }
+    const ArticleData = {
+        doi: req.body.doi,
+        print_issn: req.body.print_issn,
+        electronic_issn: req.body.electronic_issn,
+    };
+    addArticle(ArticleData);
+    res.status(200).send({ message: "The worker is working on it" });
 };
 // Retrieve all Articles from the database.
 exports.findAll = (req, res) => {
@@ -75,7 +60,6 @@ exports.findAll = (req, res) => {
 };
 // Find a single Article with an id
 exports.findOne = (req, res) => {
-    console.log(req.params);
     // Validate request
     const { error } = articleSingleValidation(req.params);
     if (error)
@@ -91,7 +75,6 @@ exports.findOne = (req, res) => {
             res.send(serializer.serialize('article', data));
     })
         .catch((e) => {
-        console.log(e);
         res
             .status(500)
             .send({ message: 'Error retrieving Article with id=' + id });

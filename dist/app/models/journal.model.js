@@ -1,4 +1,3 @@
-const { number } = require("@hapi/joi");
 module.exports = (mongoose) => {
     // eslint-disable-next-line new-cap
     const schema = mongoose.Schema({
@@ -16,7 +15,7 @@ module.exports = (mongoose) => {
         cr_last_status_check_time: Date,
         cr_parsed: Boolean,
     }, { timestamps: true });
-    mongoose.set('debug', true);
+    // mongoose.set('debug', true);
     schema.method('toJSON', function () {
         const { __v, _id, ...object } = this.toObject();
         object.id = _id;

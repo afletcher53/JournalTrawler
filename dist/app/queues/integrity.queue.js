@@ -22,11 +22,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addJournal = void 0;
+exports.addIntegrity = void 0;
 const bull_1 = __importDefault(require("bull"));
-const journal_process_1 = __importDefault(require("../processes/journal.process"));
+const integrity_process_1 = __importDefault(require("../processes/integrity.process"));
 const redis = __importStar(require("../config/redis.config"));
-const journalQueue = new bull_1.default('journalQueue', {
+const integrityQueue = new bull_1.default('integrityQueue', {
     redis: {
         host: String(redis.config.host),
         port: Number(redis.config.port)
@@ -34,16 +34,10 @@ const journalQueue = new bull_1.default('journalQueue', {
 });
 const options = {
     attempts: 2,
+    delay: 100,
 };
-const addJournal = (data) => {
-    journalQueue.add(data, options);
+const addIntegrity = (data) => {
+    integrityQueue.add(data, options);
 };
-exports.addJournal = addJournal;
-const JobLoggers_1 = require("./JobLoggers");
-journalQueue.on('global:completed', async (job) => {
-    JobLoggers_1.logJobCompleted('journal', job);
-});
-journalQueue.on('failed', (job, error) => {
-    JobLoggers_1.logJobFailed('journal', job, error);
-});
-journalQueue.process(journal_process_1.default);
+exports.addIntegrity = addIntegrity;
+integrityQueue.process(integrity_process_1.default);

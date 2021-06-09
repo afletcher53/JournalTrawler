@@ -10,7 +10,6 @@ import { journalISSNSingleValidation } from './journal.validation';
  * @returns {Promise<Boolean>} true = exists on api, false = doesnt exist
  */
 export async function checkExists(issn: String): Promise<Boolean> {
-  console.log(issn)
   try {
     const res = await fetchJournalHeadByISSN(issn)
     if (typeof res !== 'undefined') {
@@ -68,14 +67,33 @@ export const articleSingleValidation = (data) => {
   return schema.validate(data, options);
 };
 
-export const getJournalData = async (issn: String) => { //TODO: Move this to a crossref function
+
+/**
+ * Return print / electronic ISSN.
+ * @param issnObject Object given by CrossRef API
+ * @returns issn of Print/Electronic, null if not available - String
+ */
+ const getPrintAndElectronicISSN = (issnObject: Object)  => {
+  let printISSN: string, electronicISSN: string
+  issnObject['issn-type'].forEach((element: { type: string; value: any; }) => {
+    if(printISSN == undefined) printISSN =  element.type =='print' ? printISSN = String(element.value) : null
+    if(electronicISSN == undefined) electronicISSN =  element.type =='electronic' ? electronicISSN = String(element.value) : null
+  });
+  return { 
+    printISSN,
+    electronicISSN
+  }
+}
+
+
+export const getJournalData = async (issn: string) => { //TODO: Move this to a crossref function
   const data = await fetchJournalByISSN(issn);
   let issnElectronic: any;
   let issnPrint: any;
   let crDate: Date;
   // lets extract the electronic and print journal and assign to variables
   const issns = data.data.message['issn-type'];
-  if (Object.keys(issns).length > 1) {
+  if (Object.keys(issns).length > 0) {
     issns.forEach((element: { type: string; value: any; }) => {
       if (element.type === 'electronic') {
         issnElectronic = element.value;
@@ -89,7 +107,7 @@ export const getJournalData = async (issn: String) => { //TODO: Move this to a c
 
   // if not documented, assign the issn to issnPrint
   if (issnElectronic == undefined && issnPrint == undefined) {
-    issnPrint = issn;
+    issnPrint = decodeURI(issn);
   }
 
 

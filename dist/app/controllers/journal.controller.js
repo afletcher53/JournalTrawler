@@ -33,27 +33,31 @@ exports.create = async (req, res) => {
             .send(json_validation_1.default.serializeError(errorJournalValidation));
     }
     ;
+    const issn = encodeURI(req.body.issn);
     // check to see if already exists in MongooseDB
-    const checkJournalExistsMongoDB = await getJournalByISSN(req.body.issn);
-    if (checkJournalExistsMongoDB) {
-        return res.status(400)
-            .send(error_validation_1.createErrorExists(req.body.issn, 'Journal'));
-    }
-    ;
+    // const checkJournalExistsMongoDB = await getJournalByISSN(issn);
+    // if (checkJournalExistsMongoDB) {
+    //   return res.status(400)
+    //       .send(createErrorExists(issn, 'Journal'));
+    // };
     // check to see if ISSN exists on crossref
-    const checkCrossRefExists = await crossref_validation_1.checkExists(req.body.issn);
+    const checkCrossRefExists = await crossref_validation_1.checkExists(issn);
     if (!checkCrossRefExists) {
         return res.status(400)
-            .send(error_validation_1.createErrorExistsCrossRef(req.body.issn, 'Journal'));
+            .send(error_validation_1.createErrorExistsCrossRef(issn, 'Journal'));
     }
     // get the data from crossref
-    const journalData = await crossref_validation_1.getJournalData(req.body.issn);
+    const journalData = await crossref_validation_1.getJournalData(issn);
     // save the journal
     try {
         const journal = new Journal(journalData);
         journal
             .save(journal.data)
             .then((data) => {
+            const journalISSN = {
+                issn: req.body.issn,
+            };
+            journal_queue_1.addJournal(journalISSN);
             res.send(json_validation_1.default.serialize('journal', data));
         })
             .catch((err) => {
@@ -62,12 +66,8 @@ exports.create = async (req, res) => {
             });
         });
         // spawn a job that will parse the article for DOIs.
-        const journalISSN = {
-            issn: req.body.issn,
-        };
-        journal_queue_1.addJournal(journalISSN);
     }
-    catch (e) {
+    catch (err) {
         res.status(400).send({
             message: err.message || error_validation_1.createErrorGeneric(),
         });
@@ -120,9 +120,7 @@ exports.findOne = (req, res) => {
                     res.send(json_validation_1.default.serialize('journal', data));
             })
                 .catch((err) => {
-                res
-                    .status(500)
-                    .send({ message: 'Error retrieving Journal with id=' + req.params.id });
+                res.status(500).send({ message: 'Error retrieving Journal with id=' + req.params.id });
             });
         }
         catch (e) {
@@ -245,7 +243,9 @@ exports.bulkAdd = async (req, res) => {
         internal_functions_requests_1.default(e);
     });
     res.status(200).send({
-        message: 'These journals have been added, you cannot see the status of these journals',
+        message: 
+        // eslint-disable-next-line max-len
+        'These journals have been added, you cannot see the status of these journals',
     });
 };
 /**

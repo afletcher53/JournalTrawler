@@ -13,15 +13,12 @@ const options = {
 // Article Post Validation
 const articlePostValidation = (data) => {
     const schema = Joi.object({
-        title: Joi.string()
+        print_issn: Joi.string()
             .min(6)
             .required(),
-        abstract: Joi.string()
+        electronic_issn: Joi.string()
             .min(6),
         doi: Joi.string()
-            .min(6)
-            .required(),
-        journal: Joi.string()
             .min(6)
             .required(),
     });

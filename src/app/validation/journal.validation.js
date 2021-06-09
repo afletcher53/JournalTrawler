@@ -5,7 +5,7 @@ const journalPostValidation = (data) => {
   const schema = Joi.object({
     issn:
             Joi.string()
-                .pattern(new RegExp((/\b\d{3}[0-9]-\d{3}[0-9]\b/)))
+                // .pattern(new RegExp((/\b\d{3}[0-9]-\d{3}[0-9]\b/)))
                 .min(6)
                 .required(),
     title:

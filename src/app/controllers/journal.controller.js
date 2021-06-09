@@ -25,7 +25,7 @@ async function getJournalByISSN(data) {
 }
 
 // Create and Save a new Journal
-exports.create = async (req, res) => {
+exports.create = async (req, res) => { // TODO doesnt like unescaped body
   // Validate request
   const {error} = journalPostValidation(req.body);
   if (error) {
@@ -34,29 +34,34 @@ exports.create = async (req, res) => {
         .send(serializer.serializeError(errorJournalValidation));
   };
 
+  const issn = encodeURI(req.body.issn);
+
   // check to see if already exists in MongooseDB
-  const checkJournalExistsMongoDB = await getJournalByISSN(req.body.issn);
-  if (checkJournalExistsMongoDB) {
-    return res.status(400)
-        .send(createErrorExists(req.body.issn, 'Journal'));
-  };
+  // const checkJournalExistsMongoDB = await getJournalByISSN(issn);
+  // if (checkJournalExistsMongoDB) {
+  //   return res.status(400)
+  //       .send(createErrorExists(issn, 'Journal'));
+  // };
 
   // check to see if ISSN exists on crossref
-  const checkCrossRefExists = await checkExists(req.body.issn);
+  const checkCrossRefExists = await checkExists(issn);
 
   if (!checkCrossRefExists) {
     return res.status(400)
-        .send(createErrorExistsCrossRef(req.body.issn, 'Journal'));
+        .send(createErrorExistsCrossRef(issn, 'Journal'));
   }
   // get the data from crossref
-  const journalData = await getJournalData(req.body.issn);
-
+  const journalData = await getJournalData(issn);
   // save the journal
   try {
     const journal = new Journal(journalData);
     journal
         .save(journal.data)
         .then((data) => {
+          const journalISSN = {
+            issn: req.body.issn,
+          };
+          addJournal(journalISSN);
           res.send(serializer.serialize('journal', data));
         })
         .catch((err) => {
@@ -67,14 +72,10 @@ exports.create = async (req, res) => {
         });
 
     // spawn a job that will parse the article for DOIs.
-    const journalISSN = {
-      issn: req.body.issn,
-    };
-    addJournal(journalISSN);
-  } catch (e) {
+  } catch (err) {
     res.status(400).send({
       message:
-        err.message || createErrorGeneric(),
+      err.message || createErrorGeneric(),
     });
   }
 };

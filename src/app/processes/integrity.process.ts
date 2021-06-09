@@ -18,8 +18,6 @@ const integrityProcess = async (job:Job) => {
     crossrefISSNDOIlist.push(e['DOI'])
   })
   
-  console.log(crossrefISSNDOIlist)
-
   const missingDOIs = await generateMissingDOIList(crossrefISSNDOIlist)
   let obj = {
     data: missingDOIs, 
@@ -53,10 +51,6 @@ const generateMissingDOIList = async (listtoCheck: Array<string>): Promise<strin
       const docCount: number = await Article.countDocuments({ doi: listtoCheck[i] }).exec();
       if (docCount != 1) doesntExist.push(listtoCheck[i])
     }
-    // listtoCheck.forEach(async (e) => {
-    //   const docCount: number = await Article.countDocuments({ doi: e }).exec();
-    //   if (docCount != 1) doesntExist.push(e)
-    // })
     return doesntExist
   }
 

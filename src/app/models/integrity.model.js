@@ -12,7 +12,7 @@ module.exports = (mongoose) => {
       {timestamps: true},
   );
 
-  mongoose.set('debug', true);
+  // mongoose.set('debug', true);
   schema.method('toJSON', function() {
     const {__v, _id, ...object} = this.toObject();
     object.id = _id;

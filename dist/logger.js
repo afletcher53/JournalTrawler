@@ -23,6 +23,14 @@ const crossRefLogger = createLogger({
         new transports.File({ filename: 'logs/activity/crossref_activity.log', level: 'info' }),
     ],
 });
+const jobLogger = createLogger({
+    format: format.combine(format.timestamp(), format.json()),
+    transports: [
+        new transports.Console(),
+        new transports.File({ filename: 'logs/error/job_error.log', level: 'error' }),
+        new transports.File({ filename: 'logs/activity/job_activity.log', level: 'info' }),
+    ],
+});
 const DOILogger = createLogger({
     format: format.combine(format.timestamp(), format.json()),
     transports: [
@@ -36,4 +44,5 @@ module.exports = {
     systemLogger: systemLogger,
     crossRefLogger: crossRefLogger,
     DOILogger: DOILogger,
+    jobLogger: jobLogger,
 };

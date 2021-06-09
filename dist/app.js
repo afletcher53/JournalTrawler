@@ -30,4 +30,5 @@ app.get('/', (req, res) => {
 // Other routes
 require('./app/routes/journals.routes')(app);
 require('./app/routes/articles.routes')(app);
+require('./app/routes/integrities.routes')(app);
 exports.default = app;

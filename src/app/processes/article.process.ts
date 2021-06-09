@@ -26,6 +26,7 @@ const articleProcess = async (job:Job) => {
         const logText = "["+job.data.doi+"] Error processing " + err
         DOILogger.error(logText)
       });
+
 };
 
 export default articleProcess;

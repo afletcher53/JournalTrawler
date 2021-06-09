@@ -2,7 +2,7 @@ const dbConfig = require('../config/db.config.js');
 
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
-
+mongoose.set('debug', false)
 const db = {};
 db.mongoose = mongoose;
 if (process.env.NODE_ENV=='test') {

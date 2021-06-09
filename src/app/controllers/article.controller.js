@@ -72,7 +72,6 @@ exports.findAll = (req, res) => {
 
 // Find a single Article with an id
 exports.findOne = (req, res) => {
-  console.log(req.params);
   // Validate request
   const {error} = articleSingleValidation(req.params);
   if (error) return res.status(400).send(serializer.serializeError(error.details[0].message));
@@ -86,7 +85,6 @@ exports.findOne = (req, res) => {
         } else res.send(serializer.serialize('article', data));
       })
       .catch((e) => {
-        console.log(e);
         res
             .status(500)
             .send({message: 'Error retrieving Article with id=' + id});

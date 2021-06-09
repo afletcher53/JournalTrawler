@@ -17,21 +17,25 @@ exports.default = journalProcess;
  * @param {String} issn to be searched on crossref
  */
 const generateJobsFromISSN = async (issn) => {
-    const journalData = await crossref_service_1.fetchJournalMetadataByISSN(issn);
-    crossref_service_1.fetchDOIsFromISSN(issn)
-        .then((data) => {
-        data.forEach((element) => {
-            const { printISSN, electronicISSN } = getPrintAndElectronicISSN(element);
-            const doi = {
-                doi: element['DOI'],
-                print_issn: printISSN,
-                electronic_issn: electronicISSN
-            };
-            article_queue_1.addArticle(doi);
-            const logText = "[" + element['DOI'] + "] added to articleQueue";
-            logger_1.DOILogger.info(logText);
-        });
-    });
+    const DOIlist = await crossref_service_1.fetchDOIsFromISSN(encodeURI(issn));
+    await processArticles(DOIlist);
+};
+const processArticles = async (DOIList) => {
+    let articleList = [];
+    await Promise.all(DOIList.map(async (e) => {
+        const { printISSN, electronicISSN } = getPrintAndElectronicISSN(e);
+        const ArticleData = {
+            doi: e['DOI'],
+            print_issn: printISSN,
+            electronic_issn: electronicISSN
+        };
+        const articleJob = await article_queue_1.addArticle(ArticleData);
+        articleList.push(articleJob);
+        const logText = "[" + e['DOI'] + "] added to articleQueue";
+        logger_1.DOILogger.info(logText);
+        return articleList;
+    }));
+    return articleList;
 };
 /**
  * Return print / electronic ISSN.

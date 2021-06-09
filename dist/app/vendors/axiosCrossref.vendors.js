@@ -33,6 +33,7 @@ class Http {
             return response;
         }, (error) => {
             const { response } = error;
+            console.log(error);
             return this.handleError(response);
         });
         http.interceptors.request.use((config) => {
@@ -79,6 +80,7 @@ class Http {
         return Promise.reject(error);
     }
     generateError(error) {
+        console.log(error);
         return logger_1.crossRefLogger.error(`[${error.status}: ${error.config.method} ${error.config.url}:]`);
     }
 }

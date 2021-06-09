@@ -14,7 +14,6 @@ const crossref_service_1 = require("../requests/crossref.service");
  * @returns {Promise<Boolean>} true = exists on api, false = doesnt exist
  */
 async function checkExists(issn) {
-    console.log(issn);
     try {
         const res = await crossref_service_1.fetchJournalHeadByISSN(issn);
         if (typeof res !== 'undefined') {
@@ -42,7 +41,6 @@ const options = {
 };
 // Article Post Validation
 const articleCrossRefResponseValidation = (data) => {
-    console.log(typeof data.message.title);
     const schema = joi_1.default.object({
         message: joi_1.default.object().keys({
             title: joi_1.default.required(),
@@ -68,6 +66,24 @@ const articleSingleValidation = (data) => {
     return schema.validate(data, options);
 };
 exports.articleSingleValidation = articleSingleValidation;
+/**
+ * Return print / electronic ISSN.
+ * @param issnObject Object given by CrossRef API
+ * @returns issn of Print/Electronic, null if not available - String
+ */
+const getPrintAndElectronicISSN = (issnObject) => {
+    let printISSN, electronicISSN;
+    issnObject['issn-type'].forEach((element) => {
+        if (printISSN == undefined)
+            printISSN = element.type == 'print' ? printISSN = String(element.value) : null;
+        if (electronicISSN == undefined)
+            electronicISSN = element.type == 'electronic' ? electronicISSN = String(element.value) : null;
+    });
+    return {
+        printISSN,
+        electronicISSN
+    };
+};
 const getJournalData = async (issn) => {
     const data = await crossref_service_1.fetchJournalByISSN(issn);
     let issnElectronic;
@@ -75,7 +91,7 @@ const getJournalData = async (issn) => {
     let crDate;
     // lets extract the electronic and print journal and assign to variables
     const issns = data.data.message['issn-type'];
-    if (Object.keys(issns).length > 1) {
+    if (Object.keys(issns).length > 0) {
         issns.forEach((element) => {
             if (element.type === 'electronic') {
                 issnElectronic = element.value;
@@ -88,7 +104,7 @@ const getJournalData = async (issn) => {
     ;
     // if not documented, assign the issn to issnPrint
     if (issnElectronic == undefined && issnPrint == undefined) {
-        issnPrint = issn;
+        issnPrint = decodeURI(issn);
     }
     if (data.data.message['last-status-check-time'])
         crDate = new Date(data.data.message['last-status-check-time']);

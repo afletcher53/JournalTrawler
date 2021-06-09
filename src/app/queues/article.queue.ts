@@ -1,6 +1,7 @@
 import Bull from "bull";
 import articleProcess from '../processes/article.process';
 import * as redis from '../config/redis.config'
+import { logJobCompleted, logJobFailed } from "./JobLoggers";
 
 const articleQueue = new Bull('articleQueue', { 
   redis: {
@@ -16,9 +17,18 @@ const options = {
 };
 
 
-const addArticle = (data: any) => {
-  articleQueue.add(data, options);
+const addArticle = async (data: any) => {
+  const job = await articleQueue.add(data, options);
+  return job
 };
+
+articleQueue.on('global:completed', async (job) => {
+  logJobCompleted('article', job);
+});
+
+articleQueue.on('failed',  (job, error) => {
+  logJobFailed('article', job, error);
+});
 
 
 articleQueue.process(articleProcess);
