@@ -1,4 +1,3 @@
-// import rateLimiterUsingThirdParty from './rateLimiter.middleware';
 import logRequests from './logrequests.middleware';
 import helmet from 'helmet';
 import express from 'express';
@@ -29,7 +28,6 @@ module.exports = [
   express.urlencoded({extended: true}),
   cors(corsOptions),
 //   jwtCheck,
-  // rateLimiterUsingThirdParty,
 ];
 
 //TODO: Middlewear to check connection to the REDIS database

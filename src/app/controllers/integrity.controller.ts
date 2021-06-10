@@ -5,10 +5,8 @@ const Article = db.articles;
 import serializer from '../validation/json.validation';
 import express from 'express';
 import { journalPostValidation, journalSingleValidation } from '../validation/journal.validation';
-
-import { createErrorExists, createErrorGeneric } from '../validation/error.validation';
-import { fetchDOIsFromISSN } from '../requests/crossref.service';
 import { addIntegrity } from '../queues/integrity.queue';
+import { getJournalByISSN } from './functions/getJournalByISSN';
 
 // returns all integrities 
 exports.findAll = async (req: express.Request, res: express.Response) => {
@@ -25,37 +23,10 @@ exports.findAll = async (req: express.Request, res: express.Response) => {
       });
 };
 
-/**
- * Determines if a Journal already exists (via ISSN numer)
- * @param {string} data - The ISSN number of the Journal to be checked
- * @return {boolean} - True = journal exists, false it doesnt exist.
- */
- async function getJournalByISSN(data) {
-  const docCount = await Journal.countDocuments(
-      {$or: [{issn_electronic: data}, {issn_print: data}]}).exec();
-  let value = false;
-  if (docCount != 0) value = true;
-  return value;
-}
-
-/**
- * Checks a list of DOIs to see if missing from database 
- * @param listtoCheck List that needs to be checked
- * @returns List of strings that dont exist
- */
-const generateMissingDOIList = async (listtoCheck: Array<string>): Promise<string[]> => {
-  let doesntExist: Array<string> = []
-
-  for (let i = 0; i <= listtoCheck.length-1; i++) {
-    const docCount: number = await Article.countDocuments({ doi: listtoCheck[i] }).exec();
-    if (docCount != 1) doesntExist.push(listtoCheck[i])
-  }
-  return doesntExist
-}
 
 // Create a job to check the integrity of an ISSN
 exports.createISSNforDOI = async (req: express.Request, res: express.Response) => {
-
+  req.body.issn = req.body.issn.replace(/[\u200c\u200b]/g, '');
   //check to see if the requested journal is truthy
   const {error} = journalPostValidation(req.body);
   if (error) {

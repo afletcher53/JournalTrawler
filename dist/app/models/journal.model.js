@@ -15,7 +15,6 @@ module.exports = (mongoose) => {
         cr_last_status_check_time: Date,
         cr_parsed: Boolean,
     }, { timestamps: true });
-    // mongoose.set('debug', true);
     schema.method('toJSON', function () {
         const { __v, _id, ...object } = this.toObject();
         object.id = _id;

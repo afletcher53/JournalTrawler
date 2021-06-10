@@ -22,7 +22,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addArticle = void 0;
+exports.articleQueue = exports.addArticle = void 0;
 const bull_1 = __importDefault(require("bull"));
 const article_process_1 = __importDefault(require("../processes/article.process"));
 const redis = __importStar(require("../config/redis.config"));
@@ -33,6 +33,7 @@ const articleQueue = new bull_1.default('articleQueue', {
         port: Number(redis.config.port)
     }
 });
+exports.articleQueue = articleQueue;
 const options = {
     attempts: 2,
     delay: 100,

@@ -31,4 +31,4 @@ integrityQueue.on('failed',  (job, error) => {
 });
 integrityQueue.process(integrityProcess);
 
-export { addIntegrity }
+export { addIntegrity, integrityQueue }

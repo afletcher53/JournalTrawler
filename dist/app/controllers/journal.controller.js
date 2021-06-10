@@ -17,6 +17,7 @@ const journal_queue_1 = require("../queues/journal.queue");
  * @return {boolean} - True = journal exists, false it doesnt exist.
  */
 async function getJournalByISSN(data) {
+    console.log(data);
     const docCount = await Journal.countDocuments({ $or: [{ issn_electronic: data }, { issn_print: data }] }).exec();
     let value = false;
     if (docCount != 0)
@@ -26,6 +27,9 @@ async function getJournalByISSN(data) {
 // Create and Save a new Journal
 exports.create = async (req, res) => {
     // Validate request
+    const encodedIssn = encodeURI(req.body.issn);
+    const decodedIssn = decodeURI(req.body.issn);
+    // decode body
     const { error } = journal_validation_1.journalPostValidation(req.body);
     if (error) {
         const errorJournalValidation = new Error(error.details[0].message);
@@ -33,21 +37,21 @@ exports.create = async (req, res) => {
             .send(json_validation_1.default.serializeError(errorJournalValidation));
     }
     ;
-    const issn = encodeURI(req.body.issn);
     // check to see if already exists in MongooseDB
-    // const checkJournalExistsMongoDB = await getJournalByISSN(issn);
-    // if (checkJournalExistsMongoDB) {
-    //   return res.status(400)
-    //       .send(createErrorExists(issn, 'Journal'));
-    // };
+    const checkJournalExistsMongoDB = await getJournalByISSN(decodedIssn);
+    if (checkJournalExistsMongoDB) {
+        return res.status(400)
+            .send(error_validation_1.createErrorExists(issn, 'Journal'));
+    }
+    ;
     // check to see if ISSN exists on crossref
-    const checkCrossRefExists = await crossref_validation_1.checkExists(issn);
+    const checkCrossRefExists = await crossref_validation_1.checkExists(encodedIssn);
     if (!checkCrossRefExists) {
         return res.status(400)
-            .send(error_validation_1.createErrorExistsCrossRef(issn, 'Journal'));
+            .send(error_validation_1.createErrorExistsCrossRef(decodedIssn, 'Journal'));
     }
     // get the data from crossref
-    const journalData = await crossref_validation_1.getJournalData(issn);
+    const journalData = await crossref_validation_1.getJournalData(encodedIssn);
     // save the journal
     try {
         const journal = new Journal(journalData);

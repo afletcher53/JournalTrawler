@@ -28,8 +28,9 @@ exports.findAll = async (req, res) => {
  * @return {boolean} - True = journal exists, false it doesnt exist.
  */
 async function getJournalByISSN(data) {
-    const docCount = await Journal.countDocuments({ $or: [{ issn_electronic: data }, { issn_print: data }] }).exec();
+    const docCount = await Journal.find({});
     let value = false;
+    console.log(docCount);
     if (docCount != 0)
         value = true;
     return value;

@@ -1,5 +1,5 @@
 import db from '../models';
-const Journal = db.journals;
+export const Journal = db.journals;
 import {journalPostValidation,
   journalSingleValidation,
   journalMultipleValidation} from '../validation/journal.validation';
@@ -10,22 +10,13 @@ import {createErrorExists, createErrorExistsCrossRef, createErrorGeneric}
 
 import postJournalByISSN from '../requests/internal.functions.requests';
 import {addJournal} from '../queues/journal.queue';
+import { findJournal } from './functions/findJournal';
 
-/**
- * Determines if a Journal already exists (via ISSN numer)
- * @param {string} data - The ISSN number of the Journal to be checked
- * @return {boolean} - True = journal exists, false it doesnt exist.
- */
-async function getJournalByISSN(data) {
-  const docCount = await Journal.countDocuments(
-      {$or: [{issn_electronic: data}, {issn_print: data}]}).exec();
-  let value = false;
-  if (docCount != 0) value = true;
-  return value;
-}
+const {getJournalByISSN} = require('./functions/getJournalByISSN');
 
 // Create and Save a new Journal
-exports.create = async (req, res) => { // TODO doesnt like unescaped body
+exports.create = async (req, res) => {
+  req.body.issn = req.body.issn.replace(/[\u200c\u200b]/g, '');
   // Validate request
   const {error} = journalPostValidation(req.body);
   if (error) {
@@ -34,24 +25,21 @@ exports.create = async (req, res) => { // TODO doesnt like unescaped body
         .send(serializer.serializeError(errorJournalValidation));
   };
 
-  const issn = encodeURI(req.body.issn);
-
   // check to see if already exists in MongooseDB
-  // const checkJournalExistsMongoDB = await getJournalByISSN(issn);
-  // if (checkJournalExistsMongoDB) {
-  //   return res.status(400)
-  //       .send(createErrorExists(issn, 'Journal'));
-  // };
+  const checkJournalExistsMongoDB = await getJournalByISSN(req.body.issn);
+  if (checkJournalExistsMongoDB) {
+    return res.status(400)
+        .send(createErrorExists(req.body.issn, 'Journal'));
+  };
 
   // check to see if ISSN exists on crossref
-  const checkCrossRefExists = await checkExists(issn);
-
+  const checkCrossRefExists = await checkExists(req.body.issn);
   if (!checkCrossRefExists) {
     return res.status(400)
-        .send(createErrorExistsCrossRef(issn, 'Journal'));
+        .send(createErrorExistsCrossRef(req.body.issn, 'Journal'));
   }
   // get the data from crossref
-  const journalData = await getJournalData(issn);
+  const journalData = await getJournalData(req.body.issn);
   // save the journal
   try {
     const journal = new Journal(journalData);
@@ -272,25 +260,4 @@ exports.bulkAdd = async (req, res) => {
   });
 };
 
-/**
- * function to find a journal based on ISSN string
- * @param {String} issn of the journal to be found
- * @param {axios} res res to be sent
- */
-function findJournal(issn, res) {
-  Journal.find({$or: [{issn_electronic: issn}, {issn_print: issn}]})
-      .then((data) => {
-        if (data.length == 0) {
-          res.status(404).send(
-              {message: 'Not found Journal with issn ' + issn});
-        } else {
-          res.send(serializer.serialize('journal', data));
-        }
-      })
-      .catch((err) => {
-        res
-            .status(500)
-            .send({message: 'Error retrieving Journal with id=' + id});
-      });
-}
 

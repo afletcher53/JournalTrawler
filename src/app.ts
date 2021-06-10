@@ -1,9 +1,12 @@
 // load ENV file
 require('dotenv').config();
-import { systemLogger } from './logger';
+import { systemLogger, mongoDBLogger } from './logger';
 import express from 'express';
 const app = express();
 import db from './app/models';
+import wipeall from './app/scripts/wipe-data';
+
+
 
 // Middlewares
 app.use(require('./middleware'));
@@ -21,9 +24,20 @@ db.mongoose
       process.exit();
     });
 
+db.mongoose.set('debug', true)
+db.mongoose.set('debug', function (collectionName, method, query, doc) {
+  console.log(`${collectionName}.${method}`, JSON.stringify(query), doc)
+  query = collectionName + '.' + method + '(' + JSON.stringify(query) + ',' + JSON.stringify(doc) + ")";
+  mongoDBLogger.info(query);  
+});
+
 // Main route
 app.get('/', (req: express.Request, res: express.Response) => {
   res.json({"message": "Welcome to the server"})
+});
+
+app.get('/test', (req: express.Request, res: express.Response) => {
+  wipeall()
 });
 
 // Other routes

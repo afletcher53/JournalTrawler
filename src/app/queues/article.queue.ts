@@ -33,4 +33,4 @@ articleQueue.on('failed',  (job, error) => {
 
 articleQueue.process(articleProcess);
 
-export { addArticle}
+export { addArticle, articleQueue}

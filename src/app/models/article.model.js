@@ -22,7 +22,6 @@ module.exports = (mongoose) => {
       },
       {timestamps: true},
   );
-  mongoose.set('debug', false);
   schema.method('toJSON', function() {
     // eslint-disable-next-line no-unused-vars
     const {__v, _id, ...object} = this.toObject();

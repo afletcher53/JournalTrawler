@@ -3,7 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// import rateLimiterUsingThirdParty from './rateLimiter.middleware';
 const logrequests_middleware_1 = __importDefault(require("./logrequests.middleware"));
 const helmet_1 = __importDefault(require("helmet"));
 const express_1 = __importDefault(require("express"));
@@ -31,6 +30,5 @@ module.exports = [
     express_1.default.urlencoded({ extended: true }),
     cors_1.default(corsOptions),
     //   jwtCheck,
-    // rateLimiterUsingThirdParty,
 ];
 //TODO: Middlewear to check connection to the REDIS database

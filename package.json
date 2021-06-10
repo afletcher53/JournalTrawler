@@ -2,7 +2,7 @@
   "name": "nodejs-express-mongodb",
   "version": "1.0.0",
   "description": "Node.js Restful CRUD API with Node.Js, Express and MongoDB",
-  "main": "src/server.js",
+  "main": "src/server.ts",
   "scripts": {
     "dev": "ts-node-dev --respawn ./src/server.ts --trace-warnings",
     "test": "set NODE_ENV=test&&jest --silent",

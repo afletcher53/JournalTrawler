@@ -15,6 +15,16 @@ const systemLogger = createLogger({
         new transports.File({ filename: 'logs/activity/activity.log', level: 'info' }),
     ],
 });
+const mongoDBLogger = createLogger({
+    format: format.combine(format.timestamp(), format.json()),
+    transports: [
+        // new transports.Console(),
+        new transports.File({
+            filename: 'logs/error/mongodb_error.log', level: 'error'
+        }),
+        new transports.File({ filename: 'logs/activity/mongodb_activity.log', level: 'info' }),
+    ],
+});
 const crossRefLogger = createLogger({
     format: format.combine(format.timestamp(), format.json()),
     transports: [
@@ -45,4 +55,5 @@ module.exports = {
     crossRefLogger: crossRefLogger,
     DOILogger: DOILogger,
     jobLogger: jobLogger,
+    mongoDBLogger: mongoDBLogger,
 };

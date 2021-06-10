@@ -1,8 +1,6 @@
 TODO: 
 Middlewear to check REDIS connection before starting
-Fix regex on add journal function 
-function to clear flush Logs / mongoDB / Redis queues (MASTER RESET)
-Connect to log viewier
+Fix regex on add journal function JOI
 Add update ISSN function (Grab latest integrity issn-doi check and grab DOIS, if not one schedule one) - So can be ran as a cron job.
 Centralise logging to /logger (see src/app/queues/jobLogger)
 Create tests for functions (API routes, functions etc).

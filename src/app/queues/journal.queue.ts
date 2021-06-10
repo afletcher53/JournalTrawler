@@ -31,6 +31,6 @@ journalQueue.on('failed',  (job, error) => {
 
 journalQueue.process(journalProcess);
 
-export { addJournal }
+export { addJournal, journalQueue }
 
 
