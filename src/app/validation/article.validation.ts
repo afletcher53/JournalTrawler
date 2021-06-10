@@ -1,4 +1,4 @@
-const Joi = require('@hapi/joi');
+import Joi from '@hapi/joi';
 
 const options = {
   abortEarly: false,
@@ -11,7 +11,7 @@ const options = {
 
 
 // Article Post Validation
-export const articlePostValidation = (data) => {
+export const articlePostValidation = (data: Express.Request) => {
   const schema = Joi.object({
     print_issn:
             Joi.string()
@@ -29,7 +29,7 @@ export const articlePostValidation = (data) => {
   return schema.validate(data, options);
 };
 
-export const articleSingleValidation = (data) => {
+export const articleSingleValidation = (data: Express.Request) => {
   const schema = Joi.object({
     id:
           Joi

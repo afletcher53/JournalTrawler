@@ -40,11 +40,11 @@ const addJournal = (data) => {
     journalQueue.add(data, options);
 };
 exports.addJournal = addJournal;
-const JobLoggers_1 = require("./JobLoggers");
+const job_loggers_1 = require("../loggers/job.loggers");
 journalQueue.on('global:completed', async (job) => {
-    JobLoggers_1.logJobCompleted('journal', job);
+    job_loggers_1.logJobCompleted('journal', job);
 });
 journalQueue.on('failed', (job, error) => {
-    JobLoggers_1.logJobFailed('journal', job, error);
+    job_loggers_1.logJobFailed('journal', job, error);
 });
 journalQueue.process(journal_process_1.default);

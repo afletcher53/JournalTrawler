@@ -2,7 +2,7 @@ import Joi from '@hapi/joi';
 import db from '../models';
 const Journal = db.journals;
 import {  fetchJournalByISSN, fetchJournalHeadByISSN } from '../requests/crossref.service';
-import { journalISSNSingleValidation } from './journal.validation';
+
 
 /**
  * Checks if a valid journal exists from crossref API
@@ -38,7 +38,7 @@ const options = {
 
 
 // Article Post Validation
-export const articleCrossRefResponseValidation = (data) => {
+export const articleCrossRefResponseValidation = (data: Express.Request) => {
   const schema = Joi.object({
     message: 
          Joi.object().keys({
@@ -68,22 +68,22 @@ export const articleSingleValidation = (data) => {
 };
 
 
-/**
- * Return print / electronic ISSN.
- * @param issnObject Object given by CrossRef API
- * @returns issn of Print/Electronic, null if not available - String
- */
- const getPrintAndElectronicISSN = (issnObject: Object)  => {
-  let printISSN: string, electronicISSN: string
-  issnObject['issn-type'].forEach((element: { type: string; value: any; }) => {
-    if(printISSN == undefined) printISSN =  element.type =='print' ? printISSN = String(element.value) : null
-    if(electronicISSN == undefined) electronicISSN =  element.type =='electronic' ? electronicISSN = String(element.value) : null
-  });
-  return { 
-    printISSN,
-    electronicISSN
-  }
-}
+// /**
+//  * Return print / electronic ISSN.
+//  * @param issnObject Object given by CrossRef API
+//  * @returns issn of Print/Electronic, null if not available - String
+//  */
+//  const getPrintAndElectronicISSN = (issnObject: Object)  => {
+//   let printISSN: string, electronicISSN: string
+//   issnObject['issn-type'].forEach((element: { type: string; value: any; }) => {
+//     if(printISSN == undefined) printISSN =  element.type =='print' ? printISSN = String(element.value) : null
+//     if(electronicISSN == undefined) electronicISSN =  element.type =='electronic' ? electronicISSN = String(element.value) : null
+//   });
+//   return { 
+//     printISSN,
+//     electronicISSN
+//   }
+// }
 
 
 export const getJournalData = async (issn: string) => { //TODO: Move this to a crossref function

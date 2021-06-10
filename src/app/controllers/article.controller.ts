@@ -1,11 +1,10 @@
-const db = require('../models');
+import db from '../models';
 const Article = db.articles;
-exports.Article = Article;
-const {articleSingleValidation, articlePostValidation} =
-require('../validation/article.validation');
-const serializer = require('../validation/json.validation');
-const {addArticle} = require('../queues/article.queue');
-const {getArticleByDOI} = require('./functions/getArticleByDOI');
+import { articleSingleValidation, articlePostValidation } from '../validation/article.validation';
+import serializer from '../validation/json.validation';
+import { addArticle } from '../queues/article.queue';
+import { getArticleByDOI } from './functions/getArticleByDOI';
+import { articleLogger } from '../../logger';
 
 exports.create = async (req, res) => {
   // Validate request
@@ -17,14 +16,11 @@ exports.create = async (req, res) => {
   };
 
   // check to see if already exists
-  const exists = await getArticleByDOI(req.body.doi, res);
+  const exists = await getArticleByDOI(req.body.doi);
   if (exists) {
     // Generate Error Message if article exists.
     const errorArticleExists =
       new Error('The Article with the DOI ' + req.body.doi + ' already exists');
-    errorArticleExists.status = 500;
-    errorArticleExists.meta ={time: Date.now()};
-    errorArticleExists.code = '123';
     return res.status(400)
         .send(serializer.serializeError(errorArticleExists));
   }
@@ -62,7 +58,10 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
   // Validate request
   const {error} = articleSingleValidation(req.params);
-  if (error) return res.status(400).send(serializer.serializeError(error.details[0].message));
+  if (error) {
+    return res.status(400)
+        .send(serializer.serializeError(error.details[0].message));
+  }
   const id = req.params.id;
   const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
@@ -85,7 +84,10 @@ exports.findOne = (req, res) => {
 // Update a Article by the id in the request
 exports.update = (req, res) => {
   const {error} = articlePostValidation(req.body);
-  if (error) return res.status(400).send(serializer.serializeError(error.details[0].message));
+  if (error) {
+    return res.status(400)
+        .send(serializer.serializeError(error.details[0].message));
+  }
   try {
     const id = req.params.id;
 

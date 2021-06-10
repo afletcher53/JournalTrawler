@@ -1,6 +1,6 @@
 import serializer from '../../validation/json.validation';
 import db from '../../models';
-const Journal = db.journals
+const Journal = db.journals;
 
 /**
  * function to find a journal based on ISSN string
@@ -20,6 +20,6 @@ export function findJournal(issn, res) {
       .catch((err) => {
         res
             .status(500)
-            .send({message: 'Error retrieving Journal with id=' + id});
+            .send({message: 'Error retrieving Journal with id=' + issn});
       });
 }

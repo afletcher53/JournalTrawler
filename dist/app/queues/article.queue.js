@@ -26,7 +26,7 @@ exports.articleQueue = exports.addArticle = void 0;
 const bull_1 = __importDefault(require("bull"));
 const article_process_1 = __importDefault(require("../processes/article.process"));
 const redis = __importStar(require("../config/redis.config"));
-const JobLoggers_1 = require("./JobLoggers");
+const job_loggers_1 = require("../loggers/job.loggers");
 const articleQueue = new bull_1.default('articleQueue', {
     redis: {
         host: String(redis.config.host),
@@ -44,9 +44,9 @@ const addArticle = async (data) => {
 };
 exports.addArticle = addArticle;
 articleQueue.on('global:completed', async (job) => {
-    JobLoggers_1.logJobCompleted('article', job);
+    job_loggers_1.logJobCompleted('article', job);
 });
 articleQueue.on('failed', (job, error) => {
-    JobLoggers_1.logJobFailed('article', job, error);
+    job_loggers_1.logJobFailed('article', job, error);
 });
 articleQueue.process(article_process_1.default);

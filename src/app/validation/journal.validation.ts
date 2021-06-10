@@ -1,7 +1,7 @@
 const Joi = require('@hapi/joi');
 Joi.objectId = require('joi-objectid')(Joi);
 
-const journalPostValidation = (data) => {
+export const journalPostValidation = (data: Express.Request) => {
 
   const schema = Joi.object({
     issn:
@@ -18,7 +18,7 @@ const journalPostValidation = (data) => {
   return schema.validate(data);
 };
 
-const journalSingleValidation = (data) => {
+export const journalSingleValidation = (data: Express.Request) => {
   const schema = Joi.object({
     id:
           Joi
@@ -38,7 +38,7 @@ const journalSingleValidation = (data) => {
   return schema.validate(data);
 };
 
-const journalMultipleValidation = (data) => {
+export const journalMultipleValidation = (data: Express.Request) => {
   const schema = Joi.object().keys({
     issns: Joi.array().items(Joi.string()),
   });
@@ -46,7 +46,7 @@ const journalMultipleValidation = (data) => {
 };
 
 
-const journalISSNSingleValidation = (data) => {
+export const journalISSNSingleValidation = (data: Express.Request) => {
   const schema = Joi.object({
     id:
           Joi
@@ -56,9 +56,3 @@ const journalISSNSingleValidation = (data) => {
 
   return schema.validate(data);
 };
-
-
-module.exports.journalPostValidation = journalPostValidation;
-module.exports.journalSingleValidation = journalSingleValidation;
-module.exports.journalISSNSingleValidation = journalISSNSingleValidation;
-module.exports.journalMultipleValidation = journalMultipleValidation;

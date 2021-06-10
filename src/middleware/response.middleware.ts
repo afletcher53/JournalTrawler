@@ -1,6 +1,7 @@
 const JSONAPISerializer = require('jsonapi-serializer').Serializer;
-const {createSchemaList} = require('../app/formatting/general');
-const db = require('../app/models');
+import { createSchemaList } from '../app/formatting/general';
+import { Request, Response, NextFunction } from 'express';
+import db from '../app/models';
 const Journal = db.journals;
 const Article = db.articles;
 
@@ -9,7 +10,7 @@ const Article = db.articles;
  * @param {String} string input string
  * @return {string} String with capitalized first letter
  */
-function capitalizeFirstLetter(string) {
+function capitalizeFirstLetter(string: string): string {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
@@ -20,9 +21,7 @@ function capitalizeFirstLetter(string) {
  * @param {*} res response to the request
  * @param {*} next proceeds to the next function
  */
-function modifyResponseBody(req, res, next) {
-  // need to determine the route which was used
-
+export function modifyResponseBody(req, res, next) {
   let modelName = capitalizeFirstLetter(req.originalUrl
       .replace(process.env.API_PREFIX, '').split('/')[0]).split('s')[0];
 

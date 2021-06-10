@@ -50,6 +50,7 @@
   },
   "devDependencies": {
     "@types/bull": "^3.15.1",
+    "@types/cors": "^2.8.10",
     "@types/express": "^4.17.12",
     "@types/redis": "^2.8.29",
     "eslint": "^7.27.0",

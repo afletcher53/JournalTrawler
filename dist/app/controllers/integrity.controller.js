@@ -10,6 +10,7 @@ const Article = models_1.default.articles;
 const json_validation_1 = __importDefault(require("../validation/json.validation"));
 const journal_validation_1 = require("../validation/journal.validation");
 const integrity_queue_1 = require("../queues/integrity.queue");
+const getJournalByISSN_1 = require("./functions/getJournalByISSN");
 // returns all integrities 
 exports.findAll = async (req, res) => {
     Integrity.find()
@@ -22,35 +23,9 @@ exports.findAll = async (req, res) => {
         });
     });
 };
-/**
- * Determines if a Journal already exists (via ISSN numer)
- * @param {string} data - The ISSN number of the Journal to be checked
- * @return {boolean} - True = journal exists, false it doesnt exist.
- */
-async function getJournalByISSN(data) {
-    const docCount = await Journal.find({});
-    let value = false;
-    console.log(docCount);
-    if (docCount != 0)
-        value = true;
-    return value;
-}
-/**
- * Checks a list of DOIs to see if missing from database
- * @param listtoCheck List that needs to be checked
- * @returns List of strings that dont exist
- */
-const generateMissingDOIList = async (listtoCheck) => {
-    let doesntExist = [];
-    for (let i = 0; i <= listtoCheck.length - 1; i++) {
-        const docCount = await Article.countDocuments({ doi: listtoCheck[i] }).exec();
-        if (docCount != 1)
-            doesntExist.push(listtoCheck[i]);
-    }
-    return doesntExist;
-};
 // Create a job to check the integrity of an ISSN
 exports.createISSNforDOI = async (req, res) => {
+    req.body.issn = req.body.issn.replace(/[\u200c\u200b]/g, '');
     //check to see if the requested journal is truthy
     const { error } = journal_validation_1.journalPostValidation(req.body);
     if (error) {
@@ -60,7 +35,7 @@ exports.createISSNforDOI = async (req, res) => {
     }
     ;
     //check to see if the journal exists on the database
-    const checkJournalExistsMongoDB = await getJournalByISSN(req.body.issn);
+    const checkJournalExistsMongoDB = await getJournalByISSN_1.getJournalByISSN(req.body.issn);
     if (!checkJournalExistsMongoDB) {
         return res.status(400)
             .send("The journal does not exist in the database");
@@ -91,7 +66,7 @@ exports.findOne = (req, res) => {
 // Find all integrity checks via ISSN 
 exports.findAllViaISSN = async (req, res) => {
     //check to see if the journal exists on the database
-    const checkJournalExistsMongoDB = await getJournalByISSN(req.params.id);
+    const checkJournalExistsMongoDB = await getJournalByISSN_1.getJournalByISSN(req.params.id);
     if (!checkJournalExistsMongoDB) {
         return res.status(400)
             .send("The Journal does not exist in the database");

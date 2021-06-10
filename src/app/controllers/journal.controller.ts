@@ -10,7 +10,7 @@ import {createErrorExists, createErrorExistsCrossRef, createErrorGeneric}
 
 import postJournalByISSN from '../requests/internal.functions.requests';
 import {addJournal} from '../queues/journal.queue';
-import { findJournal } from './functions/findJournal';
+import {findJournal} from './functions/findJournal';
 
 const {getJournalByISSN} = require('./functions/getJournalByISSN');
 
@@ -85,8 +85,6 @@ exports.findAll = (req, res) => {
       });
 };
 
-// DONE UP TO HERE
-
 // Find a single Journal with an id
 exports.findOne = (req, res) => {
   // check to see if has ISSN format OR mongoDBID format
@@ -123,7 +121,7 @@ exports.findOne = (req, res) => {
     } catch (e) {
       res.status(400).send({
         message:
-      err.message || createErrorGeneric(),
+      e.message || createErrorGeneric(),
       });
     }
   }
@@ -162,12 +160,12 @@ exports.delete = (req, res) => {
   if (error) return res.status(400).send(error.details[0].message);
 
   try {
-    Journal.findByIdAndRemove(id, {useFindAndModify: false})
+    Journal.findByIdAndRemove(req.params.id, {useFindAndModify: false})
         .then((data) => {
           if (!data) {
             res.status(404).send({
               message:
-              `Cannot delete Journal with id=${id}.
+              `Cannot delete Journal with id=${req.params.id}.
                Maybe Journal was not found!`,
             });
           } else {
@@ -178,10 +176,10 @@ exports.delete = (req, res) => {
         })
         .catch((err) => {
           res.status(500).send({
-            message: 'Could not delete Journal with id=' + id,
+            message: 'Could not delete Journal with id=' + req.parms.id,
           });
         });
-  } catch {
+  } catch (e) {
     res.status(400).send(e);
   }
 };

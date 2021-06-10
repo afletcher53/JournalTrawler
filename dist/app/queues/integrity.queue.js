@@ -26,7 +26,7 @@ exports.integrityQueue = exports.addIntegrity = void 0;
 const bull_1 = __importDefault(require("bull"));
 const integrity_process_1 = __importDefault(require("../processes/integrity.process"));
 const redis = __importStar(require("../config/redis.config"));
-const JobLoggers_1 = require("./JobLoggers");
+const job_loggers_1 = require("../loggers/job.loggers");
 const integrityQueue = new bull_1.default('integrityQueue', {
     redis: {
         host: String(redis.config.host),
@@ -43,9 +43,9 @@ const addIntegrity = (data) => {
 };
 exports.addIntegrity = addIntegrity;
 integrityQueue.on('global:completed', async (job) => {
-    JobLoggers_1.logJobCompleted('article', job);
+    job_loggers_1.logJobCompleted('article', job);
 });
 integrityQueue.on('failed', (job, error) => {
-    JobLoggers_1.logJobFailed('article', job, error);
+    job_loggers_1.logJobFailed('article', job, error);
 });
 integrityQueue.process(integrity_process_1.default);

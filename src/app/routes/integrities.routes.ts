@@ -1,7 +1,6 @@
 module.exports = (app) => {
     const integrities = require('../controllers/integrity.controller');
-    const journals = require('../controllers/journal.controller');
-  
+    
     const router = require('express').Router();
   
     // Retrieve all Integrities

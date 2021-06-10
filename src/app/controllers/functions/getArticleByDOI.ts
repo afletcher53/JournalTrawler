@@ -7,7 +7,7 @@ const Article = db.articles;
  * @param {string} data - The ISSN number of the Journal to be checked
  * @return {boolean} - True = journal exists, false it doesnt exist.
  */
-async function getArticleByDOI(data) {
+export async function getArticleByDOI(data) {
   const docCount = await Article.countDocuments({doi: data}).exec();
   let value = false;
   if (docCount != 0) {
@@ -15,4 +15,4 @@ async function getArticleByDOI(data) {
   }
   return value;
 }
-exports.getArticleByDOI = getArticleByDOI;
+// exports.getArticleByDOI = getArticleByDOI;

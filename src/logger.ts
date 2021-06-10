@@ -1,6 +1,6 @@
-const {transports, createLogger, format} = require('winston'); // TODO Convert to TS
+import { transports, createLogger, format } from 'winston'; // TODO Convert to TS
 
-const articleLogger = createLogger({
+export const articleLogger = createLogger({
   format: format.combine(
       format.timestamp(),
       format.json(),
@@ -13,7 +13,7 @@ const articleLogger = createLogger({
   ],
 });
 
-const systemLogger = createLogger({
+export const systemLogger = createLogger({
   format: format.combine(
       format.timestamp(),
       format.json(),
@@ -25,7 +25,7 @@ const systemLogger = createLogger({
         {filename: 'logs/activity/activity.log', level: 'info'}),
   ],
 });
-const mongoDBLogger = createLogger({
+export const mongoDBLogger = createLogger({
   format: format.combine(
       format.timestamp(),
       format.json(),
@@ -39,7 +39,7 @@ const mongoDBLogger = createLogger({
   ],
 });
 
-const crossRefLogger = createLogger({
+export const crossRefLogger = createLogger({
   format: format.combine(
       format.timestamp(),
       format.json(),
@@ -53,7 +53,7 @@ const crossRefLogger = createLogger({
   ],
 });
 
-const jobLogger = createLogger({
+export const jobLogger = createLogger({
   format: format.combine(
       format.timestamp(),
       format.json(),
@@ -67,7 +67,7 @@ const jobLogger = createLogger({
   ],
 });
 
-const DOILogger = createLogger({
+export const DOILogger = createLogger({
   format: format.combine(
       format.timestamp(),
       format.json(),
@@ -81,11 +81,11 @@ const DOILogger = createLogger({
 });
 
 
-module.exports = {
-  articleLogger: articleLogger,
-  systemLogger: systemLogger,
-  crossRefLogger: crossRefLogger,
-  DOILogger: DOILogger,
-  jobLogger: jobLogger,
-  mongoDBLogger: mongoDBLogger,
-};
+// module.exports = {
+//   articleLogger: articleLogger,
+//   systemLogger: systemLogger,
+//   crossRefLogger: crossRefLogger,
+//   DOILogger: DOILogger,
+//   jobLogger: jobLogger,
+//   mongoDBLogger: mongoDBLogger,
+// };

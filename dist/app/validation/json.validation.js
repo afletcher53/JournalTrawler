@@ -1,5 +1,10 @@
-const JSONAPISerializer = require('json-api-serializer');
-const Serializer = new JSONAPISerializer();
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const json_api_serializer_1 = __importDefault(require("json-api-serializer"));
+const Serializer = new json_api_serializer_1.default();
 Serializer.register('article', {
     id: 'id',
     whitelist: ['doi', 'title', 'journal', 'abstract', 'license'],
@@ -69,4 +74,5 @@ Serializer.register('journal', {
         self: '/api/journals',
     },
 });
+exports.default = Serializer;
 module.exports = Serializer;

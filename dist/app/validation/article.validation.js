@@ -1,7 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.articleSingleValidation = exports.articlePostValidation = void 0;
-const Joi = require('@hapi/joi');
+const joi_1 = __importDefault(require("@hapi/joi"));
 const options = {
     abortEarly: false,
     errors: {
@@ -12,13 +15,13 @@ const options = {
 };
 // Article Post Validation
 const articlePostValidation = (data) => {
-    const schema = Joi.object({
-        print_issn: Joi.string()
+    const schema = joi_1.default.object({
+        print_issn: joi_1.default.string()
             .min(6)
             .required(),
-        electronic_issn: Joi.string()
+        electronic_issn: joi_1.default.string()
             .min(6),
-        doi: Joi.string()
+        doi: joi_1.default.string()
             .min(6)
             .required(),
     });
@@ -26,8 +29,8 @@ const articlePostValidation = (data) => {
 };
 exports.articlePostValidation = articlePostValidation;
 const articleSingleValidation = (data) => {
-    const schema = Joi.object({
-        id: Joi
+    const schema = joi_1.default.object({
+        id: joi_1.default
             .string()
             .required()
             .min(6),

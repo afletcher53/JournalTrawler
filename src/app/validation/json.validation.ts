@@ -1,4 +1,4 @@
-const JSONAPISerializer = require('json-api-serializer');
+import JSONAPISerializer from 'json-api-serializer';
 const Serializer = new JSONAPISerializer();
 Serializer.register('article', {
   id: 'id', // The attributes to use as the reference. Default = 'id'.
@@ -72,5 +72,6 @@ Serializer.register('journal', {
   },
 });
 
+export default Serializer
 module.exports= Serializer;
 

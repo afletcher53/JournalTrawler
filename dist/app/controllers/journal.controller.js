@@ -3,33 +3,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Journal = void 0;
 const models_1 = __importDefault(require("../models"));
-const Journal = models_1.default.journals;
+exports.Journal = models_1.default.journals;
 const journal_validation_1 = require("../validation/journal.validation");
 const json_validation_1 = __importDefault(require("../validation/json.validation"));
 const crossref_validation_1 = require("../validation/crossref.validation");
 const error_validation_1 = require("../validation/error.validation");
 const internal_functions_requests_1 = __importDefault(require("../requests/internal.functions.requests"));
 const journal_queue_1 = require("../queues/journal.queue");
-/**
- * Determines if a Journal already exists (via ISSN numer)
- * @param {string} data - The ISSN number of the Journal to be checked
- * @return {boolean} - True = journal exists, false it doesnt exist.
- */
-async function getJournalByISSN(data) {
-    console.log(data);
-    const docCount = await Journal.countDocuments({ $or: [{ issn_electronic: data }, { issn_print: data }] }).exec();
-    let value = false;
-    if (docCount != 0)
-        value = true;
-    return value;
-}
+const findJournal_1 = require("./functions/findJournal");
+const { getJournalByISSN } = require('./functions/getJournalByISSN');
 // Create and Save a new Journal
 exports.create = async (req, res) => {
+    req.body.issn = req.body.issn.replace(/[\u200c\u200b]/g, '');
     // Validate request
-    const encodedIssn = encodeURI(req.body.issn);
-    const decodedIssn = decodeURI(req.body.issn);
-    // decode body
     const { error } = journal_validation_1.journalPostValidation(req.body);
     if (error) {
         const errorJournalValidation = new Error(error.details[0].message);
@@ -38,23 +26,23 @@ exports.create = async (req, res) => {
     }
     ;
     // check to see if already exists in MongooseDB
-    const checkJournalExistsMongoDB = await getJournalByISSN(decodedIssn);
+    const checkJournalExistsMongoDB = await getJournalByISSN(req.body.issn);
     if (checkJournalExistsMongoDB) {
         return res.status(400)
-            .send(error_validation_1.createErrorExists(issn, 'Journal'));
+            .send(error_validation_1.createErrorExists(req.body.issn, 'Journal'));
     }
     ;
     // check to see if ISSN exists on crossref
-    const checkCrossRefExists = await crossref_validation_1.checkExists(encodedIssn);
+    const checkCrossRefExists = await crossref_validation_1.checkExists(req.body.issn);
     if (!checkCrossRefExists) {
         return res.status(400)
-            .send(error_validation_1.createErrorExistsCrossRef(decodedIssn, 'Journal'));
+            .send(error_validation_1.createErrorExistsCrossRef(req.body.issn, 'Journal'));
     }
     // get the data from crossref
-    const journalData = await crossref_validation_1.getJournalData(encodedIssn);
+    const journalData = await crossref_validation_1.getJournalData(req.body.issn);
     // save the journal
     try {
-        const journal = new Journal(journalData);
+        const journal = new exports.Journal(journalData);
         journal
             .save(journal.data)
             .then((data) => {
@@ -82,7 +70,7 @@ exports.findAll = (req, res) => {
     const title = req.query.title;
     const condition = title ?
         { title: { $regex: new RegExp(title), $options: 'i' } } : {};
-    Journal.find(condition)
+    exports.Journal.find(condition)
         .then((data) => {
         res.send(json_validation_1.default.serialize('journal', data));
     })
@@ -100,7 +88,7 @@ exports.findOne = (req, res) => {
     const isISSN = /\b\d{3}[0-9]-\d{3}[0-9]\b/.test(issn);
     if (isISSN) {
         try {
-            findJournal(issn, res);
+            findJournal_1.findJournal(issn, res);
         }
         catch (e) {
             res.status(400).send({
@@ -115,7 +103,7 @@ exports.findOne = (req, res) => {
         if (error)
             return res.status(400).send(error.details[0].message);
         try {
-            Journal.findById(req.params.id)
+            exports.Journal.findById(req.params.id)
                 .then((data) => {
                 if (!data) {
                     res.status(404).send({ message: 'Not found Journal with id ' + req.params.id });
@@ -142,7 +130,7 @@ exports.update = (req, res) => {
         });
     }
     const id = req.params.id;
-    Journal.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
+    exports.Journal.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
         .then((data) => {
         if (!data) {
             res.status(404).send({
@@ -165,7 +153,7 @@ exports.delete = (req, res) => {
     if (error)
         return res.status(400).send(error.details[0].message);
     try {
-        Journal.findByIdAndRemove(id, { useFindAndModify: false })
+        exports.Journal.findByIdAndRemove(id, { useFindAndModify: false })
             .then((data) => {
             if (!data) {
                 res.status(404).send({
@@ -191,7 +179,7 @@ exports.delete = (req, res) => {
 };
 // Delete all Journals from the database.
 exports.deleteAll = (req, res) => {
-    Journal.deleteMany({})
+    exports.Journal.deleteMany({})
         .then((data) => {
         res.send({
             message: `${data.deletedCount} Journals were deleted successfully!`,
@@ -205,7 +193,7 @@ exports.deleteAll = (req, res) => {
 };
 // Find all published Journals
 exports.findAllPublished = (req, res) => {
-    Journal.find({ published: true })
+    exports.Journal.find({ published: true })
         .then((data) => {
         res.send(json_validation_1.default.serialize('journal', data));
     })
@@ -217,7 +205,7 @@ exports.findAllPublished = (req, res) => {
 };
 // Find all Crossreff Synced Journals
 exports.findAllCRScraped = (req, res) => {
-    Journal.find({ cr_parsed: true })
+    exports.Journal.find({ cr_parsed: true })
         .then((data) => {
         res.send(json_validation_1.default.serialize('journal', data));
     })
@@ -229,7 +217,7 @@ exports.findAllCRScraped = (req, res) => {
 };
 // Find all Crossreff Synced Journals
 exports.findAllCRUnscraped = (req, res) => {
-    Journal.find({ cr_parsed: false })
+    exports.Journal.find({ cr_parsed: false })
         .then((data) => {
         res.send(json_validation_1.default.serialize('journal', data));
     })
@@ -252,24 +240,3 @@ exports.bulkAdd = async (req, res) => {
         'These journals have been added, you cannot see the status of these journals',
     });
 };
-/**
- * function to find a journal based on ISSN string
- * @param {String} issn of the journal to be found
- * @param {axios} res res to be sent
- */
-function findJournal(issn, res) {
-    Journal.find({ $or: [{ issn_electronic: issn }, { issn_print: issn }] })
-        .then((data) => {
-        if (data.length == 0) {
-            res.status(404).send({ message: 'Not found Journal with issn ' + issn });
-        }
-        else {
-            res.send(json_validation_1.default.serialize('journal', data));
-        }
-    })
-        .catch((err) => {
-        res
-            .status(500)
-            .send({ message: 'Error retrieving Journal with id=' + id });
-    });
-}

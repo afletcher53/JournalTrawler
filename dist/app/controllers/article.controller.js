@@ -1,20 +1,10 @@
 const db = require('../models');
 const Article = db.articles;
+exports.Article = Article;
 const { articleSingleValidation, articlePostValidation } = require('../validation/article.validation');
 const serializer = require('../validation/json.validation');
-/**
- * Determines if a Article already exists (via doi )
- * @param {string} data - The ISSN number of the Journal to be checked
- * @return {boolean} - True = journal exists, false it doesnt exist.
- */
-async function getArticleByDOI(data) {
-    const docCount = await Article.countDocuments({ doi: data }).exec();
-    let value = false;
-    if (docCount != 0)
-        value = true;
-    return value;
-}
 const { addArticle } = require('../queues/article.queue');
+const { getArticleByDOI } = require('./functions/getArticleByDOI');
 exports.create = async (req, res) => {
     // Validate request
     const { error } = articlePostValidation(req.body);
@@ -41,7 +31,7 @@ exports.create = async (req, res) => {
         electronic_issn: req.body.electronic_issn,
     };
     addArticle(ArticleData);
-    res.status(200).send({ message: "The worker is working on it" });
+    res.status(200).send({ message: 'The worker is working on it' });
 };
 // Retrieve all Articles from the database.
 exports.findAll = (req, res) => {

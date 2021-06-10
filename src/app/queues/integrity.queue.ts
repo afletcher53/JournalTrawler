@@ -1,7 +1,7 @@
 import Bull from "bull";
 import integrityProcess from '../processes/integrity.process';
 import * as redis from '../config/redis.config'
-import { logJobCompleted, logJobFailed } from "./JobLoggers";
+import { logJobCompleted, logJobFailed } from "../loggers/job.loggers";
 
 const integrityQueue = new Bull('integrityQueue', { 
   redis: {

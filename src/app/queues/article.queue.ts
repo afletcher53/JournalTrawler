@@ -1,7 +1,7 @@
 import Bull from "bull";
 import articleProcess from '../processes/article.process';
 import * as redis from '../config/redis.config'
-import { logJobCompleted, logJobFailed } from "./JobLoggers";
+import { logJobCompleted, logJobFailed } from "../loggers/job.loggers";
 
 const articleQueue = new Bull('articleQueue', { 
   redis: {
