@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 
-module.exports = class Service {
+module.exports = class Service { //TODO remove this usage
 /**
 *
 * @param {String} baseUrl base url for the axios object

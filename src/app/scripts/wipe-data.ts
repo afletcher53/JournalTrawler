@@ -16,13 +16,13 @@ const Integrity = db.integrity;
 
 
 const wipeall= ( ) =>{
-    Journal.deleteOne({}, function(err: Error) { 
+    Journal.deleteMany({}, function(err: Error) { 
         console.log('Journals collection removed') 
      });
-     Article.deleteOne({}, function(err: Error) { 
+     Article.deleteMany({}, function(err: Error) { 
         console.log('Articles collection removed') 
      });
-     Integrity.deleteOne({}, function(err: Error) { 
+     Integrity.deleteMany({}, function(err: Error) { 
         console.log('Integrities collection removed') 
      });
 

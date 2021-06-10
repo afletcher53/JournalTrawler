@@ -1,5 +1,5 @@
 
-module.exports = (mongoose) => {
+export default (mongoose) => {
   // eslint-disable-next-line new-cap
   const schema = mongoose.Schema(
       {

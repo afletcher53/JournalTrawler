@@ -1,5 +1,5 @@
 module.exports = (app) => {
-    const articles = require('../controllers/article.controller.js');
+    const articles = require('../controllers/article.controller');
     // eslint-disable-next-line new-cap
     const router = require('express').Router();
     // Create a new article

@@ -21,7 +21,7 @@ function capitalizeFirstLetter(string: string): string {
  * @param {*} res response to the request
  * @param {*} next proceeds to the next function
  */
-export function modifyResponseBody(req, res, next) {
+export function modifyResponseBody(req, res, next) { //TODO specify function types here
   let modelName = capitalizeFirstLetter(req.originalUrl
       .replace(process.env.API_PREFIX, '').split('/')[0]).split('s')[0];
 

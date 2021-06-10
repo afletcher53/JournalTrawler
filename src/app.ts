@@ -5,7 +5,8 @@ import express from 'express';
 const app = express();
 import db from './app/models';
 import wipeall from './app/scripts/wipe-data';
-
+import Redis from "ioredis";
+const redis = new Redis();
 
 
 // Middlewares
@@ -24,10 +25,9 @@ db.mongoose
       process.exit();
     });
 
-db.mongoose.set('debug', true)
-db.mongoose.set('debug', function (collectionName, method, query, doc) {
+db.mongoose.set('debug', function (collectionName: string, method: string, query: string, doc: any) {
   console.log(`${collectionName}.${method}`, JSON.stringify(query), doc)
-  query = collectionName + '.' + method + '(' + JSON.stringify(query) + ',' + JSON.stringify(doc) + ")";
+  query = JSON.stringify(collectionName + '.' + method + '(' + JSON.stringify(query) + ',' + JSON.stringify(doc) + ")");
   mongoDBLogger.info(query);  
 });
 
@@ -36,12 +36,27 @@ app.get('/', (req: express.Request, res: express.Response) => {
   res.json({"message": "Welcome to the server"})
 });
 
-app.get('/test', (req: express.Request, res: express.Response) => {
+// Nuclear wipe 
+app.get('/nuclearwipe', (req: express.Request, res: express.Response) => {
   wipeall()
+  res.json({"message": "Everything has been wipped"})
 });
+
+// 
+// // app.get('/test', (req: express.Request, res: express.Response) => {
+// //   const redis = new Redis();
+// //   redis.on('ready',function(){
+// //     res.json({"message" : redis.status})
+// //     });
+ 
+// // });
+
 
 // Other routes
 require('./app/routes/journals.routes')(app);
 require('./app/routes/articles.routes')(app);
 require('./app/routes/integrities.routes')(app);
+
+
 export default app
+

@@ -1,4 +1,4 @@
-import { transports, createLogger, format } from 'winston'; // TODO Convert to TS
+import { transports, createLogger, format } from 'winston';
 
 export const articleLogger = createLogger({
   format: format.combine(
@@ -73,7 +73,6 @@ export const DOILogger = createLogger({
       format.json(),
   ),
   transports: [
-    // new transports.Console(),
     new transports.File({filename: 'logs/error/doi_error.log', level: 'error'}),
     new transports.File(
         {filename: 'logs/activity/doi.log', level: 'info'}),

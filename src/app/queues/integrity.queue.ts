@@ -21,7 +21,6 @@ const addIntegrity = (data: any) => {
     integrityQueue.add(data, options);
 };
 
-
 integrityQueue.on('global:completed', async (job) => {
   logJobCompleted('article', job);
 });

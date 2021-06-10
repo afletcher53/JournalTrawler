@@ -10,6 +10,8 @@ const express_1 = __importDefault(require("express"));
 const app = express_1.default();
 const models_1 = __importDefault(require("./app/models"));
 const wipe_data_1 = __importDefault(require("./app/scripts/wipe-data"));
+const ioredis_1 = __importDefault(require("ioredis"));
+const redis = new ioredis_1.default();
 // Middlewares
 app.use(require('./middleware'));
 models_1.default.mongoose
@@ -24,19 +26,27 @@ models_1.default.mongoose
     logger_1.systemLogger.error('Cannot connect to the database!', err);
     process.exit();
 });
-models_1.default.mongoose.set('debug', true);
 models_1.default.mongoose.set('debug', function (collectionName, method, query, doc) {
     console.log(`${collectionName}.${method}`, JSON.stringify(query), doc);
-    query = collectionName + '.' + method + '(' + JSON.stringify(query) + ',' + JSON.stringify(doc) + ")";
+    query = JSON.stringify(collectionName + '.' + method + '(' + JSON.stringify(query) + ',' + JSON.stringify(doc) + ")");
     logger_1.mongoDBLogger.info(query);
 });
 // Main route
 app.get('/', (req, res) => {
     res.json({ "message": "Welcome to the server" });
 });
-app.get('/test', (req, res) => {
+// Nuclear wipe 
+app.get('/nuclearwipe', (req, res) => {
     wipe_data_1.default();
+    res.json({ "message": "Everything has been wipped" });
 });
+// 
+// // app.get('/test', (req: express.Request, res: express.Response) => {
+// //   const redis = new Redis();
+// //   redis.on('ready',function(){
+// //     res.json({"message" : redis.status})
+// //     });
+// // });
 // Other routes
 require('./app/routes/journals.routes')(app);
 require('./app/routes/articles.routes')(app);

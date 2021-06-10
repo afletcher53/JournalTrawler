@@ -38,6 +38,7 @@
     "express-jwt": "^6.0.0",
     "express-rate-limit": "^5.2.6",
     "helmet": "^4.6.0",
+    "ioredis": "^4.27.5",
     "joi-objectid": "^3.0.1",
     "json-api-serializer": "^2.6.2",
     "jsonapi-serializer": "^3.6.7",

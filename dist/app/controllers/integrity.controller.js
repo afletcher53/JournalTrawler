@@ -5,8 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const models_1 = __importDefault(require("../models"));
 const Integrity = models_1.default.integrity;
-const Journal = models_1.default.journals;
-const Article = models_1.default.articles;
 const json_validation_1 = __importDefault(require("../validation/json.validation"));
 const journal_validation_1 = require("../validation/journal.validation");
 const integrity_queue_1 = require("../queues/integrity.queue");

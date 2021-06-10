@@ -1,5 +1,5 @@
 TODO: 
-Middlewear to check REDIS connection before starting
+
 Remove print_issn requirement for adding job (so can be added with just a DOI. 1) Check that the article exists 2) Check we have that journal yet 3) Add job if do
 Fix regex on add journal function JOI
 Add update ISSN function (Grab latest integrity issn-doi check and grab DOIS, if not one schedule one) - So can be ran as a cron job.

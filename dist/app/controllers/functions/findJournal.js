@@ -25,7 +25,7 @@ function findJournal(issn, res) {
         .catch((err) => {
         res
             .status(500)
-            .send({ message: 'Error retrieving Journal with id=' + id });
+            .send({ message: 'Error retrieving Journal with id=' + issn });
     });
 }
 exports.findJournal = findJournal;

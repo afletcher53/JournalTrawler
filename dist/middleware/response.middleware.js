@@ -1,8 +1,14 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.modifyResponseBody = void 0;
 const JSONAPISerializer = require('jsonapi-serializer').Serializer;
-const { createSchemaList } = require('../app/formatting/general');
-const db = require('../app/models');
-const Journal = db.journals;
-const Article = db.articles;
+const general_1 = require("../app/formatting/general");
+const models_1 = __importDefault(require("../app/models"));
+const Journal = models_1.default.journals;
+const Article = models_1.default.articles;
 /**
  * Capitalizes the first letter of a string
  * @param {String} string input string
@@ -19,14 +25,13 @@ function capitalizeFirstLetter(string) {
  * @param {*} next proceeds to the next function
  */
 function modifyResponseBody(req, res, next) {
-    // need to determine the route which was used
     let modelName = capitalizeFirstLetter(req.originalUrl
         .replace(process.env.API_PREFIX, '').split('/')[0]).split('s')[0];
     const JournalSerializer = new JSONAPISerializer(modelName, {
-        attributes: createSchemaList(Journal),
+        attributes: general_1.createSchemaList(Journal),
     });
     const ArticleSerializer = new JSONAPISerializer(modelName, {
-        attributes: createSchemaList(Article),
+        attributes: general_1.createSchemaList(Article),
     });
     const oldSend = res.send;
     res.send = function (data) {
@@ -45,4 +50,5 @@ function modifyResponseBody(req, res, next) {
     };
     next();
 }
+exports.modifyResponseBody = modifyResponseBody;
 module.exports = modifyResponseBody;

@@ -66,24 +66,22 @@ const articleSingleValidation = (data) => {
     return schema.validate(data, options);
 };
 exports.articleSingleValidation = articleSingleValidation;
-/**
- * Return print / electronic ISSN.
- * @param issnObject Object given by CrossRef API
- * @returns issn of Print/Electronic, null if not available - String
- */
-const getPrintAndElectronicISSN = (issnObject) => {
-    let printISSN, electronicISSN;
-    issnObject['issn-type'].forEach((element) => {
-        if (printISSN == undefined)
-            printISSN = element.type == 'print' ? printISSN = String(element.value) : null;
-        if (electronicISSN == undefined)
-            electronicISSN = element.type == 'electronic' ? electronicISSN = String(element.value) : null;
-    });
-    return {
-        printISSN,
-        electronicISSN
-    };
-};
+// /**
+//  * Return print / electronic ISSN.
+//  * @param issnObject Object given by CrossRef API
+//  * @returns issn of Print/Electronic, null if not available - String
+//  */
+//  const getPrintAndElectronicISSN = (issnObject: Object)  => {
+//   let printISSN: string, electronicISSN: string
+//   issnObject['issn-type'].forEach((element: { type: string; value: any; }) => {
+//     if(printISSN == undefined) printISSN =  element.type =='print' ? printISSN = String(element.value) : null
+//     if(electronicISSN == undefined) electronicISSN =  element.type =='electronic' ? electronicISSN = String(element.value) : null
+//   });
+//   return { 
+//     printISSN,
+//     electronicISSN
+//   }
+// }
 const getJournalData = async (issn) => {
     const data = await crossref_service_1.fetchJournalByISSN(issn);
     let issnElectronic;

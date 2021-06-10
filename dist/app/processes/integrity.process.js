@@ -41,6 +41,11 @@ const integrityProcess = async (job) => {
         integrity.save(integrity);
     }
 };
+/**
+ * Checks a list of DOIs to see if missing from database
+ * @param listtoCheck List that needs to be checked
+ * @returns List of strings that dont exist in mongoose DB
+ */
 const generateMissingDOIList = async (listtoCheck) => {
     let doesntExist = [];
     for (let i = 0; i <= listtoCheck.length - 1; i++) {

@@ -1,10 +1,8 @@
 import db from '../models';
 const Integrity = db.integrity;
-const Journal = db.journals;
-const Article = db.articles;
 import serializer from '../validation/json.validation';
 import express from 'express';
-import { journalPostValidation, journalSingleValidation } from '../validation/journal.validation';
+import { journalPostValidation } from '../validation/journal.validation';
 import { addIntegrity } from '../queues/integrity.queue';
 import { getJournalByISSN } from './functions/getJournalByISSN';
 

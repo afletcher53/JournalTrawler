@@ -1,5 +1,7 @@
+"use strict";
 //* * Model for data integrity check **//
-module.exports = (mongoose) => {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = (mongoose) => {
     // eslint-disable-next-line new-cap
     const schema = mongoose.Schema({
         code: Number,

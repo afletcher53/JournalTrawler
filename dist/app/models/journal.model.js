@@ -1,4 +1,6 @@
-module.exports = (mongoose) => {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = (mongoose) => {
     // eslint-disable-next-line new-cap
     const schema = mongoose.Schema({
         title: String,

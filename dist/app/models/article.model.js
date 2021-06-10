@@ -1,5 +1,7 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /* eslint-disable no-invalid-this */
-module.exports = (mongoose) => {
+exports.default = (mongoose) => {
     // eslint-disable-next-line new-cap
     const schema = mongoose.Schema({
         title: String,

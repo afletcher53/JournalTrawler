@@ -16,13 +16,13 @@ const Journal = models_1.default.journals;
 const Article = models_1.default.articles;
 const Integrity = models_1.default.integrity;
 const wipeall = () => {
-    Journal.deleteOne({}, function (err) {
+    Journal.deleteMany({}, function (err) {
         console.log('Journals collection removed');
     });
-    Article.deleteOne({}, function (err) {
+    Article.deleteMany({}, function (err) {
         console.log('Articles collection removed');
     });
-    Integrity.deleteOne({}, function (err) {
+    Integrity.deleteMany({}, function (err) {
         console.log('Integrities collection removed');
     });
     //remove the logs

@@ -80,7 +80,6 @@ exports.findAll = (req, res) => {
         });
     });
 };
-// DONE UP TO HERE
 // Find a single Journal with an id
 exports.findOne = (req, res) => {
     // check to see if has ISSN format OR mongoDBID format
@@ -117,7 +116,7 @@ exports.findOne = (req, res) => {
         }
         catch (e) {
             res.status(400).send({
-                message: err.message || error_validation_1.createErrorGeneric(),
+                message: e.message || error_validation_1.createErrorGeneric(),
             });
         }
     }
@@ -153,11 +152,11 @@ exports.delete = (req, res) => {
     if (error)
         return res.status(400).send(error.details[0].message);
     try {
-        exports.Journal.findByIdAndRemove(id, { useFindAndModify: false })
+        exports.Journal.findByIdAndRemove(req.params.id, { useFindAndModify: false })
             .then((data) => {
             if (!data) {
                 res.status(404).send({
-                    message: `Cannot delete Journal with id=${id}.
+                    message: `Cannot delete Journal with id=${req.params.id}.
                Maybe Journal was not found!`,
                 });
             }
@@ -169,11 +168,11 @@ exports.delete = (req, res) => {
         })
             .catch((err) => {
             res.status(500).send({
-                message: 'Could not delete Journal with id=' + id,
+                message: 'Could not delete Journal with id=' + req.parms.id,
             });
         });
     }
-    catch {
+    catch (e) {
         res.status(400).send(e);
     }
 };

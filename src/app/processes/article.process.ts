@@ -1,6 +1,7 @@
 
 import {Job} from 'bull';
 import { DOILogger } from '../../logger';
+import { getJournalByISSN } from '../controllers/functions/getJournalByISSN';
 import db from '../models';
 import { fetchArticleByDOI } from '../requests/crossref.service';
 import { articleCrossRefResponseValidation } from '../validation/crossref.validation';
@@ -17,6 +18,10 @@ const articleProcess = async (job:Job) => {
   //Validate the data. 
   const {error} =  articleCrossRefResponseValidation(articleData);
   if (error) throw Error(error.details[0].message);
+
+  //TODO: check to see that a journal exists in the mongodb (to prevent orphaned articles) TODO 
+
+
   //Generate the article Object.
   const article = setArticleDetails(job.data.doi, job.data.print_issn, job.data.electronic_issn, articleData);
 

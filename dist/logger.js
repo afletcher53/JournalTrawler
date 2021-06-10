@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DOILogger = exports.jobLogger = exports.crossRefLogger = exports.mongoDBLogger = exports.systemLogger = exports.articleLogger = void 0;
-const winston_1 = require("winston"); // TODO Convert to TS
+const winston_1 = require("winston");
 exports.articleLogger = winston_1.createLogger({
     format: winston_1.format.combine(winston_1.format.timestamp(), winston_1.format.json()),
     transports: [
@@ -47,7 +47,6 @@ exports.jobLogger = winston_1.createLogger({
 exports.DOILogger = winston_1.createLogger({
     format: winston_1.format.combine(winston_1.format.timestamp(), winston_1.format.json()),
     transports: [
-        // new transports.Console(),
         new winston_1.transports.File({ filename: 'logs/error/doi_error.log', level: 'error' }),
         new winston_1.transports.File({ filename: 'logs/activity/doi.log', level: 'info' }),
     ],

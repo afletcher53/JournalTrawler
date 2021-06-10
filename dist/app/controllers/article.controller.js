@@ -1,36 +1,38 @@
-const db = require('../models');
-const Article = db.articles;
-exports.Article = Article;
-const { articleSingleValidation, articlePostValidation } = require('../validation/article.validation');
-const serializer = require('../validation/json.validation');
-const { addArticle } = require('../queues/article.queue');
-const { getArticleByDOI } = require('./functions/getArticleByDOI');
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const models_1 = __importDefault(require("../models"));
+const Article = models_1.default.articles;
+const article_validation_1 = require("../validation/article.validation");
+const json_validation_1 = __importDefault(require("../validation/json.validation"));
+const article_queue_1 = require("../queues/article.queue");
+const getArticleByDOI_1 = require("./functions/getArticleByDOI");
+const logger_1 = require("../../logger");
 exports.create = async (req, res) => {
     // Validate request
-    const { error } = articlePostValidation(req.body);
+    const { error } = article_validation_1.articlePostValidation(req.body);
     if (error) {
         const errorArticleValidation = error.details;
         return res.status(400)
-            .send(serializer.serializeError(errorArticleValidation));
+            .send(json_validation_1.default.serializeError(errorArticleValidation));
     }
     ;
     // check to see if already exists
-    const exists = await getArticleByDOI(req.body.doi, res);
+    const exists = await getArticleByDOI_1.getArticleByDOI(req.body.doi);
     if (exists) {
         // Generate Error Message if article exists.
         const errorArticleExists = new Error('The Article with the DOI ' + req.body.doi + ' already exists');
-        errorArticleExists.status = 500;
-        errorArticleExists.meta = { time: Date.now() };
-        errorArticleExists.code = '123';
         return res.status(400)
-            .send(serializer.serializeError(errorArticleExists));
+            .send(json_validation_1.default.serializeError(errorArticleExists));
     }
     const ArticleData = {
         doi: req.body.doi,
         print_issn: req.body.print_issn,
         electronic_issn: req.body.electronic_issn,
     };
-    addArticle(ArticleData);
+    article_queue_1.addArticle(ArticleData);
     res.status(200).send({ message: 'The worker is working on it' });
 };
 // Retrieve all Articles from the database.
@@ -40,20 +42,22 @@ exports.findAll = (req, res) => {
         { title: { $regex: new RegExp(title), $options: 'i' } } : {};
     Article.find(condition)
         .then((data) => {
-        res.send(serializer.serialize('article', data));
+        res.send(json_validation_1.default.serialize('article', data));
     })
         .catch((err) => {
         res.status(500).send({
-            message: serializer.serializeError(err.message || process.env.STRING_ERROR_ARTICLES_GET),
+            message: json_validation_1.default.serializeError(err.message || process.env.STRING_ERROR_ARTICLES_GET),
         });
     });
 };
 // Find a single Article with an id
 exports.findOne = (req, res) => {
     // Validate request
-    const { error } = articleSingleValidation(req.params);
-    if (error)
-        return res.status(400).send(serializer.serializeError(error.details[0].message));
+    const { error } = article_validation_1.articleSingleValidation(req.params);
+    if (error) {
+        return res.status(400)
+            .send(json_validation_1.default.serializeError(error.details[0].message));
+    }
     const id = req.params.id;
     const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     Article.findById(id)
@@ -62,20 +66,22 @@ exports.findOne = (req, res) => {
             res.status(404).send({ message: 'Not found Article with id ' + id });
         }
         else
-            res.send(serializer.serialize('article', data));
+            res.send(json_validation_1.default.serialize('article', data));
     })
         .catch((e) => {
         res
             .status(500)
             .send({ message: 'Error retrieving Article with id=' + id });
-        articleLogger.error('Error getting article', { sessionID: `${req.id}`, requestIP: `${ip}`, articleID: `${id}` });
+        logger_1.articleLogger.error('Error getting article', { sessionID: `${req.id}`, requestIP: `${ip}`, articleID: `${id}` });
     });
 };
 // Update a Article by the id in the request
 exports.update = (req, res) => {
-    const { error } = articlePostValidation(req.body);
-    if (error)
-        return res.status(400).send(serializer.serializeError(error.details[0].message));
+    const { error } = article_validation_1.articlePostValidation(req.body);
+    if (error) {
+        return res.status(400)
+            .send(json_validation_1.default.serializeError(error.details[0].message));
+    }
     try {
         const id = req.params.id;
         Article.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
@@ -138,7 +144,7 @@ exports.deleteAll = (req, res) => {
 exports.findAllPublished = (req, res) => {
     Article.find({ published: true })
         .then((data) => {
-        res.send(serializer.serialize('article', data));
+        res.send(json_validation_1.default.serialize('article', data));
     })
         .catch((err) => {
         res.status(500).send({

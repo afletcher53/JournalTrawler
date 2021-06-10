@@ -1,7 +1,7 @@
 //* * Model for data integrity check **//
 
 
-module.exports = (mongoose) => {
+export default (mongoose) => {
   // eslint-disable-next-line new-cap
   const schema = mongoose.Schema(
       {
@@ -17,7 +17,7 @@ module.exports = (mongoose) => {
     object.id = _id;
     return object;
   });
-  schema.set('debug', true)
+  schema.set('debug', true);
   const Integrity = mongoose.model('integrity', schema);
   return Integrity;
 };

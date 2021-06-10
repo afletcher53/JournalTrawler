@@ -7,8 +7,11 @@ import path from 'path';
 import https from 'https';
 import http from 'http';
 import fs from 'fs';
+import Redis from "ioredis";
+import * as redisconfig from './app/config/redis.config'
+const redis = new Redis(redisconfig.config.port, redisconfig.config.host);
 
-
+redis.on('connect', function () { 
 const httpServer = http.createServer(app);
 const httpsServer = https.createServer({
   key: fs.readFileSync(path.join('cert', 'key.pem')),
@@ -26,4 +29,4 @@ try {
 } catch (e) {
   console.log(e);
 }
-
+ });

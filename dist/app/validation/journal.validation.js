@@ -45,7 +45,3 @@ const journalISSNSingleValidation = (data) => {
     return schema.validate(data);
 };
 exports.journalISSNSingleValidation = journalISSNSingleValidation;
-// module.exports.journalPostValidation = journalPostValidation;
-// module.exports.journalSingleValidation = journalSingleValidation;
-// module.exports.journalISSNSingleValidation = journalISSNSingleValidation;
-// module.exports.journalMultipleValidation = journalMultipleValidation;

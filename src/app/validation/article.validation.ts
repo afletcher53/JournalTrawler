@@ -15,11 +15,12 @@ export const articlePostValidation = (data: Express.Request) => {
   const schema = Joi.object({
     print_issn:
             Joi.string()
-                .min(6)
+                .min(0)
                 .required(),
     electronic_issn:
             Joi.string()
-                .min(6),
+                .min(0)
+                .required(),
     doi:
             Joi.string()
                 .min(6)
