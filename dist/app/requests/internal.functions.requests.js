@@ -1,10 +1,10 @@
-const internal = require('../requests/internal.requests');
-/**
- * Function which adds a journal using the interal API
- * @param {string} issn - issn for the journal to be added
- */
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+const internal_requests_1 = __importDefault(require("../requests/internal.requests"));
 module.exports = async function postJournalByISSN(issn) {
-    internal.post('/api/journals', { issn: issn }).then((res) => {
+    internal_requests_1.default.post('/api/journals', { issn: issn }).then((res) => {
         if (res.status == 200 && res.statusText == 'OK') {
             console.log('Journal added with ISSN ' + issn);
         }
@@ -25,3 +25,4 @@ module.exports = async function postJournalByISSN(issn) {
         ;
     });
 };
+//# sourceMappingURL=internal.functions.requests.js.map

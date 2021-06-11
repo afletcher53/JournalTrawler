@@ -3,13 +3,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const logger_1 = require("../loggers/logger");
 const models_1 = __importDefault(require("../models"));
-const Article = models_1.default.articles;
+const article_queue_1 = require("../queues/article.queue");
+const mongoose_service_1 = require("../requests/mongoose.service");
 const article_validation_1 = require("../validation/article.validation");
 const json_validation_1 = __importDefault(require("../validation/json.validation"));
-const article_queue_1 = require("../queues/article.queue");
-const getArticleByDOI_1 = require("./functions/getArticleByDOI");
-const logger_1 = require("../../logger");
+const Article = models_1.default.articles;
 exports.create = async (req, res) => {
     // Validate request
     const { error } = article_validation_1.articlePostValidation(req.body);
@@ -20,7 +20,7 @@ exports.create = async (req, res) => {
     }
     ;
     // check to see if already exists
-    const exists = await getArticleByDOI_1.getArticleByDOI(req.body.doi);
+    const exists = await mongoose_service_1.mongoCheckArticleExistsByDOI(req.body.doi);
     if (exists) {
         // Generate Error Message if article exists.
         const errorArticleExists = new Error('The Article with the DOI ' + req.body.doi + ' already exists');
@@ -41,6 +41,7 @@ exports.findAll = (req, res) => {
     const condition = title ?
         { title: { $regex: new RegExp(title), $options: 'i' } } : {};
     Article.find(condition)
+        .populate('journal', 'title publisher')
         .then((data) => {
         res.send(json_validation_1.default.serialize('article', data));
     })
@@ -165,3 +166,4 @@ exports.findByTitleAndDelete = (req, res) => {
         });
     });
 };
+//# sourceMappingURL=article.controller.js.map

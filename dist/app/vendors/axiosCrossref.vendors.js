@@ -5,9 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.http = void 0;
 const axios_1 = __importDefault(require("axios"));
-const crossref_config_1 = __importDefault(require("../config/crossref.config"));
-const logger_1 = require("../../logger");
 const axios_request_throttle_1 = __importDefault(require("axios-request-throttle"));
+const crossref_config_1 = require("../config/crossref.config");
+const logger_1 = require("../loggers/logger");
 var StatusCode;
 (function (StatusCode) {
     StatusCode[StatusCode["Unauthorized"] = 401] = "Unauthorized";
@@ -16,7 +16,7 @@ var StatusCode;
     StatusCode[StatusCode["InternalServerError"] = 500] = "InternalServerError";
     StatusCode[StatusCode["NotFound"] = 404] = "NotFound";
 })(StatusCode || (StatusCode = {}));
-const headers = crossref_config_1.default.headers;
+const headers = crossref_config_1.crossrefHeaders;
 class Http {
     instance = null;
     get http() {
@@ -24,7 +24,7 @@ class Http {
     }
     initHttp() {
         const http = axios_1.default.create({
-            baseURL: crossref_config_1.default.baseurl,
+            baseURL: crossref_config_1.crossrefBaseurl,
             headers,
             withCredentials: true,
         });
@@ -85,3 +85,4 @@ class Http {
     }
 }
 exports.http = new Http();
+//# sourceMappingURL=axiosCrossref.vendors.js.map

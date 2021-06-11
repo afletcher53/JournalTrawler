@@ -4,24 +4,29 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Article = void 0;
-const logger_1 = require("../../logger");
+const mongoose_1 = __importDefault(require("mongoose"));
+const logger_1 = require("../loggers/logger");
 const models_1 = __importDefault(require("../models"));
 const crossref_service_1 = require("../requests/crossref.service");
 const crossref_validation_1 = require("../validation/crossref.validation");
+const toId = mongoose_1.default.Types.ObjectId;
 exports.Article = models_1.default.articles;
 /**
  * Add Article Job to the redis queue
  * @param job from the queue calling it.
  */
 const articleProcess = async (job) => {
+    console.log(job.data);
     await getArticleByDOI(job.data.doi);
     var articleData = await crossref_service_1.fetchArticleByDOI(job.data.doi);
     //Validate the data. 
     const { error } = crossref_validation_1.articleCrossRefResponseValidation(articleData);
     if (error)
         throw Error(error.details[0].message);
+    //TODO: check to see that a journal exists in the mongodb (to prevent orphaned articles) TODO 
     //Generate the article Object.
-    const article = setArticleDetails(job.data.doi, job.data.print_issn, job.data.electronic_issn, articleData);
+    const article = setArticleDetails(job.data.doi, job.data.print_issn, job.data.electronic_issn, articleData, job.data.journal_id);
+    console.log(job.data.journal_id);
     article
         .save(article)
         .catch((err) => {
@@ -30,7 +35,7 @@ const articleProcess = async (job) => {
     });
 };
 exports.default = articleProcess;
-const setArticleDetails = (doi, printISSN, electronicISSN, articleData) => {
+const setArticleDetails = (doi, printISSN, electronicISSN, articleData, journal_id) => {
     let data = articleData.message;
     let license;
     if (articleData.message.hasOwnProperty('license'))
@@ -51,7 +56,8 @@ const setArticleDetails = (doi, printISSN, electronicISSN, articleData) => {
         url: data['URL'] ? data['URL'] : null,
         doi: data['DOI'] ? data['DOI'] : null,
         license: license ? license : null,
-        cr_parsed: false
+        cr_parsed: false,
+        journal: toId(journal_id)
     });
 };
 /**
@@ -97,3 +103,4 @@ async function getArticleByDOI(data) {
     }
     return value;
 }
+//# sourceMappingURL=article.process.js.map

@@ -1,33 +1,33 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-;
+const logger_1 = require("../loggers/logger");
 const article_queue_1 = require("../queues/article.queue");
-const logger_1 = require("../../logger");
 const crossref_service_1 = require("../requests/crossref.service");
 /**
  * Starts a Journal Process Job using Bull
  * @param job Incoming Job data
  */
 const journalProcess = async (job) => {
-    generateJobsFromISSN(job.data.issn);
+    generateJobsFromISSN(job.data.issn, job.data.journal_id);
 };
 exports.default = journalProcess;
 /**
  * Create Article jobs for all DOIS in ISSN
  * @param {String} issn to be searched on crossref
  */
-const generateJobsFromISSN = async (issn) => {
+const generateJobsFromISSN = async (issn, journalId) => {
     const DOIlist = await crossref_service_1.fetchDOIsFromISSN(encodeURI(issn));
-    await processArticles(DOIlist);
+    await processArticles(DOIlist, journalId);
 };
-const processArticles = async (DOIList) => {
+const processArticles = async (DOIList, journalId) => {
     let articleList = [];
     await Promise.all(DOIList.map(async (e) => {
         const { printISSN, electronicISSN } = getPrintAndElectronicISSN(e);
         const ArticleData = {
             doi: e['DOI'],
             print_issn: printISSN,
-            electronic_issn: electronicISSN
+            electronic_issn: electronicISSN,
+            journal_id: journalId
         };
         const articleJob = await article_queue_1.addArticle(ArticleData);
         articleList.push(articleJob);
@@ -55,3 +55,4 @@ const getPrintAndElectronicISSN = (issnObject) => {
         electronicISSN
     };
 };
+//# sourceMappingURL=journal.process.js.map

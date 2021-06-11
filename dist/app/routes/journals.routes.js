@@ -23,3 +23,4 @@ module.exports = (app) => {
     router.post('/multi', journals.bulkAdd);
     app.use('/api/journals', router);
 };
+//# sourceMappingURL=journals.routes.js.map

@@ -52,3 +52,4 @@ function modifyResponseBody(req, res, next) {
 }
 exports.modifyResponseBody = modifyResponseBody;
 module.exports = modifyResponseBody;
+//# sourceMappingURL=response.middleware.js.map

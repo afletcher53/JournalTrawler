@@ -1,8 +1,11 @@
+"use strict";
 /**
  * Function to return a models schema items as an array
  * @param {Model} Model - Mongoose model schema
  * @return {array} array containing all model schema items
  */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.createSchemaList = void 0;
 const createSchemaList = (Model) => {
     const array = [];
     array.push('id');
@@ -11,4 +14,5 @@ const createSchemaList = (Model) => {
     });
     return array;
 };
-module.exports.createSchemaList = createSchemaList;
+exports.createSchemaList = createSchemaList;
+//# sourceMappingURL=general.js.map

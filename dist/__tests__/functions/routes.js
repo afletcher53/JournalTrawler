@@ -18,3 +18,4 @@ function getByAPI(route, done) {
     });
 }
 module.exports.getByAPI = getByAPI;
+//# sourceMappingURL=routes.js.map

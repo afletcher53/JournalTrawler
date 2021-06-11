@@ -1,9 +1,9 @@
 // load ENV file
 require('dotenv').config();
 import express from 'express';
+import { systemLogger } from './app/loggers/logger';
 import db from './app/models';
 import wipeall from './app/scripts/wipe-data';
-import { mongoDBLogger, systemLogger } from './logger';
 const app = express();
 
 
@@ -23,11 +23,7 @@ db.mongoose
       process.exit();
     });
 
-db.mongoose.set('debug', function (collectionName: string, method: string, query: string, doc: any) {
-  console.log(`${collectionName}.${method}`, JSON.stringify(query), doc)
-  query = JSON.stringify(collectionName + '.' + method + '(' + JSON.stringify(query) + ',' + JSON.stringify(doc) + ")");
-  mongoDBLogger.info(query);  
-});
+db.mongoose.set('debug', true);
 
 // Main route
 app.get('/', (req: express.Request, res: express.Response) => {
@@ -40,14 +36,6 @@ app.get('/nuclearwipe', (req: express.Request, res: express.Response) => {
   res.json({"message": "Everything has been wipped"})
 });
 
-// 
-// // app.get('/test', (req: express.Request, res: express.Response) => {
-// //   const redis = new Redis();
-// //   redis.on('ready',function(){
-// //     res.json({"message" : redis.status})
-// //     });
- 
-// // });
 
 
 // Other routes

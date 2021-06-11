@@ -1,7 +1,7 @@
 const JSONAPISerializer = require('jsonapi-serializer').Serializer;
 import { createSchemaList } from '../app/formatting/general';
-import { Request, Response, NextFunction } from 'express';
 import db from '../app/models';
+
 const Journal = db.journals;
 const Article = db.articles;
 

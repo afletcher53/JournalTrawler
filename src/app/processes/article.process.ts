@@ -1,7 +1,8 @@
 
 import { Job } from 'bull';
-import { DOILogger } from '../../logger';
-import db, { mongoose } from '../models';
+import mongoose from 'mongoose';
+import { DOILogger } from '../loggers/logger';
+import db from '../models';
 import { fetchArticleByDOI } from '../requests/crossref.service';
 import { articleCrossRefResponseValidation } from '../validation/crossref.validation';
 const toId = mongoose.Types.ObjectId
@@ -37,7 +38,7 @@ const articleProcess = async (job:Job) => {
 
 export default articleProcess;
 
-const setArticleDetails = (doi: String, printISSN: string, electronicISSN: string, articleData: any, journal_id: string) => {
+const setArticleDetails = (doi: String, printISSN: any, electronicISSN: any, articleData: any, journal_id: string) => {
   let data = articleData.message;
   let license: String
   if(articleData.message.hasOwnProperty('license')) license = articleData.message.license[0]['URL']

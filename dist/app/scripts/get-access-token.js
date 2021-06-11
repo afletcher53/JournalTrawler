@@ -1,6 +1,6 @@
 const axios = require('axios');
 require('dotenv').config();
-const { auth0 } = require('../models/auth0.model');
+const { auth0 } = require('../models/auth0.model').default;
 /**
  * Function to get an access token from the Auth0 servers
  * @return {Promise} Returns the result of the axios promise to Auth0
@@ -25,3 +25,4 @@ const token = async () => {
     return tokenPromise;
 };
 module.exports.token = token;
+//# sourceMappingURL=get-access-token.js.map

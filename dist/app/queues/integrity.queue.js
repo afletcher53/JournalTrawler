@@ -49,3 +49,4 @@ integrityQueue.on('failed', (job, error) => {
     job_loggers_1.logJobFailed('article', job, error);
 });
 integrityQueue.process(integrity_process_1.default);
+//# sourceMappingURL=integrity.queue.js.map

@@ -1,6 +1,8 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const Service = require('../vendors/axios.vendors');
 const internalConfig = require('../config/internal.config');
-const { systemLogger } = require('../../logger');
+const { systemLogger } = require('../loggers/logger');
 // auth0 stuff
 // const {token} = require('../scripts/get-access-token');
 const internalaxios = new Service(internalConfig.baseurl, internalConfig.headers);
@@ -14,6 +16,7 @@ internalaxios.interceptors.request.use(async (config) => {
     systemLogger.info(textlog);
     return config;
 }, (error) => {
+    const textlog = `[${error}:]`;
     systemLogger.error(textlog);
     console.log(error);
     return Promise.reject(error);
@@ -27,4 +30,5 @@ internalaxios.interceptors.response.use(function (response) {
     systemLogger.error(textlog);
     return Promise.reject(error);
 });
-module.exports = internalaxios;
+exports.default = internalaxios;
+//# sourceMappingURL=internal.requests.js.map

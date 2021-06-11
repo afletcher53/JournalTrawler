@@ -18,6 +18,7 @@ const options = {
 
 
 const addArticle = async (data: any) => {
+  console.log(data)
   const job = await articleQueue.add(data, options);
   return job
 };
@@ -34,3 +35,4 @@ articleQueue.on('failed',  (job, error) => {
 articleQueue.process(articleProcess);
 
 export { addArticle, articleQueue };
+

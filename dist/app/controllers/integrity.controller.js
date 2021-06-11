@@ -4,14 +4,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const models_1 = __importDefault(require("../models"));
-const Integrity = models_1.default.integrity;
-const json_validation_1 = __importDefault(require("../validation/json.validation"));
-const journal_validation_1 = require("../validation/journal.validation");
 const integrity_queue_1 = require("../queues/integrity.queue");
-const getJournalByISSN_1 = require("./functions/getJournalByISSN");
+const mongoose_service_1 = require("../requests/mongoose.service");
+const journal_validation_1 = require("../validation/journal.validation");
+const json_validation_1 = __importDefault(require("../validation/json.validation"));
+const Integrity = models_1.default.integrity;
 // returns all integrities 
 exports.findAll = async (req, res) => {
     Integrity.find()
+        .populate('journal')
         .then((data) => {
         res.send(json_validation_1.default.serialize('integrity', data));
     })
@@ -21,7 +22,7 @@ exports.findAll = async (req, res) => {
         });
     });
 };
-// Create a job to check the integrity of an ISSN
+// Create a job to check missing DOIS of an ISSN
 exports.createISSNforDOI = async (req, res) => {
     req.body.issn = req.body.issn.replace(/[\u200c\u200b]/g, '');
     //check to see if the requested journal is truthy
@@ -33,7 +34,7 @@ exports.createISSNforDOI = async (req, res) => {
     }
     ;
     //check to see if the journal exists on the database
-    const checkJournalExistsMongoDB = await getJournalByISSN_1.getJournalByISSN(req.body.issn);
+    const checkJournalExistsMongoDB = await mongoose_service_1.mongoCheckJournalExistsByISSN(req.body.issn);
     if (!checkJournalExistsMongoDB) {
         return res.status(400)
             .send("The journal does not exist in the database");
@@ -41,7 +42,63 @@ exports.createISSNforDOI = async (req, res) => {
     ;
     // Add job from here
     const jobData = {
-        issn: req.body.issn
+        issn: req.body.issn,
+        code: 1
+    };
+    integrity_queue_1.addIntegrity(jobData);
+    res.status(200).send({ message: "Integrity checks now are being performed on this issn and should be available shortly" });
+};
+// Create a job to check the data completeness of an ISSN
+exports.createISSNforMissing = async (req, res) => {
+    req.body.issn = req.body.issn.replace(/[\u200c\u200b]/g, '');
+    //check to see if the requested journal is truthy
+    const { error } = journal_validation_1.journalPostValidation(req.body);
+    if (error) {
+        const errorJournalValidation = new Error(error.details[0].message);
+        return res.status(400)
+            .send(json_validation_1.default.serializeError(errorJournalValidation));
+    }
+    ;
+    //check to see if the journal exists on the database
+    const checkJournalExistsMongoDB = await mongoose_service_1.mongoCheckJournalExistsByISSN(req.body.issn);
+    if (!checkJournalExistsMongoDB) {
+        return res.status(400)
+            .send("The journal does not exist in the database");
+    }
+    ;
+    // Add job from here
+    const jobData = {
+        issn: req.body.issn,
+        code: 2
+    };
+    integrity_queue_1.addIntegrity(jobData);
+    res.status(200).send({ message: "Integrity checks now are being performed on this issn and should be available shortly" });
+};
+exports.updateISSN = async (req, res) => {
+    if (req.body.issn == undefined) {
+        return res.status(400)
+            .send(json_validation_1.default.serializeError(new Error('No issn supplied in body')));
+    }
+    req.body.issn = req.body.issn.replace(/[\u200c\u200b]/g, '');
+    //check to see if the requested journal is truthy
+    const { error } = journal_validation_1.journalPostValidation(req.body);
+    if (error) {
+        const errorJournalValidation = new Error(error.details[0].message);
+        return res.status(400)
+            .send(json_validation_1.default.serializeError(errorJournalValidation));
+    }
+    ;
+    //check to see if the journal exists on the database
+    const checkJournalExistsMongoDB = await mongoose_service_1.mongoCheckJournalExistsByISSN(req.body.issn);
+    if (!checkJournalExistsMongoDB) {
+        return res.status(400)
+            .send("The journal does not exist in the database");
+    }
+    ;
+    // Add job from here
+    const jobData = {
+        issn: req.body.issn,
+        code: 3
     };
     integrity_queue_1.addIntegrity(jobData);
     res.status(200).send({ message: "Integrity checks now are being performed on this issn and should be available shortly" });
@@ -64,7 +121,7 @@ exports.findOne = (req, res) => {
 // Find all integrity checks via ISSN 
 exports.findAllViaISSN = async (req, res) => {
     //check to see if the journal exists on the database
-    const checkJournalExistsMongoDB = await getJournalByISSN_1.getJournalByISSN(req.params.id);
+    const checkJournalExistsMongoDB = await mongoose_service_1.mongoCheckJournalExistsByISSN(req.params.id);
     if (!checkJournalExistsMongoDB) {
         return res.status(400)
             .send("The Journal does not exist in the database");
@@ -99,3 +156,4 @@ exports.deleteAll = (req, res) => {
         });
     });
 };
+//# sourceMappingURL=integrity.controller.js.map

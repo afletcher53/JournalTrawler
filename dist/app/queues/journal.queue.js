@@ -48,3 +48,4 @@ journalQueue.on('failed', (job, error) => {
     job_loggers_1.logJobFailed('journal', job, error);
 });
 journalQueue.process(journal_process_1.default);
+//# sourceMappingURL=journal.queue.js.map

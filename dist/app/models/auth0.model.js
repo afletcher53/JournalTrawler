@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 require('dotenv').config();
 const auth0 = {
     clientId: process.env.AUTH0_CLIENT_ID,
@@ -5,4 +7,5 @@ const auth0 = {
     url: process.env.AUTH0_URL,
     audience: process.env.AUTH0_AUDIENCE,
 };
-module.exports = { auth0 };
+exports.default = { auth0 };
+//# sourceMappingURL=auth0.model.js.map

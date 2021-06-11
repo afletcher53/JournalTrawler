@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import { NextFunction, Request, Response } from 'express';
-import { systemLogger } from '../logger';
+import { systemLogger } from '../app/loggers/logger';
 const getActualRequestDurationInMilliseconds = (start: [number, number]) => {
   const NS_PER_SEC = 1e9; // convert to nanoseconds
   const NS_TO_MS = 1e6; // convert to milliseconds

@@ -5,6 +5,10 @@ module.exports = (app) => {
     router.get('/', integrities.findAll);
     // Check issn for DOIs
     router.post('/issn-doi', integrities.createISSNforDOI);
+    // Check issn for missing fields
+    router.post('/issn-missing', integrities.createISSNforMissing);
+    // Check issn for missing fields
+    router.post('/issn-update', integrities.updateISSN);
     // Retrieve a single journal with id
     router.get('/:id', integrities.findOne);
     // Retrieve all integrity checks for specific ISSN
@@ -13,3 +17,4 @@ module.exports = (app) => {
     router.delete('/', integrities.deleteAll);
     app.use('/api/integrities', router);
 };
+//# sourceMappingURL=integrities.routes.js.map

@@ -18,3 +18,4 @@ module.exports = (app) => {
     router.delete('/', articles.deleteAll);
     app.use('/api/articles', router);
 };
+//# sourceMappingURL=articles.routes.js.map

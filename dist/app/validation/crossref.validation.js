@@ -123,3 +123,4 @@ const getJournalData = async (issn) => {
     return journal;
 };
 exports.getJournalData = getJournalData;
+//# sourceMappingURL=crossref.validation.js.map

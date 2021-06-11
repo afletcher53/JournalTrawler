@@ -4,9 +4,11 @@ exports.journalISSNSingleValidation = exports.journalMultipleValidation = export
 const Joi = require('@hapi/joi');
 Joi.objectId = require('joi-objectid')(Joi);
 const journalPostValidation = (data) => {
+    const pattern = /\b[\S]{4}\-[\S]{4}\b/;
     const schema = Joi.object({
         issn: Joi.string()
             .min(6)
+            .pattern(new RegExp(pattern))
             .required(),
         title: Joi.string()
             .min(6),
@@ -45,3 +47,4 @@ const journalISSNSingleValidation = (data) => {
     return schema.validate(data);
 };
 exports.journalISSNSingleValidation = journalISSNSingleValidation;
+//# sourceMappingURL=journal.validation.js.map

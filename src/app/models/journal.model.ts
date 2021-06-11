@@ -1,3 +1,4 @@
+import { mongoDBLogger } from "../loggers/logger";
 
 export default (mongoose) => {
   // eslint-disable-next-line new-cap
@@ -20,11 +21,25 @@ export default (mongoose) => {
       },
       {timestamps: true},
   );
+  
 
   schema.method('toJSON', function() {
     const {__v, _id, ...object} = this.toObject();
     object.id = _id;
     return object;
+  });
+
+  schema.post('init', function(doc) {
+    mongoDBLogger.info(doc._id + 'Journal has been initialized from the db');
+  });
+  schema.post('validate', function(doc) {
+    mongoDBLogger.info(doc._id + 'Journal has been validated but not saved');
+  });
+  schema.post('save', function(doc) {
+    mongoDBLogger.info(doc._id + 'Journal has been saved');
+  });
+  schema.post('remove', function(doc) {
+    mongoDBLogger.info(doc._id + 'Journal has been removed');
   });
 
   const Journal = mongoose.model('journal', schema);

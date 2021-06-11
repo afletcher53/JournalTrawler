@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const logger_1 = require("../loggers/logger");
 exports.default = (mongoose) => {
     // eslint-disable-next-line new-cap
     const schema = mongoose.Schema({
@@ -22,6 +23,19 @@ exports.default = (mongoose) => {
         object.id = _id;
         return object;
     });
+    schema.post('init', function (doc) {
+        logger_1.mongoDBLogger.info(doc._id + 'Journal has been initialized from the db');
+    });
+    schema.post('validate', function (doc) {
+        logger_1.mongoDBLogger.info(doc._id + 'Journal has been validated but not saved');
+    });
+    schema.post('save', function (doc) {
+        logger_1.mongoDBLogger.info(doc._id + 'Journal has been saved');
+    });
+    schema.post('remove', function (doc) {
+        logger_1.mongoDBLogger.info(doc._id + 'Journal has been removed');
+    });
     const Journal = mongoose.model('journal', schema);
     return Journal;
 };
+//# sourceMappingURL=journal.model.js.map

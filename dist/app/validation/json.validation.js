@@ -7,7 +7,7 @@ const json_api_serializer_1 = __importDefault(require("json-api-serializer"));
 const Serializer = new json_api_serializer_1.default();
 Serializer.register('article', {
     id: 'id',
-    whitelist: ['doi', 'title', 'journal', 'abstract', 'license'],
+    whitelist: ['doi', 'title', 'journal', 'abstract', 'license', 'journal'],
     links: {
         // An object or a function that describes links.
         self: function (data) {
@@ -29,7 +29,7 @@ Serializer.register('article', {
 });
 Serializer.register('integrity', {
     id: 'id',
-    whitelist: ['data', 'issn', 'message', 'createdAt', 'updatedAt'],
+    whitelist: ['data', 'issn', 'message', 'journal', 'createdAt', 'updatedAt'],
     links: {
         // An object or a function that describes links.
         self: function (data) {
@@ -54,7 +54,7 @@ Serializer.register('journal', {
     whitelist: ['title', 'journal',
         'issn', 'issn_electronic', 'issn_print', 'publisher', 'subject',
         'asjc', 'counts_totaldois', 'counts_currentdois', 'counts_backfiledois',
-        'createdAt', 'updatedAt', 'cr_parsed'],
+        'createdAt', 'updatedAt', 'cr_parsed', 'articles', 'totalArticles'],
     links: {
         // An object or a function that describes links.
         self: function (data) {
@@ -76,3 +76,4 @@ Serializer.register('journal', {
 });
 exports.default = Serializer;
 module.exports = Serializer;
+//# sourceMappingURL=json.validation.js.map

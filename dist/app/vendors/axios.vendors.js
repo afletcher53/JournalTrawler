@@ -18,3 +18,4 @@ module.exports = class Service {
         Object.assign(this, service);
     }
 };
+//# sourceMappingURL=axios.vendors.js.map

@@ -51,11 +51,4 @@ exports.DOILogger = winston_1.createLogger({
         new winston_1.transports.File({ filename: 'logs/activity/doi.log', level: 'info' }),
     ],
 });
-// module.exports = {
-//   articleLogger: articleLogger,
-//   systemLogger: systemLogger,
-//   crossRefLogger: crossRefLogger,
-//   DOILogger: DOILogger,
-//   jobLogger: jobLogger,
-//   mongoDBLogger: mongoDBLogger,
-// };
+//# sourceMappingURL=logger.js.map

@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
-import crossrefConfig from '../config/crossref.config';
-import { crossRefLogger } from '../../logger';
 import axiosThrottle from 'axios-request-throttle';
+import { crossrefBaseurl, crossrefHeaders } from '../config/crossref.config';
+import { crossRefLogger } from '../loggers/logger';
 
 enum StatusCode {
   Unauthorized = 401,
@@ -11,7 +11,7 @@ enum StatusCode {
   NotFound = 404,
 }
 
-const headers: Readonly<Record<string, string | boolean>> = crossrefConfig.headers;
+const headers: Readonly<Record<string, string | boolean>> = crossrefHeaders;
 
 class Http {
   private instance: AxiosInstance | null = null;
@@ -22,7 +22,7 @@ class Http {
 
   initHttp() {
     const http = axios.create({
-      baseURL: crossrefConfig.baseurl,
+      baseURL: crossrefBaseurl,
       headers,
       withCredentials: true,
     });

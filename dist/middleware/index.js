@@ -3,10 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const logrequests_middleware_1 = __importDefault(require("./logrequests.middleware"));
-const helmet_1 = __importDefault(require("helmet"));
-const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
+const express_1 = __importDefault(require("express"));
+const helmet_1 = __importDefault(require("helmet"));
+const logrequests_middleware_1 = __importDefault(require("./logrequests.middleware"));
 // const jwt = require('express-jwt');
 // const jwks = require('jwks-rsa');
 // const jwtCheck = jwt({
@@ -32,3 +32,4 @@ module.exports = [
     //   jwtCheck,
 ];
 //TODO: Middlewear to check connection to the REDIS database
+//# sourceMappingURL=index.js.map

@@ -17,10 +17,11 @@ const options = {
 const articlePostValidation = (data) => {
     const schema = joi_1.default.object({
         print_issn: joi_1.default.string()
-            .min(6)
+            .min(0)
             .required(),
         electronic_issn: joi_1.default.string()
-            .min(6),
+            .min(0)
+            .required(),
         doi: joi_1.default.string()
             .min(6)
             .required(),
@@ -38,3 +39,4 @@ const articleSingleValidation = (data) => {
     return schema.validate(data, options);
 };
 exports.articleSingleValidation = articleSingleValidation;
+//# sourceMappingURL=article.validation.js.map

@@ -1,6 +1,6 @@
 
 import { Job } from 'bull';
-import { DOILogger } from '../../logger';
+import { DOILogger } from '../loggers/logger';
 import { addArticle } from '../queues/article.queue';
 import { fetchDOIsFromISSN } from '../requests/crossref.service';
 

@@ -22,15 +22,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const fs_1 = __importDefault(require("fs"));
+const http_1 = __importDefault(require("http"));
+const https_1 = __importDefault(require("https"));
+const ioredis_1 = __importDefault(require("ioredis"));
+const path_1 = __importDefault(require("path"));
 const app_1 = __importDefault(require("./app"));
+const redisconfig = __importStar(require("./app/config/redis.config"));
 const PORT = process.env.PORT || 8080;
 const SSLPORT = process.env.HTTPSPORT || 8083;
-const path_1 = __importDefault(require("path"));
-const https_1 = __importDefault(require("https"));
-const http_1 = __importDefault(require("http"));
-const fs_1 = __importDefault(require("fs"));
-const ioredis_1 = __importDefault(require("ioredis"));
-const redisconfig = __importStar(require("./app/config/redis.config"));
 const redis = new ioredis_1.default(redisconfig.config.port, redisconfig.config.host);
 redis.on('connect', function () {
     const httpServer = http_1.default.createServer(app_1.default);
@@ -50,3 +50,4 @@ redis.on('connect', function () {
         console.log(e);
     }
 });
+//# sourceMappingURL=server.js.map

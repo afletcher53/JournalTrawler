@@ -9,6 +9,12 @@ module.exports = (app) => {
     // Check issn for DOIs
     router.post('/issn-doi', integrities.createISSNforDOI);
 
+    // Check issn for missing fields
+    router.post('/issn-missing', integrities.createISSNforMissing);
+
+    // Check issn for missing fields
+    router.post('/issn-update', integrities.updateISSN);
+
     // Retrieve a single journal with id
     router.get('/:id', integrities.findOne);
 

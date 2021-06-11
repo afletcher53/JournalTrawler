@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const chalk_1 = __importDefault(require("chalk"));
-const logger_1 = require("../logger");
+const logger_1 = require("../app/loggers/logger");
 const getActualRequestDurationInMilliseconds = (start) => {
     const NS_PER_SEC = 1e9; // convert to nanoseconds
     const NS_TO_MS = 1e6; // convert to milliseconds
@@ -36,8 +36,10 @@ const logRequests = (req, res, next) => {
     const start = process.hrtime();
     const durationInMilliseconds = getActualRequestDurationInMilliseconds(start);
     const log = `[${chalk_1.default.blue(formatted_date)}] ${method}:${url} ${status} ${chalk_1.default.red(durationInMilliseconds.toLocaleString() + 'ms')}`;
+    console.log(log);
     const textlog = `[${method}:${url} ${status}] ${durationInMilliseconds.toLocaleString() + 'ms'}`;
     logger_1.systemLogger.info(textlog);
     next();
 };
 exports.default = logRequests;
+//# sourceMappingURL=logrequests.middleware.js.map

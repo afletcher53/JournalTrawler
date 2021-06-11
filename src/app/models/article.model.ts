@@ -1,3 +1,5 @@
+import { mongoDBLogger } from "../loggers/logger";
+
 /* eslint-disable no-invalid-this */
 export default (mongoose) => {
   // eslint-disable-next-line new-cap
@@ -9,7 +11,6 @@ export default (mongoose) => {
         journal_issn_print: String,
         journal_issn_electronic: String,
         crossref_url: String,
-        tags: String,
         publisher: String,
         reference_count: Number,
         is_referenced_by_count: Number,
@@ -31,6 +32,20 @@ export default (mongoose) => {
     const {__v, _id, ...object} = this.toObject();
     object.id = _id;
     return object;
+  });
+
+  
+  schema.post('init', function(doc) {
+    mongoDBLogger.info(doc._id + 'Article has been initialized from the db');
+  });
+  schema.post('validate', function(doc) {
+    mongoDBLogger.info(doc._id + 'Article has been validated but not saved');
+  });
+  schema.post('save', function(doc) {
+    mongoDBLogger.info(doc._id + 'Article has been saved');
+  });
+  schema.post('remove', function(doc) {
+    mongoDBLogger.info(doc._id + 'Article has been removed');
   });
 
   const Article = mongoose.model('article', schema);

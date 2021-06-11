@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const logger_1 = require("../loggers/logger");
 /* eslint-disable no-invalid-this */
 exports.default = (mongoose) => {
     // eslint-disable-next-line new-cap
@@ -10,7 +11,6 @@ exports.default = (mongoose) => {
         journal_issn_print: String,
         journal_issn_electronic: String,
         crossref_url: String,
-        tags: String,
         publisher: String,
         reference_count: Number,
         is_referenced_by_count: Number,
@@ -20,6 +20,10 @@ exports.default = (mongoose) => {
         published_print: Date,
         license: String,
         cr_parsed: Boolean,
+        journal: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'journal'
+        }
     }, { timestamps: true });
     schema.method('toJSON', function () {
         // eslint-disable-next-line no-unused-vars
@@ -27,6 +31,19 @@ exports.default = (mongoose) => {
         object.id = _id;
         return object;
     });
+    schema.post('init', function (doc) {
+        logger_1.mongoDBLogger.info(doc._id + 'Article has been initialized from the db');
+    });
+    schema.post('validate', function (doc) {
+        logger_1.mongoDBLogger.info(doc._id + 'Article has been validated but not saved');
+    });
+    schema.post('save', function (doc) {
+        logger_1.mongoDBLogger.info(doc._id + 'Article has been saved');
+    });
+    schema.post('remove', function (doc) {
+        logger_1.mongoDBLogger.info(doc._id + 'Article has been removed');
+    });
     const Article = mongoose.model('article', schema);
     return Article;
 };
+//# sourceMappingURL=article.model.js.map

@@ -1,6 +1,6 @@
 const axios = require('axios');
 require('dotenv').config();
-const {auth0} = require('../models/auth0.model');
+const {auth0} = require('../models/auth0.model').default;
 
 /**
  * Function to get an access token from the Auth0 servers

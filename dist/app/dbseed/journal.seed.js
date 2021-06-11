@@ -8,3 +8,4 @@ async function runall() {
     }
 }
 runall();
+//# sourceMappingURL=journal.seed.js.map

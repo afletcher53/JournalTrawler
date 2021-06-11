@@ -2,11 +2,12 @@ const Joi = require('@hapi/joi');
 Joi.objectId = require('joi-objectid')(Joi);
 
 export const journalPostValidation = (data: Express.Request) => {
-
+  const pattern = /\b[\S]{4}\-[\S]{4}\b/
   const schema = Joi.object({
     issn:
             Joi.string()
                 .min(6)
+                .pattern(new RegExp(pattern))
                 .required(),
     title:
             Joi.string()

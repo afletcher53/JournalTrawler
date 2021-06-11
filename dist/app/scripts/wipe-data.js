@@ -65,3 +65,4 @@ function rimraf(dir_path) {
     });
 }
 exports.default = wipeall;
+//# sourceMappingURL=wipe-data.js.map

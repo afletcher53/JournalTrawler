@@ -1,9 +1,10 @@
-import { articleLogger } from '../../logger';
+import { articleLogger } from '../loggers/logger';
 import db from '../models';
 import { addArticle } from '../queues/article.queue';
+import { mongoCheckArticleExistsByDOI } from '../requests/mongoose.service';
 import { articlePostValidation, articleSingleValidation } from '../validation/article.validation';
 import serializer from '../validation/json.validation';
-import { getArticleByDOI } from './functions/getArticleByDOI';
+
 const Article = db.articles;
 
 exports.create = async (req, res) => {
@@ -16,7 +17,7 @@ exports.create = async (req, res) => {
   };
 
   // check to see if already exists
-  const exists = await getArticleByDOI(req.body.doi);
+  const exists = await mongoCheckArticleExistsByDOI(req.body.doi);
   if (exists) {
     // Generate Error Message if article exists.
     const errorArticleExists =
@@ -24,14 +25,12 @@ exports.create = async (req, res) => {
     return res.status(400)
         .send(serializer.serializeError(errorArticleExists));
   }
-
   const ArticleData = {
     doi: req.body.doi,
     print_issn: req.body.print_issn,
     electronic_issn: req.body.electronic_issn,
   };
   addArticle(ArticleData);
-
   res.status(200).send({message: 'The worker is working on it'});
 };
 

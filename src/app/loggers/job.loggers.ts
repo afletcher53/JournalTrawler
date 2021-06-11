@@ -1,5 +1,5 @@
 import Bull from "bull";
-import { jobLogger } from '../../logger';
+import { jobLogger } from './logger';
 
 export function logJobFailed(type: string, job: Bull.Job<any>, error: Error) {
   jobLogger.error(`${type} Job failed with ID: ${job}] [${error}]`);
