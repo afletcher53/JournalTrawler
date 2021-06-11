@@ -1,18 +1,18 @@
 import db from '../models';
-export const Journal = db.journals;
-import {journalPostValidation,
-  journalSingleValidation,
-  journalMultipleValidation} from '../validation/journal.validation';
-import serializer from '../validation/json.validation';
-import {checkExists, getJournalData} from '../validation/crossref.validation';
-import {createErrorExists, createErrorExistsCrossRef, createErrorGeneric}
-  from '../validation/error.validation';
-
+import { addJournal } from '../queues/journal.queue';
 import postJournalByISSN from '../requests/internal.functions.requests';
-import {addJournal} from '../queues/journal.queue';
-import {findJournal} from './functions/findJournal';
+import { checkExists, getJournalData } from '../validation/crossref.validation';
+import { createErrorExistsCrossRef, createErrorGeneric } from '../validation/error.validation';
+import {
+  journalMultipleValidation, journalPostValidation,
+  journalSingleValidation
+} from '../validation/journal.validation';
+import serializer from '../validation/json.validation';
+import { findJournal } from './functions/findJournal';
+const Journal = db.journals;
 
-const {getJournalByISSN} = require('./functions/getJournalByISSN');
+
+// const {getJournalByISSN} = require('./functions/getJournalByISSN');
 
 // Create and Save a new Journal
 exports.create = async (req, res) => {
@@ -26,11 +26,11 @@ exports.create = async (req, res) => {
   };
 
   // check to see if already exists in MongooseDB
-  const checkJournalExistsMongoDB = await getJournalByISSN(req.body.issn);
-  if (checkJournalExistsMongoDB) {
-    return res.status(400)
-        .send(createErrorExists(req.body.issn, 'Journal'));
-  };
+  // const checkJournalExistsMongoDB = await getJournalByISSN(req.body.issn);
+  // if (checkJournalExistsMongoDB) {
+  //   return res.status(400)
+  //       .send(createErrorExists(req.body.issn, 'Journal'));
+  // };
 
   // check to see if ISSN exists on crossref
   const checkCrossRefExists = await checkExists(req.body.issn);
@@ -46,9 +46,12 @@ exports.create = async (req, res) => {
     journal
         .save(journal.data)
         .then((data) => {
+          console.log(data._id)
           const journalISSN = {
-            issn: req.body.issn,
+               journal_id: data._id, 
+               issn: req.body.issn,
           };
+          console.log(journalISSN)
           addJournal(journalISSN);
           res.send(serializer.serialize('journal', data));
         })

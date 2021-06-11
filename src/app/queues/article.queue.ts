@@ -1,7 +1,7 @@
 import Bull from "bull";
-import articleProcess from '../processes/article.process';
-import * as redis from '../config/redis.config'
+import * as redis from '../config/redis.config';
 import { logJobCompleted, logJobFailed } from "../loggers/job.loggers";
+import articleProcess from '../processes/article.process';
 
 const articleQueue = new Bull('articleQueue', { 
   redis: {
@@ -33,4 +33,4 @@ articleQueue.on('failed',  (job, error) => {
 
 articleQueue.process(articleProcess);
 
-export { addArticle, articleQueue}
+export { addArticle, articleQueue };

@@ -1,14 +1,14 @@
 
 'use strict';
+import fs from 'fs';
+import http from 'http';
+import https from 'https';
+import Redis from "ioredis";
+import path from 'path';
 import app from './app';
+import * as redisconfig from './app/config/redis.config';
 const PORT = process.env.PORT || 8080;
 const SSLPORT = process.env.HTTPSPORT || 8083;
-import path from 'path';
-import https from 'https';
-import http from 'http';
-import fs from 'fs';
-import Redis from "ioredis";
-import * as redisconfig from './app/config/redis.config'
 const redis = new Redis(redisconfig.config.port, redisconfig.config.host);
 
 redis.on('connect', function () { 

@@ -1,10 +1,10 @@
-import db from '../models';
-const Article = db.articles;
-import { articleSingleValidation, articlePostValidation } from '../validation/article.validation';
-import serializer from '../validation/json.validation';
-import { addArticle } from '../queues/article.queue';
-import { getArticleByDOI } from './functions/getArticleByDOI';
 import { articleLogger } from '../../logger';
+import db from '../models';
+import { addArticle } from '../queues/article.queue';
+import { articlePostValidation, articleSingleValidation } from '../validation/article.validation';
+import serializer from '../validation/json.validation';
+import { getArticleByDOI } from './functions/getArticleByDOI';
+const Article = db.articles;
 
 exports.create = async (req, res) => {
   // Validate request
@@ -42,6 +42,7 @@ exports.findAll = (req, res) => {
   {title: {$regex: new RegExp(title), $options: 'i'}} : {};
 
   Article.find(condition)
+      .populate('journal', 'title publisher')
       .then((data) => {
         res.send(serializer.serialize('article', data));
       })

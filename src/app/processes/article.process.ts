@@ -1,10 +1,10 @@
 
-import {Job} from 'bull';
+import { Job } from 'bull';
 import { DOILogger } from '../../logger';
-import { getJournalByISSN } from '../controllers/functions/getJournalByISSN';
-import db from '../models';
+import db, { mongoose } from '../models';
 import { fetchArticleByDOI } from '../requests/crossref.service';
 import { articleCrossRefResponseValidation } from '../validation/crossref.validation';
+const toId = mongoose.Types.ObjectId
 export const Article = db.articles;
 
 /**
@@ -12,6 +12,7 @@ export const Article = db.articles;
  * @param job from the queue calling it.
  */
 const articleProcess = async (job:Job) => {
+  console.log(job.data)
   await getArticleByDOI(job.data.doi);
   var articleData: any = await fetchArticleByDOI(job.data.doi)
  
@@ -23,8 +24,8 @@ const articleProcess = async (job:Job) => {
 
 
   //Generate the article Object.
-  const article = setArticleDetails(job.data.doi, job.data.print_issn, job.data.electronic_issn, articleData);
-
+  const article = setArticleDetails(job.data.doi, job.data.print_issn, job.data.electronic_issn, articleData, job.data.journal_id);
+  console.log(job.data.journal_id)
   article
       .save(article)
       .catch((err: Error) => {
@@ -36,7 +37,7 @@ const articleProcess = async (job:Job) => {
 
 export default articleProcess;
 
-const setArticleDetails = (doi: String, printISSN: string, electronicISSN: string, articleData: any) => {
+const setArticleDetails = (doi: String, printISSN: string, electronicISSN: string, articleData: any, journal_id: string) => {
   let data = articleData.message;
   let license: String
   if(articleData.message.hasOwnProperty('license')) license = articleData.message.license[0]['URL']
@@ -57,7 +58,8 @@ const setArticleDetails = (doi: String, printISSN: string, electronicISSN: strin
     url: data['URL'] ? data['URL'] : null,
     doi: data['DOI'] ? data['DOI'] : null,
     license: license ? license  : null,
-    cr_parsed: false
+    cr_parsed: false,
+    journal: toId(journal_id)
   });
 }
 

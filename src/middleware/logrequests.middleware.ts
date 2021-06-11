@@ -1,6 +1,6 @@
 import chalk from 'chalk';
+import { NextFunction, Request, Response } from 'express';
 import { systemLogger } from '../logger';
-import { Request, Response, NextFunction } from 'express';
 const getActualRequestDurationInMilliseconds = (start: [number, number]) => {
   const NS_PER_SEC = 1e9; // convert to nanoseconds
   const NS_TO_MS = 1e6; // convert to milliseconds
@@ -35,6 +35,7 @@ const logRequests = (req: Request, res: Response, next: NextFunction) => {
   const start = process.hrtime();
   const durationInMilliseconds = getActualRequestDurationInMilliseconds(start);
   const log = `[${chalk.blue(formatted_date)}] ${method}:${url} ${status} ${chalk.red(durationInMilliseconds.toLocaleString() + 'ms')}`;
+  console.log(log)
   const textlog = `[${method}:${url} ${status}] ${durationInMilliseconds.toLocaleString() + 'ms'}`;
   systemLogger.info(textlog);
   next();

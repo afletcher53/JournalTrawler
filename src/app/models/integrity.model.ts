@@ -8,6 +8,10 @@ export default (mongoose) => {
         code: Number,
         message: String,
         data: Object,
+        journal: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'journal'
+        }
       },
       {timestamps: true},
   );

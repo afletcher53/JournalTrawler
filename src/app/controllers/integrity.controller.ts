@@ -1,14 +1,15 @@
-import db from '../models';
-const Integrity = db.integrity;
-import serializer from '../validation/json.validation';
 import express from 'express';
-import { journalPostValidation } from '../validation/journal.validation';
+import db from '../models';
 import { addIntegrity } from '../queues/integrity.queue';
+import { journalPostValidation } from '../validation/journal.validation';
+import serializer from '../validation/json.validation';
 import { getJournalByISSN } from './functions/getJournalByISSN';
+const Integrity = db.integrity;
 
 // returns all integrities 
 exports.findAll = async (req: express.Request, res: express.Response) => {
   Integrity.find()
+  .populate('journal')
       .then((data) => {
         res.send(serializer.serialize('integrity', data));
       })

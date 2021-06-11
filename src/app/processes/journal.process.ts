@@ -1,8 +1,8 @@
 
-import { Job } from 'bull';;
-import { addArticle } from '../queues/article.queue';
+import { Job } from 'bull';
 import { DOILogger } from '../../logger';
-import { fetchDOIsFromISSN, fetchJournalMetadataByISSN } from '../requests/crossref.service';
+import { addArticle } from '../queues/article.queue';
+import { fetchDOIsFromISSN } from '../requests/crossref.service';
 
 
 /**
@@ -10,7 +10,7 @@ import { fetchDOIsFromISSN, fetchJournalMetadataByISSN } from '../requests/cross
  * @param job Incoming Job data
  */
 const journalProcess = async (job: Job) => {
-  generateJobsFromISSN(job.data.issn)
+  generateJobsFromISSN(job.data.issn, job.data.journal_id)
 };
 
 export default journalProcess;
@@ -19,12 +19,12 @@ export default journalProcess;
  * Create Article jobs for all DOIS in ISSN 
  * @param {String} issn to be searched on crossref
  */
-const generateJobsFromISSN = async(issn: string) => {
+const generateJobsFromISSN = async(issn: string, journalId: string) => {
   const DOIlist = await fetchDOIsFromISSN(encodeURI(issn))
-  await processArticles(DOIlist)
+  await processArticles(DOIlist, journalId)
 }
 
-const processArticles = async(DOIList) => {
+const processArticles = async(DOIList: any, journalId: string) => {
   let articleList = []
 
   await Promise.all(DOIList.map(async (e: Object) => {
@@ -32,7 +32,8 @@ const processArticles = async(DOIList) => {
     const ArticleData = {
       doi: e['DOI'],
       print_issn: printISSN,
-      electronic_issn: electronicISSN
+      electronic_issn: electronicISSN,
+      journal_id: journalId
     };
     const articleJob = await addArticle(ArticleData)
     articleList.push(articleJob)

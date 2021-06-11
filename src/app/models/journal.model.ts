@@ -16,6 +16,7 @@ export default (mongoose) => {
         counts_backfiledois: Number,
         cr_last_status_check_time: Date,
         cr_parsed: Boolean,
+        
       },
       {timestamps: true},
   );

@@ -1,12 +1,10 @@
 // load ENV file
 require('dotenv').config();
-import { systemLogger, mongoDBLogger } from './logger';
 import express from 'express';
-const app = express();
 import db from './app/models';
 import wipeall from './app/scripts/wipe-data';
-import Redis from "ioredis";
-const redis = new Redis();
+import { mongoDBLogger, systemLogger } from './logger';
+const app = express();
 
 
 // Middlewares

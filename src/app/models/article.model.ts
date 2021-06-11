@@ -19,6 +19,10 @@ export default (mongoose) => {
         published_print: Date,
         license: String,
         cr_parsed: Boolean,
+        journal: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'journal'
+        }
       },
       {timestamps: true},
   );

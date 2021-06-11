@@ -31,8 +31,8 @@ export const fetchJournalByISSN = async (issn: String): Promise<any> => {
 }
 
 export const fetchDOIsFromISSN = async (issn: String): Promise<Article[]> => {
-  // const data = await getDOIsfromISSNSample(issn, 20)
-  const data = await getDOIsfromISSN(issn)
+  const data = await getDOIsfromISSNSample(issn, 5)
+  // const data = await getDOIsfromISSN(issn)
   return data
 };
 
@@ -44,17 +44,17 @@ export const fetchDOIsFromISSN = async (issn: String): Promise<Article[]> => {
  * @param {List} data List of DOIS generated from API search
  * @returns {List} data List of DOIS from the CrossRefAPISearch 
  */
-const getDOIsfromISSN = async(issn: String, rows?: Number, cursor?: string, data: any = []) => {
-  if (cursor == undefined) cursor = '*'
-  if (rows == undefined) rows = 1000
-  cursor = cursor.toString()
-  let url = '/journals/' + issn + '/works?rows=' + rows + '&cursor=' + encodeURIComponent(cursor)
-  const response = await http.get(url);
-  if (response.data.message['next-cursor'] == cursor)
-      return data;
-  data.push(...response.data.message.items);
-  return getDOIsfromISSN(issn, rows, response.data.message['next-cursor'], data);
-}
+// const getDOIsfromISSN = async(issn: String, rows?: Number, cursor?: string, data: any = []) => {
+//   if (cursor == undefined) cursor = '*'
+//   if (rows == undefined) rows = 1000
+//   cursor = cursor.toString()
+//   let url = '/journals/' + issn + '/works?rows=' + rows + '&cursor=' + encodeURIComponent(cursor)
+//   const response = await http.get(url);
+//   if (response.data.message['next-cursor'] == cursor)
+//       return data;
+//   data.push(...response.data.message.items);
+//   return getDOIsfromISSN(issn, rows, response.data.message['next-cursor'], data);
+// }
 
 /**
  * Search CrossRef API via ISSN to return sample of DOIs from it.

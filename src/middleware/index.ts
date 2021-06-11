@@ -1,7 +1,7 @@
-import logRequests from './logrequests.middleware';
-import helmet from 'helmet';
-import express from 'express';
 import cors from 'cors';
+import express from 'express';
+import helmet from 'helmet';
+import logRequests from './logrequests.middleware';
 
 // const jwt = require('express-jwt');
 // const jwks = require('jwks-rsa');
