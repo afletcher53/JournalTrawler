@@ -1,6 +1,9 @@
-import { mongoDBLogger } from "../loggers/logger";
+
 
 /* eslint-disable no-invalid-this */
+import mongoosastic from 'mongoosastic';
+import config from '../config/elasticsearch.config';
+import mongoDBLogger from '../loggers/mongoDB.logger';
 export default (mongoose) => {
   // eslint-disable-next-line new-cap
   const schema = mongoose.Schema(
@@ -36,18 +39,28 @@ export default (mongoose) => {
 
   
   schema.post('init', function(doc) {
-    mongoDBLogger.info(doc._id + 'Article has been initialized from the db');
+    mongoDBLogger.info(`${doc._id} Article has been initialized from the db`);
   });
   schema.post('validate', function(doc) {
-    mongoDBLogger.info(doc._id + 'Article has been validated but not saved');
+    mongoDBLogger.info(`${doc._id} Article has been validated but not saved`);
   });
   schema.post('save', function(doc) {
-    mongoDBLogger.info(doc._id + 'Article has been saved');
+    mongoDBLogger.info(`${doc._id} Article has been saved`);
   });
   schema.post('remove', function(doc) {
-    mongoDBLogger.info(doc._id + 'Article has been removed');
+    mongoDBLogger.info(`${doc._id} Article has been removed`);
   });
+  schema.plugin(mongoosastic, config);
+  
 
   const Article = mongoose.model('article', schema);
+  var stream = Article.synchronize();
+  stream.on('error', function (err) {
+    console.log("Error while synchronizing" + err);
+  });
+
+  stream.on('data', function(err, doc){
+    console.log('indexing: done');
+});
   return Article;
 };

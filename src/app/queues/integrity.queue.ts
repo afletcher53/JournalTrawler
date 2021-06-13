@@ -1,7 +1,7 @@
 import Bull from "bull";
+import * as redis from '../config/redis.config';
+import { logJobCompleted, logJobFailed } from "../loggers/job.logger";
 import integrityProcess from '../processes/integrity.process';
-import * as redis from '../config/redis.config'
-import { logJobCompleted, logJobFailed } from "../loggers/job.loggers";
 
 const integrityQueue = new Bull('integrityQueue', { 
   redis: {
@@ -22,12 +22,13 @@ const addIntegrity = (data: any) => {
 };
 
 integrityQueue.on('global:completed', async (job) => {
-  logJobCompleted('article', job);
+  logJobCompleted('integrity', job);
 });
 
 integrityQueue.on('failed',  (job, error) => {
-  logJobFailed('article', job, error);
+  logJobFailed('integrity', job, error);
 });
 integrityQueue.process(integrityProcess);
 
-export { addIntegrity, integrityQueue }
+export { addIntegrity, integrityQueue };
+

@@ -1,6 +1,7 @@
 import db from '../models';
 const Journal = db.journals;
 const Article = db.articles;
+const Integrity = db.integrity
 /**
  * Determines if a Journal already exists (via ISSN numer)
  * @param {string} data - The ISSN number of the Journal to be checked
@@ -47,7 +48,11 @@ export async function mongoSaveJournal(journal: any) {
       .save(journal.data);
   }
   
-  
+export async function mongoFetchAllJournals() {
+    return Journal.find()
+  }
+   
+
 export  function mongoFindJournalWhere(condition) {
     return Journal.find(condition);
   }
@@ -67,8 +72,33 @@ export function mongoFindJournalByIdAndRemove(req: any) {
 export function mongoDeleteAllJournals() {
     return Journal.deleteMany({});
   }
-  
- export function mongoeFindJournalWhere2(condition) {
-    return Journal.find(condition);
+
+  export function mongoArticleFindWhere(condition) {
+    return Article.find(condition)
+      .populate('journal', 'title publisher');
   }
   
+export function mongoArticleFindById(id: any) {
+  return Article.findById(id);
+}
+
+export function mongoArticleFindByIdandUpdate(id: any, req: any) {
+  return Article.findByIdAndUpdate(id, req.body, { useFindAndModify: false });
+}
+
+export function mongoArticleDeleteById(id: any) {
+  return Article.findByIdAndRemove(id, { useFindAndModify: false });
+}
+
+
+export function mongoArticleDeleteAll() {
+  return Article.deleteMany({});
+}
+
+export function mongoFetchAllArticles() {
+  return Article.find();
+}
+
+export function mongoFetchAllIntegrities() {
+  return Integrity.find();
+}

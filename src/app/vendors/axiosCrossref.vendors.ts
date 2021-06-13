@@ -1,7 +1,8 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import axiosThrottle from 'axios-request-throttle';
 import { crossrefBaseurl, crossrefHeaders } from '../config/crossref.config';
-import { crossRefLogger } from '../loggers/logger';
+import crossrefLogger from "../loggers/crossref.logger";
+
 
 enum StatusCode {
   Unauthorized = 401,
@@ -29,7 +30,7 @@ class Http {
 
     http.interceptors.response.use(
       (response) => {
-        crossRefLogger.info(`[RESPONSE: ${response.config.method} ${response.status}] URL:${response.config.url}]`);
+        crossrefLogger.info(`[RESPONSE: ${response.config.method} ${response.status}] URL:${response.config.url}]`);
         return response},
       (error) => {
         const { response } = error;
@@ -39,10 +40,10 @@ class Http {
     );
 
     http.interceptors.request.use((config) => {
-      crossRefLogger.info(`[REQUEST: ${config.method}] URL:${config.url}]`);
+      crossrefLogger.info(`[REQUEST: ${config.method}] URL:${config.url}]`);
       return config;
     }, (error) => {
-      crossRefLogger.error(error);
+      crossrefLogger.error(error);
       return Promise.reject(error);
     });
     
@@ -95,7 +96,7 @@ class Http {
 
   private generateError(error) {
     console.log(error)
-    return crossRefLogger.error(`[${error.status}: ${error.config.method} ${error.config.url}:]`);
+    return crossrefLogger.error(`[${error.status}: ${error.config.method} ${error.config.url}:]`);
   }
 }
 

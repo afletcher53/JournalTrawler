@@ -45,3 +45,6 @@ logs
 data
 cert
 app/scripts/print-access-token.js
+
+data
+*.csv

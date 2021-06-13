@@ -1,6 +1,13 @@
 TODO: 
-Add update all journals route
-Centralise logging to /logger (see src/app/queues/jobLogger)
-update Article to use Mongoose service
+find missing abstracts job
 Create tests
 remove dist from github
+
+convert to API.localhost
+look at project structure
+
+
+CRON Jobs ran daily **To Implement**
+1) Get /integrities/issn-update-all -Updates all journals to the latest
+2) Get /integrities/issn-missing-all - runs integrity checks on the data 
+3) GET /export - Exports the mongoDB and emails to specified email

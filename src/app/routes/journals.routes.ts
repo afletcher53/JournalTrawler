@@ -30,8 +30,5 @@ module.exports = (app) => {
   // Create a new journal
   router.delete('/', journals.deleteAll);
 
-  // Add multiple journals at once
-  router.post('/multi', journals.bulkAdd);
-
   app.use('/api/journals', router);
 };

@@ -24,6 +24,8 @@ const integrityProcess = async (job:Job) => {
         break;
       case(3):
         await updateISSN(job);
+        break;
+      case(4):
         break;  
 
   }

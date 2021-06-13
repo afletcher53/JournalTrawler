@@ -1,11 +1,12 @@
 import { Job } from "bull";
-import { DOILogger } from "../../loggers/logger";
+import doiLogger from "../../loggers/doi.logger";
+import db from '../../models';
 import { addArticle } from "../../queues/article.queue";
 import { fetchArticleByDOI } from "../../requests/crossref.service";
 import { mongoCheckJournalExistsByISSN, mongofetchJournalByISSN } from "../../requests/mongoose.service";
 import { generateMissingDOIList } from "./generateMissingDOIList";
 import { getPrintAndElectronicISSN } from "./getPrintAndElectronicISSNFromCrossref";
-
+const Integrity = db.integrity;
 
 
 /**
@@ -39,18 +40,15 @@ import { getPrintAndElectronicISSN } from "./getPrintAndElectronicISSNFromCrossr
 
     await addArticle(ArticleData)
     const logText = "["+element['DOI'] +"] added to articleQueue"
-    DOILogger.info(logText)
-
+    doiLogger.info(logText)
     });
-    // const {printISSN, electronicISSN} = getPrintAndElectronicISSN(e);
-    // const ArticleData = {
-    //   doi: e['DOI'],
-    //   print_issn: printISSN,
-    //   electronic_issn: electronicISSN,
-    //   journal_id: journalId
-    // };
 
-     //TODO save that the integrity has been ran to the DB
-     
+    
+    const integrity = new Integrity({
+      code: 4,
+      message: `Jounal with ISSN ${job.data.issn} has been updated with ${missingDOIs.length} new additions`,
+      data: missingDOIs ? missingDOIs : null,
+    });
+    integrity.save(integrity)
  }
 export default updateISSN

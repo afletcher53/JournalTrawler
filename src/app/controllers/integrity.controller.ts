@@ -1,7 +1,7 @@
 import express from 'express';
 import db from '../models';
 import { addIntegrity } from '../queues/integrity.queue';
-import { mongoCheckJournalExistsByISSN } from '../requests/mongoose.service';
+import { mongoCheckJournalExistsByISSN, mongoFetchAllJournals } from '../requests/mongoose.service';
 import { journalPostValidation } from '../validation/journal.validation';
 import serializer from '../validation/json.validation';
 
@@ -53,6 +53,7 @@ exports.createISSNforDOI = async (req: express.Request, res: express.Response) =
 
 // Create a job to check the data completeness of an ISSN
 exports.createISSNforMissing = async (req: express.Request, res: express.Response) => {
+
   req.body.issn = req.body.issn.replace(/[\u200c\u200b]/g, '');
   //check to see if the requested journal is truthy
   const {error} = journalPostValidation(req.body);
@@ -171,3 +172,44 @@ exports.deleteAll = (req, res) => {
     });
   });
 };
+
+
+exports.updateAllISSN = async (req, res) => {
+  // get all Journals from the databvase.
+  const allJournals = await mongoFetchAllJournals()
+  allJournals.forEach(element => {
+    //get an ISSN to check!
+    let issn = null
+    if(element.issn_electronic != null){
+      issn = element.issn_electronic
+    } else {
+      issn = element.issn_print
+    }
+    const jobData = {
+      issn: issn,
+      code: 1
+    };
+    addIntegrity(jobData)
+    res.status(200).send({message: "Integrity checks now are being performed on this issn and should be available shortly"})
+  });
+}
+
+exports.createISSNforAllMissing = async (req, res) => {
+  // get all Journals from the databvase.
+  const allJournals = await mongoFetchAllJournals()
+  allJournals.forEach((element: { issn_electronic: any; issn_print: any; }) => {
+    //get an ISSN to check!
+    let issn = null
+    if(element.issn_electronic != null){
+      issn = element.issn_electronic
+    } else {
+      issn = element.issn_print
+    }
+    const jobData = {
+      issn: issn,
+      code: 2
+    };
+    addIntegrity(jobData)
+    res.status(200).send({message: "Integrity checks now are being performed on this issn and should be available shortly"})
+  });
+}

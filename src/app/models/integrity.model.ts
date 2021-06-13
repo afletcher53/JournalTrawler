@@ -1,7 +1,9 @@
 //* * Model for data integrity check **//
 
-import { mongoDBLogger } from "../loggers/logger";
-
+import mongoosastic from 'mongoosastic';
+import config from '../config/elasticsearch.config';
+import mongoDBLogger from "../loggers/mongoDB.logger";
+import systemLogger from '../loggers/system.logger';
 
 export default (mongoose) => {
   // eslint-disable-next-line new-cap
@@ -25,18 +27,26 @@ export default (mongoose) => {
   });
   
   schema.post('init', function(doc) {
-    mongoDBLogger.info(doc._id + 'Integrity has been initialized from the db');
+    mongoDBLogger.info(`${doc._id} Integrity has been initialized from the db`);
   });
   schema.post('validate', function(doc) {
-    mongoDBLogger.info(doc._id + 'Integrity has been validated but not saved');
+    mongoDBLogger.info(`${doc._id} Integrity has been validated but not saved`);
   });
   schema.post('save', function(doc) {
-    mongoDBLogger.info(doc._id + 'Integrity has been saved');
+    mongoDBLogger.info(`${doc._id} Integrity has been saved`);
   });
   schema.post('remove', function(doc) {
-    mongoDBLogger.info(doc._id + 'Integrity has been removed');
+    mongoDBLogger.info(`${doc._id} Integrity has been removed`);
   }); 
-  
+  schema.plugin(mongoosastic ,config);
   const Integrity = mongoose.model('integrity', schema);
+  var stream = Integrity.synchronize();
+  stream.on('error', function (err) {
+    console.log("Error while synchronizing" + err);
+  });
+
+  stream.on('data', function(err, doc){
+    systemLogger.info('indexing: done');
+});
   return Integrity;
 };

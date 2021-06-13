@@ -1,10 +1,11 @@
 
 import { Job } from 'bull';
 import mongoose from 'mongoose';
-import { DOILogger } from '../loggers/logger';
+import doiLogger from '../loggers/doi.logger';
 import db from '../models';
 import { fetchArticleByDOI } from '../requests/crossref.service';
 import { articleCrossRefResponseValidation } from '../validation/crossref.validation';
+
 const toId = mongoose.Types.ObjectId
 export const Article = db.articles;
 
@@ -31,7 +32,7 @@ const articleProcess = async (job:Job) => {
       .save(article)
       .catch((err: Error) => {
         const logText = "["+job.data.doi+"] Error processing " + err
-        DOILogger.error(logText)
+        doiLogger.error(logText)
       });
 
 };
@@ -102,7 +103,7 @@ function getDate(articleData) {
   if (docCount != 0) { 
     value = true;
     const logText = "["+data+"] Already exists in database " 
-    DOILogger.error(logText)
+    doiLogger.error(logText)
     throw new Error('Article Already Exists in the database');
   }
   

@@ -1,10 +1,9 @@
 import { addJournal } from '../queues/journal.queue';
-import postJournalByISSN from '../requests/internal.functions.requests';
 import { mongoCheckJournalExistsByISSN, mongoDeleteAllJournals, mongofetchJournalByISSN, mongoFindJournalById, mongoFindJournalByIdAndRemove, mongoFindJournalByIdAndUpdate, mongoFindJournalWhere, mongoSaveJournal } from '../requests/mongoose.service';
 import { checkExists, getJournalData } from '../validation/crossref.validation';
 import { createErrorExists, createErrorExistsCrossRef, createErrorGeneric } from '../validation/error.validation';
 import {
-  journalMultipleValidation, journalPostValidation,
+  journalPostValidation,
   journalSingleValidation
 } from '../validation/journal.validation';
 import serializer from '../validation/json.validation';
@@ -100,7 +99,6 @@ exports.findOne = async (req, res) => {
           {message: 'Error retrieving Journal with id=' + req.params.id});
     });;
     } catch (e) {
-      console.log(e)
       res.status(400).send({
         message:
         
@@ -247,20 +245,4 @@ exports.findAllCRUnscraped = (req, res) => {
           err.message || 'Some error occurred while retrieving Journals.',
         });
       });
-};
-
-
-exports.bulkAdd = async (req, res) => {
-  const {error} = journalMultipleValidation(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
-
-  req.body.issns.forEach((e)=> {
-    postJournalByISSN(e);
-  },
-  );
-  res.status(200).send({
-    message:
-    // eslint-disable-next-line max-len
-    'These journals have been added, you cannot see the status of these journals',
-  });
 };

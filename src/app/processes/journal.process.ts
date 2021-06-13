@@ -1,8 +1,9 @@
 
 import { Job } from 'bull';
-import { DOILogger } from '../loggers/logger';
+import doiLogger from '../loggers/doi.logger';
 import { addArticle } from '../queues/article.queue';
 import { fetchDOIsFromISSN } from '../requests/crossref.service';
+
 
 
 /**
@@ -38,7 +39,7 @@ const processArticles = async(DOIList: any, journalId: string) => {
     const articleJob = await addArticle(ArticleData)
     articleList.push(articleJob)
     const logText = "["+e['DOI'] +"] added to articleQueue"
-    DOILogger.info(logText)
+    doiLogger.info(logText)
     return articleList
   }))
 

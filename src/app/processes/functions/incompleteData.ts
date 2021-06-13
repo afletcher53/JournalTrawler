@@ -33,7 +33,6 @@ export async function incompleteData(job: Job<any>) {
     __v: 0
   };
   articles.forEach((element: { journal_issn_print: any; _id: any; title: any; crossref_url: any; publisher: any; journal_issn_electronic: any; reference_count: any; is_referenced_by_count: any; published_online: any; published_print: any; type: any; abstract: any; url: any; createdAt: any; updatedAt: any; license: any; doi: any; cr_parsed: any; journal: any; __v: any; }) => {
-    console.log(element.journal_issn_print);
     if (element._id != null) { totalFieldCountNotNull++, individualFields._id++; }
     if (element.title != null) { totalFieldCountNotNull++, individualFields.title++; }
     if (element.crossref_url != null) { totalFieldCountNotNull++, individualFields.crossref_url++; }
@@ -72,5 +71,5 @@ export async function incompleteData(job: Job<any>) {
   });
 
   integrity.save(integrity);
-  console.log(resultObj);
+
 }

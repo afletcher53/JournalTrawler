@@ -1,19 +1,16 @@
-import { articleLogger } from '../loggers/logger';
-import db from '../models';
+import articleLogger from '../loggers/article.logger';
 import { addArticle } from '../queues/article.queue';
-import { mongoCheckArticleExistsByDOI } from '../requests/mongoose.service';
+import { mongoArticleDeleteAll, mongoArticleDeleteById, mongoArticleFindById, mongoArticleFindByIdandUpdate, mongoArticleFindWhere, mongoCheckArticleExistsByDOI } from '../requests/mongoose.service';
 import { articlePostValidation, articleSingleValidation } from '../validation/article.validation';
 import serializer from '../validation/json.validation';
-
-const Article = db.articles;
 
 exports.create = async (req, res) => {
   // Validate request
   const {error} = articlePostValidation(req.body);
   if (error) {
     const errorArticleValidation = error.details;
-    return res.status(400)
-        .send(serializer.serializeError(errorArticleValidation));
+    articleLogger.error(errorArticleValidation);
+    return res.status(400).send(serializer.serializeError(errorArticleValidation));
   };
 
   // check to see if already exists
@@ -21,9 +18,9 @@ exports.create = async (req, res) => {
   if (exists) {
     // Generate Error Message if article exists.
     const errorArticleExists =
-      new Error('The Article with the DOI ' + req.body.doi + ' already exists');
-    return res.status(400)
-        .send(serializer.serializeError(errorArticleExists));
+      new Error(`The Article with the DOI ${req.body.doi} already exists`);
+    articleLogger.error(errorArticleExists);
+    return res.status(400).send(serializer.serializeError(errorArticleExists));
   }
   const ArticleData = {
     doi: req.body.doi,
@@ -32,6 +29,7 @@ exports.create = async (req, res) => {
   };
   addArticle(ArticleData);
   res.status(200).send({message: 'The worker is working on it'});
+  articleLogger.info(`The creation request for ${req.body.doi} is being processed`);
 };
 
 // Retrieve all Articles from the database.
@@ -40,12 +38,12 @@ exports.findAll = (req, res) => {
   const condition = title ?
   {title: {$regex: new RegExp(title), $options: 'i'}} : {};
 
-  Article.find(condition)
-      .populate('journal', 'title publisher')
+  mongoArticleFindWhere(condition)
       .then((data) => {
         res.send(serializer.serialize('article', data));
       })
       .catch((err) => {
+        articleLogger.error(err);
         res.status(500).send({
           message:
           serializer.serializeError(
@@ -59,13 +57,12 @@ exports.findOne = (req, res) => {
   // Validate request
   const {error} = articleSingleValidation(req.params);
   if (error) {
-    return res.status(400)
-        .send(serializer.serializeError(error.details[0].message));
+    articleLogger.error(error.details[0].message);
+    return res.status(400).send(serializer.serializeError(error.details[0].message));
   }
+  
   const id = req.params.id;
-  const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-
-  Article.findById(id)
+  mongoArticleFindById(id)
       .then((data) => {
         if (!data) {
           res.status(404).send({message: 'Not found Article with id ' + id});
@@ -75,9 +72,7 @@ exports.findOne = (req, res) => {
         res
             .status(500)
             .send({message: 'Error retrieving Article with id=' + id});
-        articleLogger.error(
-            'Error getting article',
-            {sessionID: `${req.id}`, requestIP: `${ip}`, articleID: `${id}`});
+        articleLogger.error(`Error getting article`);
       });
 };
 
@@ -91,16 +86,18 @@ exports.update = (req, res) => {
   try {
     const id = req.params.id;
 
-    Article.findByIdAndUpdate(id, req.body, {useFindAndModify: false})
+    mongoArticleFindByIdandUpdate(id, req)
         .then((data) => {
           if (!data) {
+            let message = `Cannot update Article with id=${id}. Maybe Article was not found!`
+            articleLogger.error(message);
             res.status(404).send({
-              message:
-            `Cannot update Article with id=${id}. Maybe Article was not found!`,
+              message: message,
             });
           } else res.send({message: process.env.STRING_ARTICLE_UPDATED});
         })
         .catch((err) => {
+          articleLogger.error(err)
           res.status(500).send({
             message: 'Error updating Article with id=' + id,
           });
@@ -113,8 +110,7 @@ exports.update = (req, res) => {
 // Delete a Article with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
-
-  Article.findByIdAndRemove(id, {useFindAndModify: false})
+  mongoArticleDeleteById(id)
       .then((data) => {
         if (!data) {
           res.status(404).send({
@@ -136,7 +132,7 @@ exports.delete = (req, res) => {
 
 // Delete all Articles from the database.
 exports.deleteAll = (req, res) => {
-  Article.deleteMany({})
+  mongoArticleDeleteAll()
       .then((data) => {
         res.send({
           message:
@@ -154,7 +150,7 @@ exports.deleteAll = (req, res) => {
 
 // Find all published Articles
 exports.findAllPublished = (req, res) => {
-  Article.find({published: true})
+  mongoArticleFindWhere({cr_parsed: true})
       .then((data) => {
         res.send(serializer.serialize('article', data));
       })
@@ -166,18 +162,3 @@ exports.findAllPublished = (req, res) => {
       });
 };
 
-
-// Find all published Articles
-exports.findByTitleAndDelete = (req, res) => {
-  const title = req.params.title;
-  Article.find({title: title})
-      .then((data) => {
-        res.send(data);
-      })
-      .catch((err) => {
-        res.status(500).send({
-          message:
-        err.message || process.env.STRING_ERROR_ARTICLES_GET,
-        });
-      });
-};

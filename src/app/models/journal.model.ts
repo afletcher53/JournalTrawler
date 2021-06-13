@@ -1,5 +1,5 @@
-import { mongoDBLogger } from "../loggers/logger";
-
+import mongoosastic from 'mongoosastic';
+import mongoDBLogger from "../loggers/mongoDB.logger";
 export default (mongoose) => {
   // eslint-disable-next-line new-cap
   const schema = mongoose.Schema(
@@ -41,7 +41,16 @@ export default (mongoose) => {
   schema.post('remove', function(doc) {
     mongoDBLogger.info(doc._id + 'Journal has been removed');
   });
+  schema.plugin(mongoosastic);
 
   const Journal = mongoose.model('journal', schema);
+  var stream = Journal.synchronize();
+  stream.on('error', function (err) {
+    console.log("Error while synchronizing" + err);
+  });
+
+  stream.on('data', function(err, doc){
+    console.log('indexing: done');
+});
   return Journal;
 };
