@@ -1,5 +1,7 @@
 import mongoosastic from 'mongoosastic';
+import config from '../config/elasticsearch.config';
 import mongoDBLogger from "../loggers/mongoDB.logger";
+import systemLogger from '../loggers/system.logger';
 export default (mongoose) => {
   // eslint-disable-next-line new-cap
   const schema = mongoose.Schema(
@@ -17,6 +19,7 @@ export default (mongoose) => {
         counts_backfiledois: Number,
         cr_last_status_check_time: Date,
         cr_parsed: Boolean,
+        abstract_source_doaj: Boolean
         
       },
       {timestamps: true},
@@ -41,16 +44,15 @@ export default (mongoose) => {
   schema.post('remove', function(doc) {
     mongoDBLogger.info(doc._id + 'Journal has been removed');
   });
-  schema.plugin(mongoosastic);
-
+  schema.plugin(mongoosastic ,config);
   const Journal = mongoose.model('journal', schema);
   var stream = Journal.synchronize();
   stream.on('error', function (err) {
-    console.log("Error while synchronizing" + err);
+    systemLogger.error("Error while synchronizing" + err);
   });
 
   stream.on('data', function(err, doc){
-    console.log('indexing: done');
+    systemLogger.info('indexing: done');
 });
   return Journal;
 };

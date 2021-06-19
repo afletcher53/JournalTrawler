@@ -11,7 +11,7 @@ exports.create = async (req, res) => {
     const errorArticleValidation = error.details;
     articleLogger.error(errorArticleValidation);
     return res.status(400).send(serializer.serializeError(errorArticleValidation));
-  };
+  }
 
   // check to see if already exists
   const exists = await mongoCheckArticleExistsByDOI(req.body.doi);

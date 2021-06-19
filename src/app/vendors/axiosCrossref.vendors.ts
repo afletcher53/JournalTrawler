@@ -89,6 +89,8 @@ class Http {
       case StatusCode.NotFound: {
         this.generateError(error);
       }
+      default:
+        this.generateError(error)
     }
 
     return Promise.reject(error);

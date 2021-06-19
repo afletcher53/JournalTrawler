@@ -7,14 +7,13 @@ import { fetchArticleByDOI } from '../requests/crossref.service';
 import { articleCrossRefResponseValidation } from '../validation/crossref.validation';
 
 const toId = mongoose.Types.ObjectId
-export const Article = db.articles;
+const Article = db.articles;
 
 /**
  * Add Article Job to the redis queue
  * @param job from the queue calling it.
  */
 const articleProcess = async (job:Job) => {
-  console.log(job.data)
   await getArticleByDOI(job.data.doi);
   var articleData: any = await fetchArticleByDOI(job.data.doi)
  
@@ -27,7 +26,6 @@ const articleProcess = async (job:Job) => {
 
   //Generate the article Object.
   const article = setArticleDetails(job.data.doi, job.data.print_issn, job.data.electronic_issn, articleData, job.data.journal_id);
-  console.log(job.data.journal_id)
   article
       .save(article)
       .catch((err: Error) => {
@@ -42,7 +40,7 @@ export default articleProcess;
 const setArticleDetails = (doi: String, printISSN: any, electronicISSN: any, articleData: any, journal_id: string) => {
   let data = articleData.message;
   let license: String
-  if(articleData.message.hasOwnProperty('license')) license = articleData.message.license[0]['URL']
+  if(articleData.message.hasOwwnProperty('license')) license = articleData.message.license[0]['URL']
   var { publishedPrintDate, publishedOnlineDate } = getDate(articleData);
 
   return new Article({
@@ -55,7 +53,7 @@ const setArticleDetails = (doi: String, printISSN: any, electronicISSN: any, art
     published_online: publishedOnlineDate ? publishedOnlineDate : null,
     published_print: publishedPrintDate ? publishedPrintDate : null,
     type: data.type ? data.type : null,
-    abstract: data.abstract ? data.abstract : null,
+    abstract: data.abstract ? data.abstract : null, 
     title: data.title ? String(data.title) : null,
     url: data['URL'] ? data['URL'] : null,
     doi: data['DOI'] ? data['DOI'] : null,
@@ -70,7 +68,7 @@ const setArticleDetails = (doi: String, printISSN: any, electronicISSN: any, art
  * @param articleData 
  * @returns Two strings
  */
-function getDate(articleData) {
+const getDate = (articleData) => {
   if (typeof articleData.message['published-online'] !== 'undefined') {
     //Set day to one if not provided
     if (!articleData.message['published-online']['date-parts'][0][2]) {
@@ -97,7 +95,7 @@ function getDate(articleData) {
  * @param {string} data - The ISSN number of the Journal to be checked
  * @return {Promise<boolean>} - True = journal exists, false it doesnt exist.
  */
- async function getArticleByDOI(data: String): Promise<boolean> {
+const getArticleByDOI = async (data: String): Promise<boolean> => {
   const docCount = await Article.countDocuments({doi: data}).exec();
   let value = false;
   if (docCount != 0) { 

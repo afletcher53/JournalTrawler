@@ -6,6 +6,7 @@ import { fetchDOIsFromISSN } from '../requests/crossref.service';
 
 
 
+
 /**
  * Starts a Journal Process Job using Bull
  * @param job Incoming Job data
@@ -62,3 +63,4 @@ const getPrintAndElectronicISSN = (issnObject: Object)  => {
     electronicISSN
   }
 }
+

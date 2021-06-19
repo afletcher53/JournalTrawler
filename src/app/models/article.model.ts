@@ -3,6 +3,7 @@
 /* eslint-disable no-invalid-this */
 import mongoosastic from 'mongoosastic';
 import config from '../config/elasticsearch.config';
+import articleLogger from '../loggers/article.logger';
 import mongoDBLogger from '../loggers/mongoDB.logger';
 export default (mongoose) => {
   // eslint-disable-next-line new-cap
@@ -55,12 +56,13 @@ export default (mongoose) => {
 
   const Article = mongoose.model('article', schema);
   var stream = Article.synchronize();
+   Article.synchronize();
   stream.on('error', function (err) {
-    console.log("Error while synchronizing" + err);
+    articleLogger.info("Error while synchronizing" + err);
   });
 
   stream.on('data', function(err, doc){
-    console.log('indexing: done');
+    articleLogger.info('indexing: done');
 });
   return Article;
 };

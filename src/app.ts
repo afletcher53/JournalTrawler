@@ -1,6 +1,7 @@
 // load ENV file
 require('dotenv').config();
 import express from 'express';
+import Article from '../src/app/models/article.class';
 import systemLogger from './app/loggers/system.logger';
 import db from './app/models';
 import exportData from './app/utils/export-data';
@@ -24,8 +25,6 @@ db.mongoose
       process.exit();
     });
 
-// db.mongoose.set('debug', true);
-
 // Main route
 app.get('/', (req: express.Request, res: express.Response) => {
   res.json({"message": "Welcome to the server"})
@@ -44,6 +43,11 @@ app.get('/backup', (req: express.Request, res: express.Response) => {
   res.json({"message": "Backups are being prepared"})
 });
 
+// Nuclear wipe 
+app.get('/yes', async (req: express.Request, res: express.Response) => {
+   const art = new Article("10.46570/utjms.vol7.346.228")
+   console.log(await art.get())
+});
 
 
 // Other routes

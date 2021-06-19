@@ -42,7 +42,7 @@ export default (mongoose) => {
   const Integrity = mongoose.model('integrity', schema);
   var stream = Integrity.synchronize();
   stream.on('error', function (err) {
-    console.log("Error while synchronizing" + err);
+    systemLogger.error("Error while synchronizing" + err);
   });
 
   stream.on('data', function(err, doc){

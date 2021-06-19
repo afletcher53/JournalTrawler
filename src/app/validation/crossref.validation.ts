@@ -1,7 +1,8 @@
 import Joi from '@hapi/joi';
 import db from '../models';
+import { fetchJournalByISSN, fetchJournalHeadByISSN } from '../requests/crossref.service';
+import { fetchArticleExistsByISSNDOAJ } from '../requests/doaj.service';
 const Journal = db.journals;
-import {  fetchJournalByISSN, fetchJournalHeadByISSN } from '../requests/crossref.service';
 
 
 /**
@@ -68,29 +69,29 @@ export const articleSingleValidation = (data) => {
 };
 
 
-// /**
-//  * Return print / electronic ISSN.
-//  * @param issnObject Object given by CrossRef API
-//  * @returns issn of Print/Electronic, null if not available - String
-//  */
-//  const getPrintAndElectronicISSN = (issnObject: Object)  => {
-//   let printISSN: string, electronicISSN: string
-//   issnObject['issn-type'].forEach((element: { type: string; value: any; }) => {
-//     if(printISSN == undefined) printISSN =  element.type =='print' ? printISSN = String(element.value) : null
-//     if(electronicISSN == undefined) electronicISSN =  element.type =='electronic' ? electronicISSN = String(element.value) : null
-//   });
-//   return { 
-//     printISSN,
-//     electronicISSN
-//   }
-// }
 
+/**
+ * Determine if the article exists on DOAJ for abstract scraping
+ */
+//TODO: Export to function file
+ const checkDOAJJournal = async (issn: String): Promise<Boolean> => {
+  const data = await fetchArticleExistsByISSNDOAJ(issn)
+  if (data.results[0] !== undefined && "bibjson" in data.results[0]){
+    return true
+ } else {
+   return false
+ }
+}
 
 export const getJournalData = async (issn: string) => { //TODO: Move this to a crossref function
+
+
   const data = await fetchJournalByISSN(issn);
+
   let issnElectronic: any;
   let issnPrint: any;
   let crDate: Date;
+  const absSrcDoaj: Boolean = await checkDOAJJournal(issn)
   // lets extract the electronic and print journal and assign to variables
   const issns = data.data.message['issn-type'];
   if (Object.keys(issns).length > 0) {
@@ -104,7 +105,6 @@ export const getJournalData = async (issn: string) => { //TODO: Move this to a c
     });
   };
 
-
   // if not documented, assign the issn to issnPrint
   if (issnElectronic == undefined && issnPrint == undefined) {
     issnPrint = decodeURI(issn);
@@ -117,8 +117,6 @@ export const getJournalData = async (issn: string) => { //TODO: Move this to a c
   const journal = new Journal({
     title: data.data.message.title ? data.data.message.title : null,
     publisher: data.data.message.publisher ? data.data.message.publisher : null,
-    // asjc: data.data.message.subjects[0].ASJC ? data.data.message.subjects[0].ASJC : null,
-    // subject: data.data.message.subjects[0].name ? data.data.message.subjects[0].name : null,
     counts_totaldois: data.data.message.counts['total-dois'] ? data.data.message.counts['total-dois'] : null,
     counts_currentdois: data.data.message.counts['current-dois'] ? data.data.message.counts['current-dois'] : null,
     counts_backfiledois: data.data.message.counts['backfile-dois'] ? data.data.message.counts['backfile-dois'] : null,
@@ -126,7 +124,9 @@ export const getJournalData = async (issn: string) => { //TODO: Move this to a c
     cr_last_status_check_time: crDate ? crDate : null,
     issn_print: issnPrint ? issnPrint : null,
     issn_electronic: issnElectronic ? issnElectronic : null,
+    abstract_source_doaj: absSrcDoaj ? absSrcDoaj : null
   });
+
 
   return journal;
 };

@@ -9,6 +9,7 @@ import {
 import serializer from '../validation/json.validation';
 
 
+
 // Create and Save a new Journal
 exports.create = async (req, res) => {
   req.body.issn = req.body.issn.replace(/[\u200c\u200b]/g, '');
@@ -38,6 +39,7 @@ exports.create = async (req, res) => {
   const journalData = await getJournalData(req.body.issn);
   // save the journal
   try {
+   
     mongoSaveJournal(journalData)
         .then((data) => {
           const journalISSN = {
@@ -45,6 +47,7 @@ exports.create = async (req, res) => {
                issn: req.body.issn,
           };
           addJournal(journalISSN);
+          
           res.send(serializer.serialize('journal', data));
         })
         .catch((err) => {
@@ -62,6 +65,9 @@ exports.create = async (req, res) => {
     });
   }
 };
+
+
+
 
 // Retrieve all Journals from the database.
 exports.findAll = async (req, res) => {

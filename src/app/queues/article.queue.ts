@@ -1,6 +1,7 @@
 import Bull from "bull";
 import * as redis from '../config/redis.config';
 import { logJobCompleted, logJobFailed } from "../loggers/job.logger";
+import { getAbstract } from "../processes/abstract.process";
 import articleProcess from '../processes/article.process';
 
 
@@ -19,8 +20,11 @@ const options = {
 
 
 const addArticle = async (data: any) => {
-  console.log(data)
   const job = await articleQueue.add(data, options);
+  await job.finished().then(()=>{
+    getAbstract(job)
+  }
+  );
   return job
 };
 
