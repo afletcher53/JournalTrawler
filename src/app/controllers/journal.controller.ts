@@ -38,7 +38,7 @@ exports.create = async (req, res) => {
   // Get the data from crossref
   const journalData = await getJournalData(req.body.issn);
   // save the journal
-  try {
+
    
     mongoSaveJournal(journalData)
         .then((data) => {
@@ -56,14 +56,6 @@ exports.create = async (req, res) => {
               err.message || createErrorGeneric,
           });
         });
-
-    // spawn a job that will parse the article for DOIs.
-  } catch (err) {
-    res.status(400).send({
-      message:
-      err.message || createErrorGeneric(),
-    });
-  }
 };
 
 
