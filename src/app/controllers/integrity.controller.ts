@@ -33,14 +33,14 @@ exports.createISSNforDOI = async (req: express.Request, res: express.Response) =
     const errorJournalValidation = new Error(error.details[0].message);
     return res.status(400)
         .send(serializer.serializeError(errorJournalValidation));
-  };
+  }
 
   //check to see if the journal exists on the database
   const checkJournalExistsMongoDB = await mongoCheckJournalExistsByISSN(req.body.issn);
   if (!checkJournalExistsMongoDB) {
     return res.status(400)
         .send("The journal does not exist in the database");
-  };
+  }
 
   // Add job from here
   const jobData = {
@@ -61,14 +61,14 @@ exports.createISSNforMissing = async (req: express.Request, res: express.Respons
     const errorJournalValidation = new Error(error.details[0].message);
     return res.status(400)
         .send(serializer.serializeError(errorJournalValidation));
-  };
+  }
 
   //check to see if the journal exists on the database
   const checkJournalExistsMongoDB = await mongoCheckJournalExistsByISSN(req.body.issn);
   if (!checkJournalExistsMongoDB) {
     return res.status(400)
         .send("The journal does not exist in the database");
-  };
+  }
 
   // Add job from here
   const jobData = {
@@ -119,12 +119,12 @@ exports.findOne = (req, res) => {
          .then((data) => {
            if (!data) {
              res.status(404).send(
-                 {message: 'Not found Integrity check with id ' + req.params.id});
+                 {message: 'Not found Integrity check with this id'});
            } else res.send(serializer.serialize('integrity', data));
          })
          .catch((err) => {
            res.status(500).send(
-               {message: 'Error retrieving Integrity check with id=' + req.params.id});
+               {message: 'Error retrieving Integrity check with this id'});
          });
 
 };
@@ -144,7 +144,7 @@ exports.findAllViaISSN = async (req, res) => {
  .then((data) => {
   if (data.length == 0) {
     res.status(404).send(
-        {message: 'Not found Integrity checks found for issn:  ' + req.params.id + ' [Maybe start one?]'});
+        {message: 'Not found Integrity checks found for issn [Maybe start one?]'});
   } else {
     res.send(serializer.serialize('integrity', data));
   }

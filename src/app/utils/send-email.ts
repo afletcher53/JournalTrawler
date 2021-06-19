@@ -4,6 +4,10 @@ var nodemailer = require('nodemailer');
 
 var transporter = nodemailer.createTransport({
   service: 'gmail',
+  secure: true, // Compliant
+  requireTLS: true, // Compliant
+  port: 465, // Compliant
+  secured: true, // Compliant,
   auth: {
     user: emailAccount,
     pass: emailApplicationPassword
