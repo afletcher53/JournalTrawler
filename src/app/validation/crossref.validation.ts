@@ -1,7 +1,7 @@
 import Joi from '@hapi/joi';
 import db from '../models';
 import { fetchJournalByISSN, fetchJournalHeadByISSN } from '../requests/crossref.service';
-import { fetchArticleExistsByISSNDOAJ } from '../requests/doaj.service';
+import { checkJournalExistsDOAJ } from './functions/checkDOAJJournal';
 const Journal = db.journals;
 
 
@@ -70,20 +70,7 @@ export const articleSingleValidation = (data) => {
 
 
 
-/**
- * Determine if the article exists on DOAJ for abstract scraping
- */
-//TODO: Export to function file
- const checkDOAJJournal = async (issn: String): Promise<Boolean> => {
-  const data = await fetchArticleExistsByISSNDOAJ(issn)
-  if (data.results[0] !== undefined && "bibjson" in data.results[0]){
-    return true
- } else {
-   return false
- }
-}
-
-export const getJournalData = async (issn: string) => { //TODO: Move this to a crossref function
+export const getJournalData = async (issn: string) => {
 
 
   const data = await fetchJournalByISSN(issn);
@@ -91,7 +78,7 @@ export const getJournalData = async (issn: string) => { //TODO: Move this to a c
   let issnElectronic: any;
   let issnPrint: any;
   let crDate: Date;
-  const absSrcDoaj: Boolean = await checkDOAJJournal(issn)
+  const absSrcDoaj: Boolean = await checkJournalExistsDOAJ(issn)
   // lets extract the electronic and print journal and assign to variables
   const issns = data.data.message['issn-type'];
   if (Object.keys(issns).length > 0) {
