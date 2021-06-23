@@ -12,7 +12,7 @@ import serializer from '../validation/json.validation';
 
 // Create and Save a new Journal
 exports.create = async (req, res) => {
-  req.body.issn = req.body.issn.replace(/[\u200c\u200b]/g, '');
+  if(req.body.issn) req.body.issn = req.body.issn.replace(/[\u200c\u200b]/g, '');
 
   //  Validate request
   const {error} = journalPostValidation(req.body);

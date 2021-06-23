@@ -42,9 +42,7 @@ node_modules
 *.env
 .vscode
 logs
-data
+
 cert
 app/scripts/print-access-token.js
-
-data
 *.csv

@@ -1,0 +1,75 @@
+version: "3.7"
+
+services:
+
+    elasticsearch:
+      container_name: es-container
+      image: docker.elastic.co/elasticsearch/elasticsearch:7.11.0
+      environment:
+        - xpack.security.enabled=false
+        - "discovery.type=single-node"
+      networks:
+        - es-net
+      ports:
+        - 9200:9200
+        
+    kibana:
+      container_name: kb-container
+      image: docker.elastic.co/kibana/kibana:7.11.0
+      environment:
+        - ELASTICSEARCH_HOSTS=http://es-container:9200
+      networks:
+        - es-net
+      depends_on:
+        - elasticsearch
+      ports:
+        - 5601:5601
+
+    mongodb:
+      image : mongo
+      container_name: mongodb
+      environment:
+        - PUID=1000
+        - PGID=1000
+      volumes:
+        - /home/barry/mongodb/database:/data/db
+      ports:
+        - 27017:27017
+      restart: unless-stopped
+
+    redis:
+        image: redis
+        container_name: journalTrawler_redis
+        environment:
+          - ALLOW_EMPTY_PASSWORD=yes
+        ports:
+          - 6379:6379
+
+    redis-commander:
+        container_name: journalTrawler_redis-commander
+        image: rediscommander/redis-commander
+        restart: always
+        environment:
+          - REDIS_HOSTS=local:redis:6379
+        ports:
+          - "8081:8081"
+
+    server:
+        container_name: journalTrawler_backend
+        build:
+          context: ./
+        environment:
+          REDIS_URL: redis:6379
+          CHOKIDAR_USEPOLLING: 'true'
+          CHOKIDAR_INTERVAL: 1000
+        ports:
+         - 5000:5000
+        volumes:
+          - ./:/var/app
+        depends_on:
+          - redis
+
+networks:
+    es-net:
+      driver: bridge
+      

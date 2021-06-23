@@ -1,7 +1,6 @@
 import Joi from '@hapi/joi';
 import db from '../models';
 import { fetchJournalByISSN, fetchJournalHeadByISSN } from '../requests/crossref.service';
-import { checkJournalExistsDOAJ } from './functions/checkDOAJJournal';
 const Journal = db.journals;
 
 
@@ -78,7 +77,7 @@ export const getJournalData = async (issn: string) => {
   let issnElectronic: any;
   let issnPrint: any;
   let crDate: Date;
-  const absSrcDoaj: Boolean = await checkJournalExistsDOAJ(issn)
+  // const absSrcDoaj: Boolean = await checkDOAJJournalExistsDOAJ(issn)
   // lets extract the electronic and print journal and assign to variables
   const issns = data.data.message['issn-type'];
   if (Object.keys(issns).length > 0) {
@@ -111,7 +110,7 @@ export const getJournalData = async (issn: string) => {
     cr_last_status_check_time: crDate ? crDate : null,
     issn_print: issnPrint ? issnPrint : null,
     issn_electronic: issnElectronic ? issnElectronic : null,
-    abstract_source_doaj: absSrcDoaj ? absSrcDoaj : null
+    // abstract_source_doaj: absSrcDoaj ? absSrcDoaj : null
   });
 
 

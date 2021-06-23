@@ -40,7 +40,7 @@ export default articleProcess;
 const setArticleDetails = (doi: String, printISSN: any, electronicISSN: any, articleData: any, journal_id: string) => {
   let data = articleData.message;
   let license: String
-  if(articleData.message.hasOwwnProperty('license')) license = articleData.message.license[0]['URL']
+  if(articleData.message.hasOwnProperty('license')) license = articleData.message.license[0]['URL']
   var { publishedPrintDate, publishedOnlineDate } = getDate(articleData);
 
   return new Article({
