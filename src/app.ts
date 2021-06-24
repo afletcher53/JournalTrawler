@@ -1,5 +1,5 @@
-// load ENV file
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
 import express from 'express';
 import systemLogger from './app/loggers/system.logger';
 import db from './app/models';
@@ -26,20 +26,20 @@ db.mongoose
 
 // Main route
 app.get('/', (req: express.Request, res: express.Response) => {
-  res.json({"message": "Welcome to the server"})
+  res.json({'message': 'Welcome to the server'});
 });
 
-// Nuclear wipe 
+// Nuclear wipe
 app.get('/nuclearwipe', (req: express.Request, res: express.Response) => {
-  wipeall()
-  res.json({"message": "Everything has been wipped"})
+  wipeall();
+  res.json({'message': 'Everything has been wipped'})
 });
 
-// Nuclear wipe 
+// Nuclear wipe
 app.get('/backup', (req: express.Request, res: express.Response) => {
-  exportData()
-  sendEmail()
-  res.json({"message": "Backups are being prepared"})
+  exportData();
+  sendEmail();
+  res.json({'message': 'Backups are being prepared'});
 });
 
 
@@ -49,5 +49,5 @@ require('./app/routes/articles.routes')(app);
 require('./app/routes/integrities.routes')(app);
 
 
-export default app
+export default app;
 

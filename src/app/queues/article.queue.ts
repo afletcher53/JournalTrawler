@@ -1,5 +1,5 @@
 import Bull from "bull";
-import * as redis from '../config/redis.config';
+import {redisHost, redisPort} from '../config/redis.config';
 import { logJobCompleted, logJobFailed } from "../loggers/job.logger";
 import { getAbstract } from "../processes/abstract.process";
 import articleProcess from '../processes/article.process';
@@ -7,8 +7,8 @@ import articleProcess from '../processes/article.process';
 
 const articleQueue = new Bull('articleQueue', { 
   redis: {
-    host: String(redis.config.host),
-    port: Number(redis.config.port)
+    host: String(redisHost),
+    port: Number(redisPort)
   }
 });
 

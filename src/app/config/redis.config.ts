@@ -1,6 +1,5 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
+export const redisHost = process.env.REDIS_HOST;
+export const redisPort = Number(process.env.REDIS_PORT);
 
-export const config = {  
-    host: String(process.env.REDIS_HOST),
-    port: Number(process.env.REDIS_PORT)
-};

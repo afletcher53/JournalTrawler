@@ -1,4 +1,5 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
 export const doajBaseurl = process.env.DOAJ_BASEURL;
 export const doajHeaders = {
   'Accept': 'application/json',

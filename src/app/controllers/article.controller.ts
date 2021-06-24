@@ -1,6 +1,7 @@
 import articleLogger from '../loggers/article.logger';
 import { addArticle } from '../queues/article.queue';
-import { mongoArticleDeleteAll, mongoArticleDeleteById, mongoArticleFindById, mongoArticleFindByIdandUpdate, mongoArticleFindWhere, mongoCheckArticleExistsByDOI } from '../requests/mongoose.service';
+import { mongoArticleDeleteAll, mongoArticleDeleteById, mongoArticleFindById, mongoArticleFindByIdandUpdate,
+  mongoArticleFindWhere, mongoCheckArticleExistsByDOI } from '../requests/mongoose.service';
 import { articlePostValidation, articleSingleValidation } from '../validation/article.validation';
 import serializer from '../validation/json.validation';
 

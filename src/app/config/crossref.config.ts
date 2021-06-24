@@ -1,4 +1,5 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
 export const crossrefBaseurl = process.env.CROSSREF_BASEURL;
 export const crossrefHeaders = {
   'Accept': 'application/json',
