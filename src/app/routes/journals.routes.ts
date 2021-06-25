@@ -1,4 +1,4 @@
-module.exports = (app) => {
+export default (app) => {
   const journals = require('../controllers/journal.controller');
 
   const router = require('express').Router();

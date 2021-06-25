@@ -1,4 +1,4 @@
-import { http } from "../vendors/axiosCrossref.vendors";
+import { http } from "../vendors/axios.crossref.vendors";
 
 export type Article = {
   doi: String

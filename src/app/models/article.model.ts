@@ -61,8 +61,8 @@ export default (mongoose) => {
     articleLogger.info("Error while synchronizing" + err);
   });
 
-  stream.on('data', function(err, doc){
-    articleLogger.info('indexing: done');
-});
+//   stream.on('data', function(err, doc){
+//     articleLogger.info('indexing: done');
+// });
   return Article;
 };

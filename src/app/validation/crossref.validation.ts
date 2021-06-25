@@ -1,28 +1,7 @@
 import Joi from '@hapi/joi';
 import db from '../models';
-import { fetchJournalByISSN, fetchJournalHeadByISSN } from '../requests/crossref.service';
+import { fetchJournalByISSN } from '../requests/crossref.service';
 const Journal = db.journals;
-
-
-/**
- * Checks if a valid journal exists from crossref API
- * @param {String} issn to be searched 
- * @returns {Promise<Boolean>} true = exists on api, false = doesnt exist
- */
-export async function checkExists(issn: String): Promise<Boolean> {
-  try {
-    const res = await fetchJournalHeadByISSN(issn)
-    if (typeof res !== 'undefined') {
-      if (res.status == 200) {
-        return true;
-      }
-    } else {
-      return false;
-    }
-  }
-  catch(e) {
-    console.log(e)} 
-}
 
 
 const options = {
@@ -68,6 +47,7 @@ export const articleSingleValidation = (data) => {
 };
 
 
+//TODO: Export this to the functionfile
 
 export const getJournalData = async (issn: string) => {
 

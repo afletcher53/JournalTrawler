@@ -1,4 +1,4 @@
-module.exports = (app) => {
+export default (app) => {
   const articles = require('../controllers/article.controller');
 
   // eslint-disable-next-line new-cap

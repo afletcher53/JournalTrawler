@@ -11,8 +11,9 @@ export async function mongoCheckJournalExistsByISSN(data:any): Promise<Boolean> 
   const docCount = await Journal.countDocuments(
     { $or: [{ issn_electronic: data }, { issn_print: data }] }).exec();
   let value = false;
-  if (docCount != 0)
+  if (docCount !== 0) {
     value = true;
+  }
   return value;
 }
 
@@ -25,7 +26,7 @@ export async function mongoCheckJournalExistsByISSN(data:any): Promise<Boolean> 
  export async function mongoCheckArticleExistsByDOI(data: any): Promise<boolean> {
     const docCount = await Article.countDocuments({doi: data}).exec();
     let value = false;
-    if (docCount != 0) {
+    if (docCount !== 0) {
       value = true;
     }
     return value;

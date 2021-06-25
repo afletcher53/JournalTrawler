@@ -1,11 +1,11 @@
-module.exports = (app) => {
+export default (app) => {
     const integrities = require('../controllers/integrity.controller');
-    
+ 
     const router = require('express').Router();
-  
+
     // Retrieve all Integrities
     router.get('/', integrities.findAll);
-    
+
     // Check issn for DOIs
     router.post('/issn-doi', integrities.createISSNforDOI);
 
@@ -32,4 +32,3 @@ module.exports = (app) => {
 
     app.use('/api/integrities', router);
   };
-  

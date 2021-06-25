@@ -12,6 +12,7 @@ const options = {
 
 // Article Post Validation
 export const articlePostValidation = (data: Express.Request) => {
+  const minStringValue = 6;
   const schema = Joi.object({
     print_issn:
             Joi.string()
@@ -23,7 +24,7 @@ export const articlePostValidation = (data: Express.Request) => {
                 .required(),
     doi:
             Joi.string()
-                .min(6)
+                .min(minStringValue)
                 .required(),
 
   });
@@ -31,12 +32,13 @@ export const articlePostValidation = (data: Express.Request) => {
 };
 
 export const articleSingleValidation = (data: Express.Request) => {
+  const minStringValue = 6;
   const schema = Joi.object({
     id:
           Joi
               .string()
               .required()
-              .min(6),
+              .min(minStringValue),
   });
 
   return schema.validate(data, options);
