@@ -47,7 +47,7 @@ export const articleSingleValidation = (data) => {
 };
 
 
-//TODO: Export this to the functionfile
+//TODO: Export this to the functionfile UP TO HERE!!!!!!!!
 
 export const getJournalData = async (issn: string) => {
 
