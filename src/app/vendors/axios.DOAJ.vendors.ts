@@ -24,17 +24,18 @@ class Http {
   initHttp() {
     const http = axios.create({
       baseURL: doajBaseurl,
-      headers,
       withCredentials: true,
+      headers,
     });
 
     http.interceptors.response.use(
       (response) => {
         doajLogger.info(`[RESPONSE: ${response.config.method} ${response.status}] URL:${response.config.url}]`);
-        return response},
+        return response;
+      },
       (error) => {
         const { response } = error;
-        doajLogger.error(error)
+        doajLogger.error(error);
         return this.handleError(response);
       }
     );
@@ -58,7 +59,7 @@ class Http {
   }
 
   get<T = any, R = AxiosResponse<T>>(url: string, config?: AxiosRequestConfig): Promise<R> {
-    doajLogger.info(url)
+    doajLogger.info(url);
     return this.http.get<T, R>(url, config);
   }
 

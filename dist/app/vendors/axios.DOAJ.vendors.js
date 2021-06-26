@@ -25,8 +25,8 @@ class Http {
     initHttp() {
         const http = axios_1.default.create({
             baseURL: doaj_config_1.doajBaseurl,
-            headers,
             withCredentials: true,
+            headers,
         });
         http.interceptors.response.use((response) => {
             doaj_logger_1.default.info(`[RESPONSE: ${response.config.method} ${response.status}] URL:${response.config.url}]`);

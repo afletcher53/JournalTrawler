@@ -24,8 +24,8 @@ class Http {
   initHttp() {
     const http = axios.create({
       baseURL: crossrefBaseurl,
-      headers,
       withCredentials: true,
+      headers,
     });
 
     http.interceptors.response.use(

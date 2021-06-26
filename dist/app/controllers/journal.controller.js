@@ -5,12 +5,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const journal_queue_1 = require("../queues/journal.queue");
 const mongoose_service_1 = require("../requests/mongoose.service");
-const crossref_validation_1 = require("../validation/crossref.validation");
+const getJournalData_1 = __importDefault(require("../validation/functions/getJournalData"));
+const checkCrossrefJournalExists_1 = __importDefault(require("../validation/functions/checkCrossrefJournalExists"));
 const error_validation_1 = require("../validation/error.validation");
 const journal_validation_1 = require("../validation/journal.validation");
 const json_validation_1 = __importDefault(require("../validation/json.validation"));
 // Create and Save a new Journal
 exports.create = async (req, res) => {
+    getJournalData_1.default;
     if (req.body.issn)
         req.body.issn = req.body.issn.replace(/[\u200c\u200b]/g, '');
     //  Validate request
@@ -29,13 +31,13 @@ exports.create = async (req, res) => {
     }
     ;
     // Check to see if ISSN exists on crossref
-    const checkCrossRefExists = await crossref_validation_1.checkExists(req.body.issn);
+    const checkCrossRefExists = await checkCrossrefJournalExists_1.default(req.body.issn);
     if (!checkCrossRefExists) {
         return res.status(400)
             .send(error_validation_1.createErrorExistsCrossRef(req.body.issn, 'Journal'));
     }
     // Get the data from crossref
-    const journalData = await crossref_validation_1.getJournalData(req.body.issn);
+    const journalData = await getJournalData_1.default(req.body.issn);
     // save the journal
     mongoose_service_1.mongoSaveJournal(journalData)
         .then((data) => {

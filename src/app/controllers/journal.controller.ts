@@ -1,7 +1,7 @@
 import { addJournal } from '../queues/journal.queue';
 import { mongoCheckJournalExistsByISSN, mongoDeleteAllJournals, mongofetchJournalByISSN, mongoFindJournalById, mongoFindJournalByIdAndRemove, mongoFindJournalByIdAndUpdate, mongoFindJournalWhere, mongoSaveJournal } from '../requests/mongoose.service';
-import { getJournalData } from '../validation/crossref.validation';
-import  checkExists  from "../validation/functions/checkCrossrefJournal";
+import getJournalData from "../validation/functions/getJournalData";
+import  checkExists  from "../validation/functions/checkCrossrefJournalExists";
 import { createErrorExists, createErrorExistsCrossRef, createErrorGeneric } from '../validation/error.validation';
 import {
   journalPostValidation,
@@ -13,7 +13,7 @@ import serializer from '../validation/json.validation';
 
 // Create and Save a new Journal
 exports.create = async (req, res) => {
-
+  getJournalData
   if(req.body.issn) req.body.issn = req.body.issn.replace(/[\u200c\u200b]/g, '');
 
   //  Validate request

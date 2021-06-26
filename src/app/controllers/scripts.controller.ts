@@ -1,7 +1,7 @@
 import express from 'express';
-import exportData from '../utils/export-data';
-import sendEmail from '../utils/send-email';
-import wipeall from '../utils/wipe-data';
+import exportData from '../scripts/export-data';
+import sendEmail from '../scripts/send-email';
+import wipeall from '../scripts/wipe-data';
 
 
 exports.nuclearWipe = async (req: express.Request, res: express.Response) => {
