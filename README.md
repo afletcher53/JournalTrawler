@@ -1,4 +1,4 @@
-"# JournalTrawler" 
+# JournalTrawler
 
 Journal Trawler is designed to textmine metadata from various journals. It utilised CROSSREF, DOAJ and other APIS to do this.
 This express application utilises good manners when using these services. 
