@@ -3,7 +3,7 @@ import express from 'express';
 
 const options = {
   abortEarly: false,
-  allowUnknown:true,
+  allowUnknown: true,
   errors: {
     wrap: {
       label: '',
@@ -18,16 +18,16 @@ const options = {
 export const articleCrossRefResponseValidation = (data: express.Response) => {
   const schema = Joi.object({
     message:
-         Joi.object().keys({
-          title: Joi.required(),
-          DOI: Joi.required(),
-          abstract: Joi.string(),
-          publisher: Joi.required(),
-          'reference-count': Joi.required(),
-          'is-referenced-by-count': Joi.required(),
-          type: Joi.required(),
-          URL: Joi.required(),
-         }),
-        });
+      Joi.object().keys({
+        title: Joi.required(),
+        DOI: Joi.required(),
+        abstract: Joi.string(),
+        publisher: Joi.required(),
+        'reference-count': Joi.required(),
+        'is-referenced-by-count': Joi.required(),
+        type: Joi.required(),
+        URL: Joi.required(),
+      }),
+  });
   return schema.validate(data, options);
 };

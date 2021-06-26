@@ -9,21 +9,17 @@ Serializer.register('article', {
     id: 'id',
     whitelist: ['doi', 'title', 'journal', 'abstract', 'license', 'journal'],
     links: {
-        // An object or a function that describes links.
-        self: function (data) {
-            // Can be a function or a string value ex: { self: '/articles/1'}
+        self: (data) => {
             return '/api/articles/' + data.id;
         },
     },
-    topLevelMeta: function (data, extraData) {
-        // An object or a function that describes top level meta.
+    topLevelMeta: (data, extraData) => {
         return {
             count: extraData.count,
             total: data.length,
         };
     },
     topLevelLinks: {
-        // An object or a function that describes top level links.
         self: '/api/articles',
     },
 });
@@ -31,21 +27,17 @@ Serializer.register('integrity', {
     id: 'id',
     whitelist: ['data', 'issn', 'message', 'journal', 'createdAt', 'updatedAt'],
     links: {
-        // An object or a function that describes links.
-        self: function (data) {
-            // Can be a function or a string value ex: { self: '/articles/1'}
+        self: (data) => {
             return '/api/integrities/' + data.id;
         },
     },
-    topLevelMeta: function (data, extraData) {
-        // An object or a function that describes top level meta.
+    topLevelMeta: (data, extraData) => {
         return {
             count: extraData.count,
             total: data.length,
         };
     },
     topLevelLinks: {
-        // An object or a function that describes top level links.
         self: '/api/integrities',
     },
 });
@@ -56,23 +48,18 @@ Serializer.register('journal', {
         'asjc', 'counts_totaldois', 'counts_currentdois', 'counts_backfiledois',
         'createdAt', 'updatedAt', 'cr_parsed', 'articles', 'totalArticles'],
     links: {
-        // An object or a function that describes links.
-        self: function (data) {
-            // Can be a function or a string value ex: { self: '/articles/1'}
+        self: (data) => {
             return '/api/journals/' + data.id;
         },
     },
-    topLevelMeta: function (data, extraData) {
-        // An object or a function that describes top level meta.
+    topLevelMeta: (data, extraData) => {
         return {
             count: extraData.count,
             total: data.length,
         };
     },
     topLevelLinks: {
-        // An object or a function that describes top level links.
         self: '/api/journals',
     },
 });
 exports.default = Serializer;
-module.exports = Serializer;

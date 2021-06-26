@@ -1,17 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.journalISSNSingleValidation = exports.journalMultipleValidation = exports.journalSingleValidation = exports.journalPostValidation = void 0;
+exports.journalSingleValidation = exports.journalPostValidation = void 0;
 const Joi = require('@hapi/joi');
 Joi.objectId = require('joi-objectid')(Joi);
+const minStringLength = 6;
 const journalPostValidation = (data) => {
     const pattern = /\b[\S]{4}\-[\S]{4}\b/;
     const schema = Joi.object({
         issn: Joi.string()
-            .min(6)
+            .min(minStringLength)
             .pattern(new RegExp(pattern))
             .required(),
         title: Joi.string()
-            .min(6),
+            .min(minStringLength),
         id: Joi.string(),
     });
     return schema.validate(data);
@@ -26,24 +27,8 @@ const journalSingleValidation = (data) => {
             .string(),
         issn_electronic: Joi
             .string()
-            .min(6),
+            .min(minStringLength),
     });
     return schema.validate(data);
 };
 exports.journalSingleValidation = journalSingleValidation;
-const journalMultipleValidation = (data) => {
-    const schema = Joi.object().keys({
-        issns: Joi.array().items(Joi.string()),
-    });
-    return schema.validate(data);
-};
-exports.journalMultipleValidation = journalMultipleValidation;
-const journalISSNSingleValidation = (data) => {
-    const schema = Joi.object({
-        id: Joi
-            .string()
-            .required(),
-    });
-    return schema.validate(data);
-};
-exports.journalISSNSingleValidation = journalISSNSingleValidation;

@@ -3,15 +3,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const export_data_1 = __importDefault(require("../scripts/export-data"));
-const send_email_1 = __importDefault(require("../scripts/send-email"));
-const wipe_data_1 = __importDefault(require("../scripts/wipe-data"));
+const exportData_script_1 = __importDefault(require("../scripts/exportData.script"));
+const sendEmail_script_1 = __importDefault(require("../scripts/sendEmail.script"));
+const wipeData_script_1 = __importDefault(require("../scripts/wipeData.script"));
+const models_1 = __importDefault(require("../models"));
 exports.nuclearWipe = async (req, res) => {
-    wipe_data_1.default();
+    wipeData_script_1.default(models_1.default);
     res.json({ 'message': 'Everything has been wipped' });
 };
 exports.backup = async (req, res) => {
-    export_data_1.default();
-    send_email_1.default();
+    exportData_script_1.default();
+    sendEmail_script_1.default();
     res.json({ 'message': 'Backups are being prepared' });
 };

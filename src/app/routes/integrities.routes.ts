@@ -1,6 +1,8 @@
-export default (app) => {
+import express from 'express';
+
+export default (app: express.Application) => {
     const integrities = require('../controllers/integrity.controller');
- 
+
     const router = require('express').Router();
 
     // Retrieve all Integrities
@@ -12,7 +14,7 @@ export default (app) => {
     // Check issn for missing fields
     router.post('/issn-missing', integrities.createISSNforMissing);
 
-    // check for all missing fields 
+    // check for all missing fields
     router.get('/issn-missing-all', integrities.createISSNforAllMissing);
 
     // Check issn for missing fields

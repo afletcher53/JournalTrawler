@@ -47,7 +47,7 @@ class Http {
       doajLogger.error(error);
       return Promise.reject(error);
     });
-    axiosThrottle.use(http, {requestsPerSecond: 5});
+    axiosThrottle.use(http, { requestsPerSecond: 5 });
     this.instance = http;
 
 

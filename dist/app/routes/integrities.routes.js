@@ -9,7 +9,7 @@ exports.default = (app) => {
     router.post('/issn-doi', integrities.createISSNforDOI);
     // Check issn for missing fields
     router.post('/issn-missing', integrities.createISSNforMissing);
-    // check for all missing fields 
+    // check for all missing fields
     router.get('/issn-missing-all', integrities.createISSNforAllMissing);
     // Check issn for missing fields
     router.post('/issn-update', integrities.updateISSN);

@@ -1,3 +1,4 @@
-declare const _default: (app: any) => void;
+import express from 'express';
+declare const _default: (app: express.Application) => void;
 export default _default;
 //# sourceMappingURL=integrities.routes.d.ts.map

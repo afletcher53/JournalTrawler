@@ -1,11 +1,11 @@
 import express from 'express';
-import exportData from '../scripts/export-data';
-import sendEmail from '../scripts/send-email';
-import wipeall from '../scripts/wipe-data';
-
+import exportData from '../scripts/exportData.script';
+import sendEmail from '../scripts/sendEmail.script';
+import wipeall from '../scripts/wipeData.script';
+import db from '../models';
 
 exports.nuclearWipe = async (req: express.Request, res: express.Response) => {
-  wipeall();
+  wipeall(db);
   res.json({'message': 'Everything has been wipped'});
 };
 

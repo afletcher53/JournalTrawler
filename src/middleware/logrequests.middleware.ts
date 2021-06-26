@@ -1,7 +1,7 @@
 
 import { NextFunction, Request, Response } from 'express';
 import systemLogger from '../app/loggers/system.logger';
-import getActualRequestDurationInMilliseconds  from './functions/getActualRequestDurationInMilliseconds';
+import getActualRequestDurationInMilliseconds from './functions/getActualRequestDurationInMilliseconds';
 
 /**
  * Middleware to log requests to the systemLogger
@@ -10,7 +10,7 @@ import getActualRequestDurationInMilliseconds  from './functions/getActualReques
  * @param next Express NextFunction
  */
 const logRequests = (req: Request, res: Response, next: NextFunction) => {
-  const { method }  = req;
+  const { method } = req;
   const url = req.url;
   const status = res.statusCode;
   const start = process.hrtime();

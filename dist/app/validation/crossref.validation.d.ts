@@ -1,6 +1,10 @@
-/// <reference types="express-serve-static-core" />
 /// <reference types="hapi__joi" />
 import Joi from '@hapi/joi';
-export declare const articleCrossRefResponseValidation: (data: Express.Request) => Joi.ValidationResult;
-export declare const articleSingleValidation: (data: any) => Joi.ValidationResult;
+import express from 'express';
+/**
+ * Validate the response of getting a single article from Crossref API
+ * @param data express resposne from API
+ * @returns Error if doesnt match
+ */
+export declare const articleCrossRefResponseValidation: (data: express.Response) => Joi.ValidationResult;
 //# sourceMappingURL=crossref.validation.d.ts.map

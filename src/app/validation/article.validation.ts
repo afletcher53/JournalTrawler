@@ -1,4 +1,5 @@
 import Joi from '@hapi/joi';
+import express from 'express';
 
 const options = {
   abortEarly: false,
@@ -11,34 +12,34 @@ const options = {
 
 
 // Article Post Validation
-export const articlePostValidation = (data: Express.Request) => {
+export const articlePostValidation = (data: express.Request) => {
   const minStringValue = 6;
   const schema = Joi.object({
     print_issn:
-            Joi.string()
-                .min(0)
-                .required(),
+      Joi.string()
+        .min(0)
+        .required(),
     electronic_issn:
-            Joi.string()
-                .min(0)
-                .required(),
+      Joi.string()
+        .min(0)
+        .required(),
     doi:
-            Joi.string()
-                .min(minStringValue)
-                .required(),
+      Joi.string()
+        .min(minStringValue)
+        .required(),
 
   });
   return schema.validate(data, options);
 };
 
-export const articleSingleValidation = (data: Express.Request) => {
+export const articleSingleValidation = (data: express.Request) => {
   const minStringValue = 6;
   const schema = Joi.object({
     id:
-          Joi
-              .string()
-              .required()
-              .min(minStringValue),
+      Joi
+        .string()
+        .required()
+        .min(minStringValue),
   });
 
   return schema.validate(data, options);

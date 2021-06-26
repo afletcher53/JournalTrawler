@@ -1,4 +1,6 @@
-export default (app) => {
+import express from 'express';
+
+export default (app: express.Application) => {
   const articles = require('../controllers/article.controller');
 
   // eslint-disable-next-line new-cap

@@ -1,4 +1,6 @@
-export default (app) => {
+import express from 'express';
+
+export default (app: express.Application) => {
   const journals = require('../controllers/journal.controller');
 
   const router = require('express').Router();
