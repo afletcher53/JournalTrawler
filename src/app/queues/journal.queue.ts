@@ -1,12 +1,12 @@
-import Bull from "bull";
+import Bull from 'bull';
 import {redisHost, redisPort} from '../config/redis.config';
-import { logJobCompleted, logJobFailed } from "../loggers/job.logger";
+import { logJobCompleted, logJobFailed } from '../loggers/job.logger';
 import journalProcess from '../processes/journal.process';
 const journalQueue = new Bull('journalQueue', {
   redis: {
     host: String(redisHost),
-    port: Number(redisPort)
-  }
+    port: Number(redisPort),
+  },
 });
 
 const options = {

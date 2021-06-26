@@ -1,15 +1,15 @@
-import Bull from "bull";
+import Bull from 'bull';
 import {redisHost, redisPort} from '../config/redis.config';
-import { logJobCompleted, logJobFailed } from "../loggers/job.logger";
-import { getAbstract } from "../processes/abstract.process";
+import { logJobCompleted, logJobFailed } from '../loggers/job.logger';
+import { getAbstract } from '../processes/abstract.process';
 import articleProcess from '../processes/article.process';
 
 
-const articleQueue = new Bull('articleQueue', { 
+const articleQueue = new Bull('articleQueue', {
   redis: {
     host: String(redisHost),
-    port: Number(redisPort)
-  }
+    port: Number(redisPort),
+  },
 });
 
 
@@ -22,10 +22,10 @@ const options = {
 const addArticle = async (data: any) => {
   const job = await articleQueue.add(data, options);
   await job.finished().then(()=>{
-    getAbstract(job)
+    getAbstract(job);
   }
   );
-  return job
+  return job;
 };
 
 articleQueue.on('global:completed', async (job) => {

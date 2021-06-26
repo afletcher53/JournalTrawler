@@ -1,7 +1,6 @@
 import express from 'express';
-
+import articles from '../controllers/article.controller';
 export default (app: express.Application) => {
-  const articles = require('../controllers/article.controller');
 
   // eslint-disable-next-line new-cap
   const router = require('express').Router();
@@ -22,7 +21,7 @@ export default (app: express.Application) => {
   router.put('/:id', articles.update);
 
   // Delete a article with id
-  router.delete('/:id', articles.delete);
+  router.delete('/:id', articles.deleteOne);
 
   // Create a new article
   router.delete('/', articles.deleteAll);

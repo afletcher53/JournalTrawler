@@ -1,7 +1,8 @@
 import express from 'express';
+import integrities from '../controllers/integrity.controller';
 
 export default (app: express.Application) => {
-    const integrities = require('../controllers/integrity.controller');
+
 
     const router = require('express').Router();
 

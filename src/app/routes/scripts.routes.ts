@@ -1,5 +1,8 @@
-export default (app) => {
-    const scripts = require('../controllers/scripts.controller');
+import express from 'express';
+import scripts from '../controllers/scripts.controller';
+
+export default (app: express.Application) => {
+
 
     // eslint-disable-next-line new-cap
     const router = require('express').Router();

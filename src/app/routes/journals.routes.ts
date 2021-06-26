@@ -1,7 +1,8 @@
 import express from 'express';
+import journals from '../controllers/journal.controller';
 
 export default (app: express.Application) => {
-  const journals = require('../controllers/journal.controller');
+
 
   const router = require('express').Router();
 
@@ -27,7 +28,7 @@ export default (app: express.Application) => {
   router.put('/:id', journals.update);
 
   // Delete a journal with id
-  router.delete('/:id', journals.delete);
+  router.delete('/:id', journals.deleteOne);
 
   // Create a new journal
   router.delete('/', journals.deleteAll);
