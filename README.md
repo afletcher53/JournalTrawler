@@ -1,9 +1,7 @@
 # JournalTrawler
 
 Journal Trawler is designed to textmine metadata from various journals. It utilised CROSSREF, DOAJ and other APIS to do this.
-This express application utilises good manners when using these services. 
-It creates an elasticsearch database containing all information mined from these services. 
-it is built in Typescript, with ES6. 
+Journal Trawler creates an express API which can be used to download journal metadata to an elasticsearch database. It  utilises good manners when using these services. It is built in Typescript, with ES6. 
 
 # Configuration
 
