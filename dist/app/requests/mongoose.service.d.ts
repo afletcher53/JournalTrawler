@@ -3,7 +3,7 @@
  * @param {string} data - The ISSN number of the Journal to be checked
  * @return {boolean} - True = journal exists, false it doesnt exist.
  */
-export declare function mongoCheckJournalExistsByISSN(data: any): Promise<Boolean>;
+export declare function mongoCheckJournalExistsByISSN(data: any): Promise<boolean>;
 /**
  * Determines if a Article already exists (via doi )
  * @param {string} data - The ISSN number of the Journal to be checked

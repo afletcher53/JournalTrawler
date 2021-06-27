@@ -11,8 +11,8 @@ const integrity_process_1 = __importDefault(require("../processes/integrity.proc
 const integrityQueue = new bull_1.default('integrityQueue', {
     redis: {
         host: String(redis_config_1.redisHost),
-        port: Number(redis_config_1.redisPort)
-    }
+        port: Number(redis_config_1.redisPort),
+    },
 });
 exports.integrityQueue = integrityQueue;
 const options = {

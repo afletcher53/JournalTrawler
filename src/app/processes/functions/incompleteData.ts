@@ -1,14 +1,16 @@
 import { Job } from 'bull';
 import db from '../../models';
 import jobLiterals from '../../static/JobCode.enum';
-import { convert, Journal } from '../integrity.process';
+
+import  convert  from './convert';
 const Article = db.articles;
 const Integrity = db.integrity;
+const Journal = db.journals;
 
-/** 
+/**
  * Calculates incomplete data from an issn
  */
-export async function incompleteData(job: Job<any>) {
+export async function incompleteData(job: Job) {
   // grab all articles with the ISSN
   const journal = await Journal.findOne({ $or: [{ issn_electronic: job.data.issn }, { issn_print: job.data.issn }] });
   const articles = await Article.find({ 'journal': journal._id });
@@ -35,7 +37,7 @@ export async function incompleteData(job: Job<any>) {
     journal: 0,
     createdAt: 0,
     updatedAt: 0,
-    __v: 0
+    __v: 0,
   };
   articles.forEach((element) => {
     if (element._id != null) {
@@ -60,7 +62,7 @@ export async function incompleteData(job: Job<any>) {
     }
     if (element.journal_issn_print != null) {
       totalFieldCountNotNull++;
-      individualFields.journal_issn_print++
+      individualFields.journal_issn_print++;
     }
     if (element.reference_count != null) {
       totalFieldCountNotNull++;
@@ -103,7 +105,7 @@ export async function incompleteData(job: Job<any>) {
       individualFields.license++;
     }
     if (element.doi != null) {
-      totalFieldCountNotNull++; 
+      totalFieldCountNotNull++;
       individualFields.doi++;
     }
     if (element.cr_parsed != null) {
@@ -125,7 +127,7 @@ export async function incompleteData(job: Job<any>) {
     articlesParsed: articles.length,
     totalArticleFieldsAvailable: totalFieldCount,
     totalPercentageFieldsFilled: percentageFilled,
-    dataBreakdown: convert(individualFields, articles.length)
+    dataBreakdown: convert(individualFields, articles.length),
   };
 
   const integrity = new Integrity({

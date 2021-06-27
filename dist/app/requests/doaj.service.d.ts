@@ -1,2 +1,2 @@
-export declare const fetchArticleExistsByISSNDOAJ: (issn: String) => Promise<any>;
+export declare const fetchArticleExistsByISSNDOAJ: (issn: string) => Promise<any>;
 //# sourceMappingURL=doaj.service.d.ts.map

@@ -10,5 +10,5 @@ export default {
     host: elasticSearchUrl,
     port: elasticSearchPort,
     protocol: elasticSearchProtocol,
-    auth: `${elasticSearchUsername}:${elasticSearchPassword}`
-}
+    auth: `${elasticSearchUsername}:${elasticSearchPassword}`,
+};

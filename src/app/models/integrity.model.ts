@@ -2,8 +2,8 @@
 
 import mongoosastic from 'mongoosastic';
 import config from '../config/elasticsearch.config';
-import mongoDBLogger from "../loggers/mongoDB.logger";
-import systemLogger from '../loggers/system.logger';
+import mongoDBLogger from '../loggers/mongoDB.logger';
+// import systemLogger from '../loggers/system.logger';
 
 export default (mongoose) => {
   // eslint-disable-next-line new-cap
@@ -14,10 +14,10 @@ export default (mongoose) => {
         data: Object,
         journal: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: 'journal'
-        }
+          ref: 'journal',
+        },
       },
-      {timestamps: true},
+      {timestamps: true}
   );
 
   schema.method('toJSON', function() {
@@ -25,7 +25,7 @@ export default (mongoose) => {
     object.id = _id;
     return object;
   });
-  
+
   schema.post('init', function(doc) {
     mongoDBLogger.info(`${doc._id} Integrity has been initialized from the db`);
   });
@@ -37,16 +37,17 @@ export default (mongoose) => {
   });
   schema.post('remove', function(doc) {
     mongoDBLogger.info(`${doc._id} Integrity has been removed`);
-  }); 
-  schema.plugin(mongoosastic ,config);
-  const Integrity = mongoose.model('integrity', schema);
-  var stream = Integrity.synchronize();
-  stream.on('error', function (err) {
-    systemLogger.error("Error while synchronizing" + err);
   });
 
-  stream.on('data', function(err, doc){
-    systemLogger.info('indexing: done');
-});
+  schema.plugin(mongoosastic, config);
+  const Integrity = mongoose.model('integrity', schema);
+  // const stream = Integrity.synchronize();
+
+  // stream.on('error', function (err) {
+  //   systemLogger.error("Error while synchronizing" + err);
+  // });
+  // stream.on('data', function (err, doc) {
+  //   systemLogger.info('indexing: done');
+  // });
   return Integrity;
 };

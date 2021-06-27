@@ -1,9 +1,8 @@
 import Bull from 'bull';
-import {redisHost, redisPort} from '../config/redis.config';
+import { redisHost, redisPort } from '../config/redis.config';
 import { logJobCompleted, logJobFailed } from '../loggers/job.logger';
 import { getAbstract } from '../processes/abstract.process';
 import articleProcess from '../processes/article.process';
-
 
 const articleQueue = new Bull('articleQueue', {
   redis: {
@@ -18,10 +17,9 @@ const options = {
   delay: 100,
 };
 
-
 const addArticle = async (data: any) => {
   const job = await articleQueue.add(data, options);
-  await job.finished().then(()=>{
+  await job.finished().then(() => {
     getAbstract(job);
   }
   );
@@ -32,7 +30,7 @@ articleQueue.on('global:completed', async (job) => {
   logJobCompleted('article', job);
 });
 
-articleQueue.on('failed',  (job, error) => {
+articleQueue.on('failed', (job, error) => {
   logJobFailed('article', job, error);
 });
 

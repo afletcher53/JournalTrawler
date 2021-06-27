@@ -11,8 +11,8 @@ const abstract_process_1 = require("../processes/abstract.process");
 const abstractQueue = new bull_1.default('abstractQueue', {
     redis: {
         host: String(redis_config_1.redisHost),
-        port: Number(redis_config_1.redisPort)
-    }
+        port: Number(redis_config_1.redisPort),
+    },
 });
 exports.abstractQueue = abstractQueue;
 const options = {

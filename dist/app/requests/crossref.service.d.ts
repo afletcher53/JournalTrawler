@@ -1,12 +1,12 @@
 export declare type Article = {
-    doi: String;
+    doi: string;
 };
-export declare const fetchArticleByDOI: (doi: String) => Promise<any>;
-export declare const fetchJournalMetadataByISSN: (issn: String) => Promise<any>;
-export declare const fetchArticleHeadByDOI: (doi: String) => Promise<any>;
-export declare const fetchJournalHeadByISSN: (ISSN: String) => Promise<any>;
-export declare const fetchJournalByISSN: (issn: String) => Promise<any>;
-export declare const fetchDOIsFromISSN: (issn: String) => Promise<Article[]>;
+export declare const fetchArticleByDOI: (doi: string) => Promise<any>;
+export declare const fetchJournalMetadataByISSN: (issn: string) => Promise<any>;
+export declare const fetchArticleHeadByDOI: (doi: string) => Promise<any>;
+export declare const fetchJournalHeadByISSN: (ISSN: string) => Promise<any>;
+export declare const fetchJournalByISSN: (issn: string) => Promise<any>;
+export declare const fetchDOIsFromISSN: (issn: string) => Promise<Article[]>;
 /**
  * Search CrossRef API via ISSN to return sample of DOIs from it.
  * @param {String} issn ISSN to be searched on the CrossRefAPI

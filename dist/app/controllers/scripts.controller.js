@@ -7,12 +7,16 @@ const exportData_script_1 = __importDefault(require("../scripts/exportData.scrip
 const sendEmail_script_1 = __importDefault(require("../scripts/sendEmail.script"));
 const wipeData_script_1 = __importDefault(require("../scripts/wipeData.script"));
 const models_1 = __importDefault(require("../models"));
-exports.nuclearWipe = async (req, res) => {
+const nuclearWipe = async (req, res) => {
     wipeData_script_1.default(models_1.default);
     res.json({ 'message': 'Everything has been wipped' });
 };
-exports.backup = async (req, res) => {
+const backup = async (req, res) => {
     exportData_script_1.default();
     sendEmail_script_1.default();
     res.json({ 'message': 'Backups are being prepared' });
+};
+exports.default = {
+    nuclearWipe,
+    backup,
 };
