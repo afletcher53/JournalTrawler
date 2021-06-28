@@ -6,6 +6,7 @@ import articleRoutes from './app/routes/articles.routes';
 import journalRoutes from './app/routes/journals.routes';
 import integrityRoutes from './app/routes/integrities.routes';
 import scriptsRoutes from './app/routes/scripts.routes';
+import getActualRequestDurationInMilliseconds from './middleware/functions/getActualRequestDurationInMilliseconds';
 
 const app = express();
 
@@ -35,5 +36,7 @@ integrityRoutes(app);
 journalRoutes(app);
 scriptsRoutes(app);
 
+console.log(process.hrtime())
+console.log(getActualRequestDurationInMilliseconds(process.hrtime()))
 export default app;
 

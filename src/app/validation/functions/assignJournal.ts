@@ -4,7 +4,7 @@ const Journal = db.journals;
 
 /**
  * Setter for data to the Journal Object
- * @param data data to be assigned. 
+ * @param data data to be assigned.
  * @param crDate Date of the last crossref check time
  * @param issnPrint issn of Print
  * @param issnElectronic issn of Electronic

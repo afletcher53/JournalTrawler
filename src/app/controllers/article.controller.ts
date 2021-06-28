@@ -37,6 +37,8 @@ const create = async (req: express.Request, res: express.Response) => {
   articleLogger.info(`The creation request for ${req.body.doi} is being processed`);
 };
 
+
+
 // Retrieve all Articles from the database.
 const findAll = (req, res: express.Response) => {
   const title = req.query.title;

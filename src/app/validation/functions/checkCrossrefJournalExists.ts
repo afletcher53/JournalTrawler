@@ -21,6 +21,7 @@ const checkCrossrefJournalExists = async (issn: string): Promise<boolean> => {
     }
   } catch (e) {
     crossrefLogger.error(e);
+    return false;
   }
 };
 

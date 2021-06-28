@@ -1,5 +1,5 @@
 import Bull from 'bull';
-import {redisHost, redisPort} from '../config/redis.config';
+import { redisHost, redisPort } from '../config/redis.config';
 import { logJobCompleted, logJobFailed } from '../loggers/job.logger';
 import { getAbstract } from '../processes/abstract.process';
 
@@ -14,21 +14,17 @@ const options = {
   attempts: 2,
 };
 
-
-
 const addJournal = (data: any) => {
   abstractQueue.add(data, options);
 };
-
 
 abstractQueue.on('global:completed', async (job) => {
   logJobCompleted('journal', job);
 });
 
-abstractQueue.on('failed',  (job, error) => {
+abstractQueue.on('failed', (job, error) => {
   logJobFailed('journal', job, error);
 });
-
 
 abstractQueue.process(getAbstract);
 

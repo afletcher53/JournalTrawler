@@ -41,7 +41,8 @@ export default (mongoose) => {
 
   schema.plugin(mongoosastic, config);
   const Integrity = mongoose.model('integrity', schema);
-  // const stream = Integrity.synchronize();
+  // const stream = Integrity.synchronize(); //TODO : Fix synchronisation issue:  reason: 'mapper [data.dataBreakdown.percentage] cannot be changed from type [float] to [long]'
+
 
   // stream.on('error', function (err) {
   //   systemLogger.error("Error while synchronizing" + err);

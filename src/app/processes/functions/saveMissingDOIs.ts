@@ -35,10 +35,4 @@ export async function missingDOIs(job: Job) {
     integrity.save(integrity);
   }
 }
-export function convert(obj, articleCount: number) {
-  return Object.keys(obj).map(key => ({
-    name: key,
-    value: obj[key],
-    percentage: obj[key] / articleCount * 100,
-  }));
-}
+
