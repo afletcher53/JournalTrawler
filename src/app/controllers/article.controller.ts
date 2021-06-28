@@ -7,7 +7,7 @@ import {
 } from '../requests/mongoose.service';
 import { articlePostValidation, articleSingleValidation } from '../validation/article.validation';
 import serializer from '../validation/json.validation';
-import HttpStatusCode from '../static/HttpStatusCode.enum';
+import HttpStatusCode from '../Typescript/Enums/HttpStatusCode.enum';
 
 const create = async (req: express.Request, res: express.Response) => {
   // Validate request

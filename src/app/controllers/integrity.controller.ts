@@ -4,9 +4,9 @@ import { addIntegrity } from '../queues/integrity.queue';
 import { mongoCheckJournalExistsByISSN, mongoFetchAllJournals } from '../requests/mongoose.service';
 import { journalPostValidation } from '../validation/journal.validation';
 import serializer from '../validation/json.validation';
-import HttpStatusCode from '../static/HttpStatusCode.enum';
-import StringLiterals from '../static/StringLiterals.enum';
-import jobLiterals from '../static/JobCode.enum';
+import HttpStatusCode from '../Typescript/Enums/HttpStatusCode.enum';
+import StringLiterals from '../Typescript/Enums/StringLiterals.enum';
+import jobLiterals from '../Typescript/Enums/JobCode.enum';
 
 const Integrity = db.integrity;
 

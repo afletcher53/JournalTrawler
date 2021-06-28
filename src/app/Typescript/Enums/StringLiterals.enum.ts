@@ -5,7 +5,6 @@ enum StringLiterals {
 
     JOURNAL_NOT_EXIST = 'The journal does not exist in the database',
     GENERIC_ERROR = 'Error',
-
     INTEGRITIES_START = 'Integrity checks now are being performed on this issn and should be available shortly',
 
     INTEGRITY_NOT_FOUND = 'No Integrity check found with this id',

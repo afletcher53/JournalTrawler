@@ -1,6 +1,6 @@
 import { Job } from 'bull';
 import db from '../../models';
-import jobLiterals from '../../static/JobCode.enum';
+import jobLiterals from '../../Typescript/Enums/JobCode.enum';
 
 import  convert  from './convert';
 const Article = db.articles;

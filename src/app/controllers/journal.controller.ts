@@ -9,8 +9,8 @@ import {
   journalSingleValidation
 } from '../validation/journal.validation';
 import serializer from '../validation/json.validation';
-import HttpStatusCode from '../static/HttpStatusCode.enum';
-import StringLiterals from '../static/StringLiterals.enum';
+import HttpStatusCode from '../Typescript/Enums/HttpStatusCode.enum';
+import StringLiterals from '../Typescript/Enums/StringLiterals.enum';
 import mongoDBLogger from '../loggers/mongoDB.logger';
 
 

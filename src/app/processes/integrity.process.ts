@@ -1,7 +1,7 @@
 
 import { Job } from 'bull';
 
-import jobLiterals from '../static/JobCode.enum';
+import jobLiterals from '../Typescript/Enums/JobCode.enum';
 import { incompleteData } from './functions/incompleteData';
 import updateISSN from './functions/updateISSN';
 import { missingDOIs } from './functions/saveMissingDOIs';
