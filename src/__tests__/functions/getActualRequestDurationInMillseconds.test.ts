@@ -1,4 +1,4 @@
-import getActualRequestDurationInMilliseconds from '../middleware/functions/getActualRequestDurationInMilliseconds';
+import getActualRequestDurationInMilliseconds from '../../middleware/functions/getActualRequestDurationInMilliseconds';
 
 
 describe('Convert Request Duration into Milliseconds', () => {

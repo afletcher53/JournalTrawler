@@ -17,6 +17,7 @@ const checkDOAJJournalExistsDOAJ = async (issn: string): Promise<boolean> => {
     }
   } catch (e) {
     doajLogger.error(e);
+    return false;
   }
 };
 

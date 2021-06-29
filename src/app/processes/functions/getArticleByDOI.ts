@@ -14,7 +14,6 @@ const checkArticlesExistsInMongoDB = async (data: string): Promise<boolean> => {
     value = true;
     const logText = `[${data}] Already exists in database`;
     doiLogger.error(logText);
-    throw new Error('Article Already Exists in the database');
   }
 
   return value;

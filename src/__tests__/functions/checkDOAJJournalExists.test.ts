@@ -1,5 +1,6 @@
-import TestLiterals from '../app/Typescript/Enums/TestLiterals.enum';
-import checkDOAJJournalExists from '../app/validation/functions/checkDOAJJournalExists';
+import TestLiterals from '../../app/Typescript/Enums/TestLiterals.enum';
+import checkDOAJJournalExists from '../../app/validation/functions/checkDOAJJournalExists';
+
 
 describe('Checks to see if known crossref issns return true or false', () => {
     test('it should return true', async() => {

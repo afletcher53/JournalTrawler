@@ -18,4 +18,4 @@ const crossrefLogger = winston.createLogger({
   transports,
 })
 
-export default crossrefLogger
+export default crossrefLogger;

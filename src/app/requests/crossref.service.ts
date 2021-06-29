@@ -31,8 +31,8 @@ export const fetchJournalByISSN = async (issn: string): Promise<any> => {
 };
 
 export const fetchDOIsFromISSN = async (issn: string): Promise<Article[]> => {
-  // const data = await getDOIsfromISSNSample(issn, 5)
-  const data = await getDOIsfromISSN(issn);
+  const data = await getDOIsfromISSNSample(issn, 5)
+  // const data = await getDOIsfromISSN(issn);
   return data;
 };
 
@@ -68,10 +68,10 @@ const getDOIsfromISSN = async (issn: string, rows?: number, cursor?: string, dat
  * @param {List} data List of DOIS generated from API search
  * @returns {Array} data List of DOIS from the CrossRefAPISearch
  */
-// const getDOIsfromISSNSample = async(issn: String, sampleSize: Number)=>  {
-//   let data = []
-//   let url = '/journals/' + issn + '/works?sample=' + sampleSize
-//   const response = await http.get(url);
-//   data.push(...response.data.message.items);
-//   return data;
-// }
+const getDOIsfromISSNSample = async(issn: String, sampleSize: Number)=>  {
+  let data = []
+  let url = '/journals/' + issn + '/works?sample=' + sampleSize
+  const response = await http.get(url);
+  data.push(...response.data.message.items);
+  return data;
+}

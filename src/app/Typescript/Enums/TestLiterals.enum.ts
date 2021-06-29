@@ -12,7 +12,10 @@ enum TestLiterals {
     ISSN_EXISTS_CROSSREF = '2396-9776',
 
     // International Standard Serial Number of a Jorunal known NOT to exist
-    ISSN_DOESNT_EXIST = '1234-1234'
+    ISSN_DOESNT_EXIST = '1234-1234',
+
+    // Title of the known ISSN
+    ISSN_EXISTS_CROSSREF_TITLE = 'Veterinary Evidence'
 
 }
 

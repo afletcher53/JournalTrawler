@@ -6,6 +6,7 @@ import { fetchArticleByDOI } from '../requests/crossref.service';
 import { articleCrossRefResponseValidation } from '../validation/crossref.validation';
 import setArticleDetails from './functions/setArticleDetails';
 import getArticleByDOI from './functions/getArticleByDOI';
+import { mongoCheckJournalExistsByISSN } from '../requests/mongoose.service';
 
 export const Article = db.articles;
 
@@ -14,7 +15,7 @@ export const Article = db.articles;
  * @param job from the queue calling it.
  */
 const articleProcess = async (job: Job) => {
-  await getArticleByDOI(job.data.doi);
+  const articleExists = await getArticleByDOI(job.data.doi);
   const articleData: any = await fetchArticleByDOI(job.data.doi);
 
   //Validate the data.
@@ -23,20 +24,33 @@ const articleProcess = async (job: Job) => {
     throw Error(error.details[0].message);
   }
 
-  //TODO: check to see that a journal exists in the mongodb (to prevent orphaned articles) TODO
+  // Check journal exists in database to prevent orphaned articles
+  const journalExistsElectronic = await mongoCheckJournalExistsByISSN(job.data.electronic_issn);
+  const journalExistsPrint = await mongoCheckJournalExistsByISSN(job.data.print_issn);
+
+  if (journalExistsPrint && journalExistsElectronic) {
+    throw Error('The journal doesnt exist, dont add it');
+  }
+
+  if (!articleExists) {
+    //Generate the article Object.
+    const article = setArticleDetails(job.data.doi, job.data.print_issn, job.data.electronic_issn, articleData, job.data.journal_id);
+
+    try {
+      article
+        .save(article)
+        .catch((err: Error) => {
+          const logText = `[${job.data.doi}] Error processing ${err}`;
+          doiLogger.error(logText);
+        });
+    } catch (e) {
+      throw Error(' The article already exists');
+    }
+  }
 
 
-  //Generate the article Object.
-  const article = setArticleDetails(job.data.doi, job.data.print_issn, job.data.electronic_issn, articleData, job.data.journal_id);
-  article
-    .save(article)
-    .catch((err: Error) => {
-      const logText = `[${job.data.doi}] Error processing ${err}`;
-      doiLogger.error(logText);
-    });
 
 };
 
 export default articleProcess;
-
 

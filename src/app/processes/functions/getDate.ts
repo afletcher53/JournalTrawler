@@ -6,7 +6,6 @@
 
 
 const getDate = (articleData) => {
-  console.log(articleData.message)
   if (typeof articleData.message['published-online'] !== 'undefined') {
     //Set day to one if not provided
     if (!articleData.message['published-online']['date-parts'][0][2]) {

@@ -1,4 +1,4 @@
-import checkCrossrefJournalExists from '../app/validation/functions/checkCrossrefJournalExists';
+import checkCrossrefJournalExists from '../../app/validation/functions/checkCrossrefJournalExists';
 
 
 describe('Checks to see if known crossref issns return true or false', () => {

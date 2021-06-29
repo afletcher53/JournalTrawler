@@ -1,5 +1,6 @@
-import { fetchArticleByDOI } from '../app/requests/crossref.service';
-import TestLiterals from '../app/Typescript/Enums/TestLiterals.enum';
+import { fetchArticleByDOI } from '../../app/requests/crossref.service';
+import TestLiterals from '../../app/Typescript/Enums/TestLiterals.enum';
+
 
 describe('Checks to see if Crossref Services are responding correctly', () => {
     test('it should return true', async() => {
