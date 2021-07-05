@@ -5,12 +5,12 @@ import journalProcess from '../processes/journal.process';
 const journalQueue = new Bull('journalQueue', {
   redis: {
     host: String(redisHost),
-    port: Number(redisPort),
-  },
+    port: Number(redisPort)
+  }
 });
 
 const options = {
-  attempts: 2,
+  attempts: 2
 };
 
 const addJournal = (data: any) => {
@@ -27,5 +27,3 @@ journalQueue.on('failed', (job, error) => {
 journalQueue.process(journalProcess);
 
 export { addJournal, journalQueue };
-
-

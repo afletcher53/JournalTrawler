@@ -1,7 +1,5 @@
-
 import { Job } from 'bull';
 import { generateJobsFromISSN } from './functions/generateJobsFromISSN';
-
 
 /**
  * Starts a Journal Process Job using Bull

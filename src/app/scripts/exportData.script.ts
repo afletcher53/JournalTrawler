@@ -2,7 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import systemLogger from '../loggers/system.logger';
 import {
-  mongoFetchAllArticles, mongoFetchAllIntegrities,
+  mongoFetchAllArticles,
+  mongoFetchAllIntegrities,
   mongoFetchAllJournals
 } from '../requests/mongoose.service';
 
@@ -31,38 +32,40 @@ const exportData = async () => {
   });
   Promise.all(
     // Delete all previous backups
-    [mongoFetchAllArticles().then((data) => {
-      const sendData = JSON.stringify(data);
-      const fileName = `data/backup_Article_${year}-${month}-${date}.csv`;
-      fs.writeFile(fileName, sendData, function (error) {
-        if (error) {
-          systemLogger.error(error);
-        }
-        systemLogger.info(`Backup to  ${fileName} was a success`);
-      });
-    }),
+    [
+      mongoFetchAllArticles().then((data) => {
+        const sendData = JSON.stringify(data);
+        const fileName = `data/backup_Article_${year}-${month}-${date}.csv`;
+        fs.writeFile(fileName, sendData, function (error) {
+          if (error) {
+            systemLogger.error(error);
+          }
+          systemLogger.info(`Backup to  ${fileName} was a success`);
+        });
+      }),
 
-    mongoFetchAllJournals().then((data) => {
-      const sendData = JSON.stringify(data);
-      const fileName = `data/backup_Journal_${year}-${month}-${date}.csv`;
-      fs.writeFile(fileName, sendData, function (error) {
-        if (error) {
-          systemLogger.error(error);
-        }
-        systemLogger.info(`Backup to  ${fileName} was a success`);
-      });
-    }),
+      mongoFetchAllJournals().then((data) => {
+        const sendData = JSON.stringify(data);
+        const fileName = `data/backup_Journal_${year}-${month}-${date}.csv`;
+        fs.writeFile(fileName, sendData, function (error) {
+          if (error) {
+            systemLogger.error(error);
+          }
+          systemLogger.info(`Backup to  ${fileName} was a success`);
+        });
+      }),
 
-    mongoFetchAllIntegrities().then((data) => {
-      const sendData = JSON.stringify(data);
-      const fileName = `data/backup_Integrities_${year}-${month}-${date}.csv`;
-      fs.writeFile(fileName, sendData, function (error) {
-        if (error) {
-          systemLogger.error(error);
-        }
-        systemLogger.info(`Backup to  ${fileName} was a success`);
-      });
-    })]
+      mongoFetchAllIntegrities().then((data) => {
+        const sendData = JSON.stringify(data);
+        const fileName = `data/backup_Integrities_${year}-${month}-${date}.csv`;
+        fs.writeFile(fileName, sendData, function (error) {
+          if (error) {
+            systemLogger.error(error);
+          }
+          systemLogger.info(`Backup to  ${fileName} was a success`);
+        });
+      })
+    ]
   );
 };
 

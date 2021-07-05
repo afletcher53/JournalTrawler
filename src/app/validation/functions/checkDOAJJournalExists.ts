@@ -1,7 +1,6 @@
 import doajLogger from '../../loggers/doaj.logger.';
 import { fetchArticleExistsByISSNDOAJ } from '../../requests/doaj.service';
 
-
 /**
  * Checks if a valid journal exists from DOAJ API
  * @param {string} issn to be searched

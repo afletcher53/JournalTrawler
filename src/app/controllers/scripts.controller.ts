@@ -6,16 +6,16 @@ import db from '../models';
 
 const nuclearWipe = async (req: express.Request, res: express.Response) => {
   wipeall(db);
-  res.json({'message': 'Everything has been wipped'});
+  res.json({ message: 'Everything has been wipped' });
 };
 
 const backup = async (req: express.Request, res: express.Response) => {
   exportData();
   sendEmail();
-  res.json({'message': 'Backups are being prepared'});
+  res.json({ message: 'Backups are being prepared' });
 };
 
 export default {
   nuclearWipe,
-  backup,
+  backup
 };

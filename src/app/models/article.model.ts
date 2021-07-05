@@ -1,5 +1,3 @@
-
-
 /* eslint-disable no-invalid-this */
 import mongoosastic from 'mongoosastic';
 import config from '../config/elasticsearch.config';
@@ -26,8 +24,8 @@ export default (mongoose) => {
       cr_parsed: Boolean,
       journal: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'journal',
-      },
+        ref: 'journal'
+      }
     },
     { timestamps: true }
   );
@@ -37,7 +35,6 @@ export default (mongoose) => {
     object.id = _id;
     return object;
   });
-
 
   schema.post('init', function (doc) {
     mongoDBLogger.info(`${doc._id} Article has been initialized from the db`);

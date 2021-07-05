@@ -1,7 +1,6 @@
 import express from 'express';
 import articles from '../controllers/article.controller';
 export default (app: express.Application) => {
-
   // eslint-disable-next-line new-cap
   const router = require('express').Router();
 

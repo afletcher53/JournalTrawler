@@ -14,20 +14,22 @@ export const generateJobsFromISSN = async (issn: string, journalId: string) => {
 const processArticles = async (DOIList: any, journalId: string) => {
   const articleList = [];
 
-  await Promise.all(DOIList.map(async (e: Object) => {
-    const { printISSN, electronicISSN } = getPrintAndElectronicISSN(e);
-    const ArticleData = {
-      doi: e['DOI'],
-      print_issn: printISSN,
-      electronic_issn: electronicISSN,
-      journal_id: journalId,
-    };
-    const articleJob = await addArticle(ArticleData);
-    articleList.push(articleJob);
-    const logText = `[${e['DOI']}] added to articleQueue`;
-    doiLogger.info(logText);
-    return articleList;
-  }));
+  await Promise.all(
+    DOIList.map(async (e: Object) => {
+      const { printISSN, electronicISSN } = getPrintAndElectronicISSN(e);
+      const ArticleData = {
+        doi: e['DOI'],
+        print_issn: printISSN,
+        electronic_issn: electronicISSN,
+        journal_id: journalId
+      };
+      const articleJob = await addArticle(ArticleData);
+      articleList.push(articleJob);
+      const logText = `[${e['DOI']}] added to articleQueue`;
+      doiLogger.info(logText);
+      return articleList;
+    })
+  );
 
   return articleList;
 };

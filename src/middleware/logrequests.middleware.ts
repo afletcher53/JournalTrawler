@@ -1,4 +1,3 @@
-
 import { NextFunction, Request, Response } from 'express';
 import systemLogger from '../app/loggers/system.logger';
 import getActualRequestDurationInMilliseconds from './functions/getActualRequestDurationInMilliseconds';
@@ -16,7 +15,9 @@ const logRequests = (req: Request, res: Response, next: NextFunction) => {
   const start = process.hrtime();
   const durationInMilliseconds = getActualRequestDurationInMilliseconds(start);
 
-  const textlog = `[${method}:${url} ${status}] ${durationInMilliseconds.toLocaleString() + 'ms'}`;
+  const textlog = `[${method}:${url} ${status}] ${
+    durationInMilliseconds.toLocaleString() + 'ms'
+  }`;
   systemLogger.info(textlog);
   next();
 };

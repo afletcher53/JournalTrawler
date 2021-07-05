@@ -4,7 +4,6 @@
  * @returns Two strings
  */
 
-
 const getDate = (articleData) => {
   if (typeof articleData.message['published-online'] !== 'undefined') {
     //Set day to one if not provided
@@ -13,7 +12,13 @@ const getDate = (articleData) => {
     } else {
       daytum = articleData.message['published-online']['date-parts'][0][2];
     }
-    var publishedOnlineDate = new Date(Date.UTC(articleData.message['published-online']['date-parts'][0][0], (articleData.message['published-online']['date-parts'][0][1] - 1), daytum));
+    var publishedOnlineDate = new Date(
+      Date.UTC(
+        articleData.message['published-online']['date-parts'][0][0],
+        articleData.message['published-online']['date-parts'][0][1] - 1,
+        daytum
+      )
+    );
   }
 
   if (typeof articleData.message['published-print'] !== 'undefined') {
@@ -22,7 +27,13 @@ const getDate = (articleData) => {
     } else {
       ppdaytum = articleData.message['published-print']['date-parts'][0][2];
     }
-    var publishedPrintDate = new Date(Date.UTC(articleData.message['published-print']['date-parts'][0][0], (articleData.message['published-print']['date-parts'][0][1] - 1), ppdaytum));
+    var publishedPrintDate = new Date(
+      Date.UTC(
+        articleData.message['published-print']['date-parts'][0][0],
+        articleData.message['published-print']['date-parts'][0][1] - 1,
+        ppdaytum
+      )
+    );
   }
   return { publishedPrintDate, publishedOnlineDate };
 };

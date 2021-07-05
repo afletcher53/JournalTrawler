@@ -1,4 +1,3 @@
-
 import { Job } from 'bull';
 import doiLogger from '../loggers/doi.logger';
 import db from '../models';
@@ -25,8 +24,12 @@ const articleProcess = async (job: Job) => {
   }
 
   // Check journal exists in database to prevent orphaned articles
-  const journalExistsElectronic = await mongoCheckJournalExistsByISSN(job.data.electronic_issn);
-  const journalExistsPrint = await mongoCheckJournalExistsByISSN(job.data.print_issn);
+  const journalExistsElectronic = await mongoCheckJournalExistsByISSN(
+    job.data.electronic_issn
+  );
+  const journalExistsPrint = await mongoCheckJournalExistsByISSN(
+    job.data.print_issn
+  );
 
   if (journalExistsPrint && journalExistsElectronic) {
     throw Error('The journal doesnt exist, dont add it');
@@ -34,23 +37,23 @@ const articleProcess = async (job: Job) => {
 
   if (!articleExists) {
     //Generate the article Object.
-    const article = setArticleDetails(job.data.doi, job.data.print_issn, job.data.electronic_issn, articleData, job.data.journal_id);
+    const article = setArticleDetails(
+      job.data.doi,
+      job.data.print_issn,
+      job.data.electronic_issn,
+      articleData,
+      job.data.journal_id
+    );
 
     try {
-      article
-        .save(article)
-        .catch((err: Error) => {
-          const logText = `[${job.data.doi}] Error processing ${err}`;
-          doiLogger.error(logText);
-        });
+      article.save(article).catch((err: Error) => {
+        const logText = `[${job.data.doi}] Error processing ${err}`;
+        doiLogger.error(logText);
+      });
     } catch (e) {
       throw Error(' The article already exists');
     }
   }
-
-
-
 };
 
 export default articleProcess;
-

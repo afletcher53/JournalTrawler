@@ -17,17 +17,16 @@ import logRequests from './logrequests.middleware';
 //   algorithms: ['RS256'],
 // });
 const corsOptions = {
-  origin: 'http://localhost:8081',
+  origin: 'http://localhost:8081'
 };
-
 
 module.exports = [
   logRequests,
   helmet(),
   express.json(),
-  express.urlencoded({extended: true}),
-  cors(corsOptions),
-//   jwtCheck,
+  express.urlencoded({ extended: true }),
+  cors(corsOptions)
+  //   jwtCheck,
 ];
 
 //TODO: Middlewear to check connection to the REDIS database

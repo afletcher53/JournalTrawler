@@ -11,10 +11,9 @@ const transporter = nodemailer.createTransport({
   secured: true,
   auth: {
     user: emailAccount,
-    pass: emailApplicationPassword,
-  },
+    pass: emailApplicationPassword
+  }
 });
-
 
 const ts = Date.now();
 const dateObj = new Date(ts);
@@ -26,21 +25,21 @@ const mailOptions = {
   attachments: [
     {
       filename: `Article_${year}-${month}-${date}.csv`,
-      path: `data/backup_Article_${year}-${month}-${date}.csv`,
+      path: `data/backup_Article_${year}-${month}-${date}.csv`
     },
     {
       filename: `Journal_${year}-${month}-${date}.csv`,
-      path: `data/backup_Journal_${year}-${month}-${date}.csv`,
+      path: `data/backup_Journal_${year}-${month}-${date}.csv`
     },
     {
       filename: `Integrities_${year}-${month}-${date}.csv`,
-      path: `data/backup_Integrities_${year}-${month}-${date}.csv`,
-    },
+      path: `data/backup_Integrities_${year}-${month}-${date}.csv`
+    }
   ],
   from: emailAccount,
   to: emailAccount,
   subject: 'JournalTrawler Database Backup ready',
-  text: 'That was easy!',
+  text: 'That was easy!'
 };
 
 const sendEmailBackup = () => {
@@ -54,5 +53,3 @@ const sendEmailBackup = () => {
 };
 
 export default sendEmailBackup;
-
-

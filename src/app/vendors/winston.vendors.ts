@@ -5,7 +5,7 @@ export const levels = {
   warn: 1,
   info: 2,
   http: 3,
-  debug: 4,
+  debug: 4
 };
 
 export const level = () => {
@@ -19,7 +19,7 @@ const colors = {
   warn: 'yellow',
   info: 'green',
   http: 'magenta',
-  debug: 'white',
+  debug: 'white'
 };
 
 winston.addColors(colors);
@@ -33,4 +33,3 @@ export const format = winston.format.combine(
 );
 
 export default levels;
-

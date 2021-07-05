@@ -5,17 +5,21 @@
  */
 const getPrintAndElectronicISSN = (issnObject: Object) => {
   let printISSN: string, electronicISSN: string;
-  issnObject['issn-type'].forEach((element: { type: string; value: any; }) => {
+  issnObject['issn-type'].forEach((element: { type: string; value: any }) => {
     if (printISSN === undefined) {
-      printISSN = element.type === 'print' ? printISSN = String(element.value) : null;
+      printISSN =
+        element.type === 'print' ? (printISSN = String(element.value)) : null;
     }
     if (electronicISSN === undefined) {
-      electronicISSN = element.type === 'electronic' ? electronicISSN = String(element.value) : null;
+      electronicISSN =
+        element.type === 'electronic'
+          ? (electronicISSN = String(element.value))
+          : null;
     }
   });
   return {
     printISSN,
-    electronicISSN,
+    electronicISSN
   };
 };
 

@@ -19,12 +19,10 @@ export default (mongoose) => {
       counts_backfiledois: Number,
       cr_last_status_check_time: Date,
       cr_parsed: Boolean,
-      abstract_source_doaj: Boolean,
-
+      abstract_source_doaj: Boolean
     },
     { timestamps: true }
   );
-
 
   schema.method('toJSON', function () {
     const { __v, _id, ...object } = this.toObject();

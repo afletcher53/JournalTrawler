@@ -6,12 +6,12 @@ import { getAbstract } from '../processes/abstract.process';
 const abstractQueue = new Bull('abstractQueue', {
   redis: {
     host: String(redisHost),
-    port: Number(redisPort),
-  },
+    port: Number(redisPort)
+  }
 });
 
 const options = {
-  attempts: 2,
+  attempts: 2
 };
 
 const addJournal = (data: any) => {
@@ -29,5 +29,3 @@ abstractQueue.on('failed', (job, error) => {
 abstractQueue.process(getAbstract);
 
 export { addJournal, abstractQueue };
-
-

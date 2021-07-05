@@ -2,7 +2,7 @@ import { Job } from 'bull';
 import db from '../../models';
 import jobLiterals from '../../Typescript/Enums/JobCode.enum';
 
-import  convert  from './convert';
+import convert from './convert';
 const Article = db.articles;
 const Integrity = db.integrity;
 const Journal = db.journals;
@@ -12,9 +12,12 @@ const Journal = db.journals;
  */
 export async function incompleteData(job: Job) {
   // grab all articles with the ISSN
-  const journal = await Journal.findOne({ $or: [{ issn_electronic: job.data.issn }, { issn_print: job.data.issn }] });
-  const articles = await Article.find({ 'journal': journal._id });
-  const totalFieldCount: number = articles.length * Object.keys(Article.schema.paths).length;
+  const journal = await Journal.findOne({
+    $or: [{ issn_electronic: job.data.issn }, { issn_print: job.data.issn }]
+  });
+  const articles = await Article.find({ journal: journal._id });
+  const totalFieldCount: number =
+    articles.length * Object.keys(Article.schema.paths).length;
   let totalFieldCountNotNull = 0;
 
   const individualFields = {
@@ -37,7 +40,7 @@ export async function incompleteData(job: Job) {
     journal: 0,
     createdAt: 0,
     updatedAt: 0,
-    __v: 0,
+    __v: 0
   };
   articles.forEach((element) => {
     if (element._id != null) {
@@ -94,7 +97,7 @@ export async function incompleteData(job: Job) {
     }
     if (element.createdAt != null) {
       totalFieldCountNotNull++;
-       individualFields.createdAt++;
+      individualFields.createdAt++;
     }
     if (element.updatedAt != null) {
       totalFieldCountNotNull++;
@@ -122,21 +125,20 @@ export async function incompleteData(job: Job) {
     }
   });
 
-  const percentageFilled = totalFieldCountNotNull / totalFieldCount * 100;
+  const percentageFilled = (totalFieldCountNotNull / totalFieldCount) * 100;
   const resultObj = {
     articlesParsed: articles.length,
     totalArticleFieldsAvailable: totalFieldCount,
     totalPercentageFieldsFilled: percentageFilled,
-    dataBreakdown: convert(individualFields, articles.length),
+    dataBreakdown: convert(individualFields, articles.length)
   };
 
   const integrity = new Integrity({
     code: jobLiterals.DATA_COMPLETENESS_SINGLE,
     message: `Out of ${articles.length} articles, with a total of ${totalFieldCount} Article fields available, ${percentageFilled}% were filled`,
     journal: journal._id,
-    data: resultObj,
+    data: resultObj
   });
 
   integrity.save(integrity);
-
 }

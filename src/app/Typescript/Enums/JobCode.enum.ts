@@ -5,14 +5,12 @@
 /**
  * String Literals for Response Messages
  */
- enum jobLiterals {
+enum jobLiterals {
+  MISSING_DOIS = 1,
 
-    MISSING_DOIS = 1,
+  DATA_COMPLETENESS_SINGLE = 2,
 
-    DATA_COMPLETENESS_SINGLE = 2,
-
-    UPDATE_ISSN_SINGLE = 3,
-
+  UPDATE_ISSN_SINGLE = 3
 }
 
 export default jobLiterals;

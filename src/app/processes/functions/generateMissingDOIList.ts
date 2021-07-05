@@ -7,7 +7,6 @@ const Article = db.articles;
  * @returns List of strings that dont exist in mongoose DB
  */
 const generateMissingDOIList = async (issn: string): Promise<string[]> => {
-
   const crossrefDOISfromISSN = await fetchDOIsFromISSN(encodeURI(issn));
   const crossrefISSNDOIlist = [];
   crossrefDOISfromISSN.forEach((e) => {
@@ -17,7 +16,9 @@ const generateMissingDOIList = async (issn: string): Promise<string[]> => {
   const doesntExist: Array<string> = [];
 
   for (let i = 0; i <= crossrefISSNDOIlist.length - 1; i++) {
-    const docCount: number = await Article.countDocuments({ doi: crossrefISSNDOIlist[i] }).exec();
+    const docCount: number = await Article.countDocuments({
+      doi: crossrefISSNDOIlist[i]
+    }).exec();
     if (docCount !== 1) {
       doesntExist.push(crossrefISSNDOIlist[i]);
     }
@@ -26,4 +27,3 @@ const generateMissingDOIList = async (issn: string): Promise<string[]> => {
 };
 
 export default generateMissingDOIList;
-

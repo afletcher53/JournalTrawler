@@ -4,7 +4,13 @@ import mongoose from 'mongoose';
 const Article = db.articles;
 const toId = mongoose.Types.ObjectId;
 
-const setArticleDetails = (doi: string, printISSN: any, electronicISSN: any, articleData: any, journalId: string) => {
+const setArticleDetails = (
+  doi: string,
+  printISSN: any,
+  electronicISSN: any,
+  articleData: any,
+  journalId: string
+) => {
   const data = articleData.message;
   let license: string;
   if (articleData.message.hasOwnProperty('license')) {
@@ -18,7 +24,9 @@ const setArticleDetails = (doi: string, printISSN: any, electronicISSN: any, art
     journal_issn_print: printISSN ? printISSN : null,
     publisher: data.hasOwnProperty('publisher') ? data.publisher : 0,
     reference_count: data['reference-count'] ? data['reference-count'] : 0,
-    is_referenced_by_count: data['is-referenced-by-count'] ? data['is-referenced-by-count'] : 0,
+    is_referenced_by_count: data['is-referenced-by-count']
+      ? data['is-referenced-by-count']
+      : 0,
     published_online: publishedOnlineDate ? publishedOnlineDate : null,
     published_print: publishedPrintDate ? publishedPrintDate : null,
     type: data.type ? data.type : null,
@@ -28,7 +36,7 @@ const setArticleDetails = (doi: string, printISSN: any, electronicISSN: any, art
     doi: data['DOI'] ? data['DOI'] : null,
     license: license ? license : null,
     cr_parsed: false,
-    journal: toId(journalId),
+    journal: toId(journalId)
   });
 };
 

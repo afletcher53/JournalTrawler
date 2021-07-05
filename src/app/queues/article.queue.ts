@@ -7,22 +7,20 @@ import articleProcess from '../processes/article.process';
 const articleQueue = new Bull('articleQueue', {
   redis: {
     host: String(redisHost),
-    port: Number(redisPort),
-  },
+    port: Number(redisPort)
+  }
 });
-
 
 const options = {
   attempts: 2,
-  delay: 100,
+  delay: 100
 };
 
 const addArticle = async (data: any) => {
   const job = await articleQueue.add(data, options);
   await job.finished().then(() => {
     getAbstract(job);
-  }
-  );
+  });
   return job;
 };
 
@@ -34,8 +32,6 @@ articleQueue.on('failed', (job, error) => {
   logJobFailed('article', job, error);
 });
 
-
 articleQueue.process(articleProcess);
 
 export { addArticle, articleQueue };
-

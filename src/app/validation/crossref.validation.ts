@@ -6,9 +6,9 @@ const options = {
   allowUnknown: true,
   errors: {
     wrap: {
-      label: '',
-    },
-  },
+      label: ''
+    }
+  }
 };
 /**
  * Validate the response of getting a single article from Crossref API
@@ -17,17 +17,16 @@ const options = {
  */
 export const articleCrossRefResponseValidation = (data: express.Response) => {
   const schema = Joi.object({
-    message:
-      Joi.object().keys({
-        title: Joi.required(),
-        DOI: Joi.required(),
-        abstract: Joi.string(),
-        publisher: Joi.required(),
-        'reference-count': Joi.required(),
-        'is-referenced-by-count': Joi.required(),
-        type: Joi.required(),
-        URL: Joi.required(),
-      }),
+    message: Joi.object().keys({
+      title: Joi.required(),
+      DOI: Joi.required(),
+      abstract: Joi.string(),
+      publisher: Joi.required(),
+      'reference-count': Joi.required(),
+      'is-referenced-by-count': Joi.required(),
+      type: Joi.required(),
+      URL: Joi.required()
+    })
   });
   return schema.validate(data, options);
 };

@@ -2,8 +2,6 @@ import express from 'express';
 import journals from '../controllers/journal.controller';
 
 export default (app: express.Application) => {
-
-
   const router = require('express').Router();
 
   // Create a new journal

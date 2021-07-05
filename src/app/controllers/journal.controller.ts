@@ -1,7 +1,11 @@
-
 import {
-  mongoDeleteAllJournals, mongofetchJournalByISSN,
-  mongoFindJournalById, mongoFindJournalByIdAndRemove, mongoFindJournalByIdAndUpdate, mongoFindJournalWhere, mongoSaveJournal
+  mongoDeleteAllJournals,
+  mongofetchJournalByISSN,
+  mongoFindJournalById,
+  mongoFindJournalByIdAndRemove,
+  mongoFindJournalByIdAndUpdate,
+  mongoFindJournalWhere,
+  mongoSaveJournal
 } from '../requests/mongoose.service';
 import getJournalData from '../validation/functions/getJournalData';
 import checkExists from '../validation/functions/checkCrossrefJournalExists';
@@ -17,8 +21,6 @@ import mongoDBLogger from '../loggers/mongoDB.logger';
 import checkDOAJJournalExistsDOAJ from '../validation/functions/checkDOAJJournalExists';
 import { addJournal } from '../queues/journal.queue';
 
-
-
 // Create and Save a new Journal
 const create = async (req, res) => {
   if (req.body.issn) {
@@ -28,7 +30,8 @@ const create = async (req, res) => {
   const { error } = journalPostValidation(req.body);
   if (error) {
     const errorJournalValidation = new Error(error.details[0].message);
-    return res.status(HttpStatusCode.CONFLICT)
+    return res
+      .status(HttpStatusCode.CONFLICT)
       .send(serializer.serializeError(errorJournalValidation));
   }
 
@@ -42,42 +45,42 @@ const create = async (req, res) => {
   // Check to see if ISSN exists on crossref
   const checkCrossRefExists = await checkExists(req.body.issn);
   if (!checkCrossRefExists) {
-    return res.status(HttpStatusCode.CONFLICT)
+    return res
+      .status(HttpStatusCode.CONFLICT)
       .send(createErrorExistsCrossRef(req.body.issn, 'Journal'));
   }
   // Get the data from crossref
   const journalData = await getJournalData(req.body.issn);
 
   //check to see if the journal is supported by DOAJ
-  journalData.abstract_source_doaj = await checkDOAJJournalExistsDOAJ(req.body.issn);
-
+  journalData.abstract_source_doaj = await checkDOAJJournalExistsDOAJ(
+    req.body.issn
+  );
 
   // save the journal
   mongoSaveJournal(journalData)
-      .then((data) => {
-        const journalISSN = {
-             journal_id: data._id,
-             issn: req.body.issn,
-        };
-        addJournal(journalISSN);
+    .then((data) => {
+      const journalISSN = {
+        journal_id: data._id,
+        issn: req.body.issn
+      };
+      addJournal(journalISSN);
 
-        res.send(serializer.serialize('journal', data));
-      })
-      .catch((err) => {
-        res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
-          message:
-            err.message || StringLiterals.GENERIC_ERROR,
-        });
+      res.send(serializer.serialize('journal', data));
+    })
+    .catch((err) => {
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
+        message: err.message || StringLiterals.GENERIC_ERROR
       });
+    });
 };
-
-
-
 
 // Retrieve all Journals from the database.
 const findAll = async (req, res) => {
   const title = req.query.title;
-  const condition = title ? { title: { $regex: new RegExp(title), $options: 'i' } } : {};
+  const condition = title
+    ? { title: { $regex: new RegExp(title), $options: 'i' } }
+    : {};
 
   mongoFindJournalWhere(condition)
     .then((data) => {
@@ -85,8 +88,7 @@ const findAll = async (req, res) => {
     })
     .catch((err) => {
       res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
-        message:
-          err.message || StringLiterals.GENERIC_ERROR,
+        message: err.message || StringLiterals.GENERIC_ERROR
       });
     });
 };
@@ -99,25 +101,29 @@ const findOne = async (req, res) => {
 
   if (isISSN) {
     try {
-      await mongofetchJournalByISSN(issn).then((data) => {
-        if (!data) {
-          res.status(HttpStatusCode.NOT_FOUND).send(
-            { message: 'Not found Journal with id ' + req.params.id });
-        } else {
-          res.send(serializer.serialize('journal', data));
-        }
-      })
+      await mongofetchJournalByISSN(issn)
+        .then((data) => {
+          if (!data) {
+            res
+              .status(HttpStatusCode.NOT_FOUND)
+              .send({ message: 'Not found Journal with id ' + req.params.id });
+          } else {
+            res.send(serializer.serialize('journal', data));
+          }
+        })
         .catch((err) => {
-          res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send(
-            { message: 'Error retrieving Journal with id=' + req.params.id });
+          res
+            .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+            .send({
+              message: 'Error retrieving Journal with id=' + req.params.id
+            });
         });
     } catch (e) {
       res.status(HttpStatusCode.CONFLICT).send({
-        message: StringLiterals.GENERIC_ERROR,
+        message: StringLiterals.GENERIC_ERROR
       });
     }
   } else {
-
     const { error } = journalSingleValidation(req.params);
     if (error) {
       return res.status(HttpStatusCode.CONFLICT).send(error.details[0].message);
@@ -126,20 +132,23 @@ const findOne = async (req, res) => {
       mongoFindJournalById(req.params.id)
         .then((data) => {
           if (!data) {
-            res.status(HttpStatusCode.NOT_FOUND).send(
-              { message: 'Not found Journal with id ' + req.params.id });
+            res
+              .status(HttpStatusCode.NOT_FOUND)
+              .send({ message: 'Not found Journal with id ' + req.params.id });
           } else {
             res.send(serializer.serialize('journal', data));
           }
         })
         .catch((err) => {
-          res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send(
-            { message: 'Error retrieving Journal with id=' + req.params.id });
+          res
+            .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+            .send({
+              message: 'Error retrieving Journal with id=' + req.params.id
+            });
         });
     } catch (e) {
       res.status(HttpStatusCode.CONFLICT).send({
-        message:
-          e.message || StringLiterals.GENERIC_ERROR,
+        message: e.message || StringLiterals.GENERIC_ERROR
       });
     }
   }
@@ -149,7 +158,7 @@ const findOne = async (req, res) => {
 const update = (req, res) => {
   if (!req.body) {
     return res.status(HttpStatusCode.CONFLICT).send({
-      message: 'Data to update can not be empty!',
+      message: 'Data to update can not be empty!'
     });
   }
 
@@ -159,9 +168,8 @@ const update = (req, res) => {
     .then((data) => {
       if (!data) {
         res.status(HttpStatusCode.NOT_FOUND).send({
-          message:
-            `Cannot update Journal with id=${id}.
-             Maybe Journal was not found!`,
+          message: `Cannot update Journal with id=${id}.
+             Maybe Journal was not found!`
         });
       } else {
         res.send({ message: 'Journal was updated successfully.' });
@@ -170,7 +178,7 @@ const update = (req, res) => {
     .catch((err) => {
       mongoDBLogger.error(err);
       res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
-        message: 'Error updating Journal with id=' + id,
+        message: 'Error updating Journal with id=' + id
       });
     });
 };
@@ -187,20 +195,19 @@ const deleteOne = (req, res) => {
       .then((data) => {
         if (!data) {
           res.status(HttpStatusCode.NOT_FOUND).send({
-            message:
-              `Cannot delete Journal with id=${req.params.id}.
-               Maybe Journal was not found!`,
+            message: `Cannot delete Journal with id=${req.params.id}.
+               Maybe Journal was not found!`
           });
         } else {
           res.send({
-            message: 'Journal was deleted successfully!',
+            message: 'Journal was deleted successfully!'
           });
         }
       })
       .catch((err) => {
         mongoDBLogger.error(err);
         res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
-          message: 'Could not delete Journal with id=' + req.parms.id,
+          message: 'Could not delete Journal with id=' + req.parms.id
         });
       });
   } catch (e) {
@@ -213,14 +220,14 @@ const deleteAll = (req, res) => {
   mongoDeleteAllJournals()
     .then((data) => {
       res.send({
-        message: `${data.deletedCount} Journals were deleted successfully!`,
+        message: `${data.deletedCount} Journals were deleted successfully!`
       });
     })
     .catch((err) => {
       mongoDBLogger.error(err);
       res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
         message:
-          err.message || 'Some error occurred while removing all Journals.',
+          err.message || 'Some error occurred while removing all Journals.'
       });
     });
 };
@@ -234,8 +241,7 @@ const findAllPublished = (req, res) => {
     .catch((err) => {
       mongoDBLogger.error(err);
       res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
-        message:
-          err.message || StringLiterals.GENERIC_ERROR,
+        message: err.message || StringLiterals.GENERIC_ERROR
       });
     });
 };
@@ -249,8 +255,7 @@ const findAllCRScraped = (req, res) => {
     .catch((err) => {
       mongoDBLogger.error(err);
       res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
-        message:
-          err.message || StringLiterals.GENERIC_ERROR,
+        message: err.message || StringLiterals.GENERIC_ERROR
       });
     });
 };
@@ -264,8 +269,7 @@ const findAllCRUnscraped = (req, res) => {
     .catch((err) => {
       mongoDBLogger.error(err);
       res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
-        message:
-          err.message || StringLiterals.GENERIC_ERROR,
+        message: err.message || StringLiterals.GENERIC_ERROR
       });
     });
 };
@@ -279,6 +283,5 @@ export default {
   findAllPublished,
   findAllCRScraped,
   findAllCRUnscraped,
-  deleteOne,
-
+  deleteOne
 };
