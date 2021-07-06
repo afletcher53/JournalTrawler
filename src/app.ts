@@ -1,4 +1,3 @@
-
 import express from 'express';
 import systemLogger from './app/loggers/system.logger';
 import db from './app/models';
@@ -6,7 +5,6 @@ import articleRoutes from './app/routes/articles.routes';
 import journalRoutes from './app/routes/journals.routes';
 import integrityRoutes from './app/routes/integrities.routes';
 import scriptsRoutes from './app/routes/scripts.routes';
-
 
 const app = express();
 
@@ -16,7 +14,7 @@ app.use(require('./middleware'));
 db.mongoose
   .connect(db.url, {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
+    useUnifiedTopology: true
   })
   .then(() => {
     systemLogger.info('Connected to the database!');
@@ -28,7 +26,7 @@ db.mongoose
 
 // Main route
 app.get('/', (req: express.Request, res: express.Response) => {
-  res.json({ 'message': 'Welcome to the server' });
+  res.json({ message: 'Welcome to the server' });
 });
 
 articleRoutes(app);
@@ -36,6 +34,4 @@ integrityRoutes(app);
 journalRoutes(app);
 scriptsRoutes(app);
 
-
 export default app;
-

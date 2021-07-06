@@ -20,6 +20,7 @@ import StringLiterals from '../Typescript/Enums/StringLiterals.enum';
 import mongoDBLogger from '../loggers/mongoDB.logger';
 import checkDOAJJournalExistsDOAJ from '../validation/functions/checkDOAJJournalExists';
 import { addJournal } from '../queues/journal.queue';
+import { checkJournalExistsByISSN } from '../requests/springer.service';
 
 // Create and Save a new Journal
 const create = async (req, res) => {
@@ -52,8 +53,13 @@ const create = async (req, res) => {
   // Get the data from crossref
   const journalData = await getJournalData(req.body.issn);
 
-  //check to see if the journal is supported by DOAJ
+  //check to see if the journal is supported by DOAJ API
   journalData.abstract_source_doaj = await checkDOAJJournalExistsDOAJ(
+    req.body.issn
+  );
+
+  // check to see if the journal is supported by Springer API
+  journalData.abstract_source_springer = await checkJournalExistsByISSN(
     req.body.issn
   );
 
@@ -112,11 +118,9 @@ const findOne = async (req, res) => {
           }
         })
         .catch((err) => {
-          res
-            .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
-            .send({
-              message: 'Error retrieving Journal with id=' + req.params.id
-            });
+          res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
+            message: 'Error retrieving Journal with id=' + req.params.id
+          });
         });
     } catch (e) {
       res.status(HttpStatusCode.CONFLICT).send({
@@ -140,11 +144,9 @@ const findOne = async (req, res) => {
           }
         })
         .catch((err) => {
-          res
-            .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
-            .send({
-              message: 'Error retrieving Journal with id=' + req.params.id
-            });
+          res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
+            message: 'Error retrieving Journal with id=' + req.params.id
+          });
         });
     } catch (e) {
       res.status(HttpStatusCode.CONFLICT).send({

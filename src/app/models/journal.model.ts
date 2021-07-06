@@ -19,7 +19,8 @@ export default (mongoose) => {
       counts_backfiledois: Number,
       cr_last_status_check_time: Date,
       cr_parsed: Boolean,
-      abstract_source_doaj: Boolean
+      abstract_source_doaj: Boolean,
+      abstract_source_springer: Boolean
     },
     { timestamps: true }
   );
