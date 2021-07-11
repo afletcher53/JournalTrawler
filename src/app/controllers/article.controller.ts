@@ -134,7 +134,7 @@ const update = (req: express.Request, res: express.Response) => {
       .catch((err) => {
         articleLogger.error(err);
         res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
-          message: 'Error updating Article with id=' + id
+          message: 'Error updating Article '
         });
       });
   } catch (e) {
@@ -149,7 +149,7 @@ const deleteOne = (req: express.Request, res: express.Response) => {
     .then((data) => {
       if (!data) {
         res.status(HttpStatusCode.NOT_FOUND).send({
-          message: `Cannot delete Article with id=${id}. Maybe Article was not found!`
+          message: `Cannot delete Article. Maybe Article was not found!`
         });
       } else {
         res.send({
@@ -159,7 +159,7 @@ const deleteOne = (req: express.Request, res: express.Response) => {
     })
     .catch((err) => {
       res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
-        message: 'Could not delete Article with id=' + id
+        message: 'Could not delete Article'
       });
     });
 };
