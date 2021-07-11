@@ -122,7 +122,7 @@ const update = (req: express.Request, res: express.Response) => {
     mongoArticleFindByIdandUpdate(id, req)
       .then((data) => {
         if (!data) {
-          const returnMessage = `Cannot update Article with id=${id}. Maybe Article was not found!`;
+          const returnMessage = `Cannot update Article. Maybe Article was not found!`;
           articleLogger.error(returnMessage);
           res.status(HttpStatusCode.NOT_FOUND).send({
             message: returnMessage
