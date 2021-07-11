@@ -30,7 +30,7 @@ export async function mongoCheckJournalExistsByISSN(
  * @return {boolean} - True = journal exists, false it doesnt exist.
  */
 export async function mongoCheckArticleExistsByDOI(
-  data: any
+  data: string
 ): Promise<boolean> {
   const docCount = await Article.countDocuments({ doi: data }).exec();
   let value = false;
