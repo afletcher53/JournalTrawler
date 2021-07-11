@@ -95,7 +95,7 @@ const findOne = (req, res: express.Response) => {
       if (!data) {
         res
           .status(HttpStatusCode.NOT_FOUND)
-          .send({ message: 'Not found Article with id ' + id });
+          .send({ message: 'Article Not found' });
       } else {
         res.send(serializer.serialize('article', data));
       }
@@ -103,7 +103,7 @@ const findOne = (req, res: express.Response) => {
     .catch((e) => {
       res
         .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
-        .send({ message: 'Error retrieving Article with id=' + id });
+        .send({ message: 'Error retrieving Article' });
       articleLogger.error(`Error getting article`);
     });
 };
