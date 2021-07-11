@@ -2,16 +2,10 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import axiosThrottle from 'axios-request-throttle';
 import { crossrefBaseurl, crossrefHeaders } from '../config/crossref.config';
 import crossrefLogger from '../loggers/crossref.logger';
+import HttpStatusCode from '../Typescript/Enums/HttpStatusCode.enum';
+import VendorHeader from '../Typescript/Interfaces/VendorHeader.interface';
 
-enum StatusCode {
-  Unauthorized = 401,
-  Forbidden = 403,
-  TooManyRequests = 429,
-  InternalServerError = 500,
-  NotFound = 404
-}
-
-const headers: Readonly<Record<string, string | boolean>> = crossrefHeaders;
+const headers: VendorHeader = crossrefHeaders;
 
 class Http {
   private instance: AxiosInstance | null = null;
@@ -85,19 +79,19 @@ class Http {
     const { status } = error;
 
     switch (status) {
-      case StatusCode.InternalServerError: {
+      case HttpStatusCode.INTERNAL_SERVER_ERROR: {
         this.generateError(error);
       }
-      case StatusCode.Forbidden: {
+      case HttpStatusCode.FORBIDDEN: {
         this.generateError(error);
       }
-      case StatusCode.Unauthorized: {
+      case HttpStatusCode.UNAUTHORIZED: {
         this.generateError(error);
       }
-      case StatusCode.TooManyRequests: {
+      case HttpStatusCode.TOO_MANY_REQUESTS: {
         this.generateError(error);
       }
-      case StatusCode.NotFound: {
+      case HttpStatusCode.NOT_FOUND: {
         this.generateError(error);
       }
       default:

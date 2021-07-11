@@ -135,7 +135,8 @@ const deleteAll = (req, res) => {
     mongoose_service_1.mongoArticleDeleteAll()
         .then((data) => {
         res.send({
-            message: `${data.deletedCount} ${process.env.STRING_ARTICLES_DELETED}`,
+            message: `${data.deletedCount} ${ARTICLES_DELETED
+            }`,
         });
     })
         .catch((err) => {

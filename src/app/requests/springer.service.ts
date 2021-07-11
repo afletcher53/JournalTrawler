@@ -19,3 +19,21 @@ export const checkJournalExistsByISSN = async (
     return false;
   }
 };
+
+/**
+ * Grabs Abstract from the Springer API
+ * @param doi Digital Object Identifier System number
+ * @returns {Promise<any>} Promise object containing the abstract
+ */
+
+export const fetchAbstractByDOISpringer = async (doi: string): Promise<any> => {
+  const doiSearch = '(doi:' + encodeURIComponent(doi) + ')';
+  const apiKey = '&api_key=' + encodeURIComponent(springerAPIKey);
+  const url = 'meta/v2/json?q=' + doiSearch + apiKey;
+  const { data } = await http.get(url);
+  if (data.records[0]) {
+    return data.records[0].abstract;
+  } else {
+    return null;
+  }
+};

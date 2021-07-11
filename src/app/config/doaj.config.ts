@@ -1,10 +1,12 @@
 import dotenv from 'dotenv';
+import VendorHeader from '../Typescript/Interfaces/VendorHeader.interface';
+
 dotenv.config();
-export const doajBaseurl = process.env.DOAJ_BASEURL;
-export const doajHeaders = {
+export const doajBaseurl: string = process.env.DOAJ_BASEURL;
+export const doajHeaders: VendorHeader = {
   Accept: 'application/json',
-  'Content-Type': 'application/json; charset=utf-8',
+  'Content-Type': process.env.CONTENT_TYPE,
   'Access-Control-Allow-Credentials': true,
   'X-Requested-With': 'XMLHttpRequest',
-  'User-Agent': 'mailto:afletcher53@gmail.com'
+  'User-Agent': 'mailto:' + process.env.API_MAILTO
 };

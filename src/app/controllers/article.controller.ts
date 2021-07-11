@@ -15,6 +15,7 @@ import {
 } from '../validation/article.validation';
 import serializer from '../validation/json.validation';
 import HttpStatusCode from '../Typescript/Enums/HttpStatusCode.enum';
+import ArticleOperations from '../Typescript/Enums/ArticleOperations.enum';
 
 const create = async (req: express.Request, res: express.Response) => {
   // Validate request
@@ -68,7 +69,7 @@ const findAll = (req, res: express.Response) => {
       articleLogger.error(err);
       res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
         message: serializer.serializeError(
-          err.message || process.env.STRING_ERROR_ARTICLES_GET
+          err.message || ArticleOperations.ERROR_ARTICLES_GET
         )
       });
     });
@@ -124,7 +125,7 @@ const update = (req: express.Request, res: express.Response) => {
             message: returnMessage
           });
         } else {
-          res.send({ message: process.env.STRING_ARTICLE_UPDATED });
+          res.send({ message: ArticleOperations.ARTICLE_UPDATED });
         }
       })
       .catch((err) => {
@@ -149,7 +150,7 @@ const deleteOne = (req: express.Request, res: express.Response) => {
         });
       } else {
         res.send({
-          message: process.env.STRING_ARTICLE_DELETED
+          message: ArticleOperations.ARTICLE_DELETED
         });
       }
     })
@@ -165,12 +166,12 @@ const deleteAll = (req: express.Request, res: express.Response) => {
   mongoArticleDeleteAll()
     .then((data) => {
       res.send({
-        message: `${data.deletedCount} ${process.env.STRING_ARTICLES_DELETED}`
+        message: `${data.deletedCount} ${ArticleOperations.ARTICLES_DELETED}`
       });
     })
     .catch((err) => {
       res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
-        message: err.message || process.env.STRING_ERROR_ARTICLES_GET
+        message: err.message || ArticleOperations.ERROR_ARTICLES_GET
       });
     });
 };
@@ -183,7 +184,7 @@ const findAllPublished = (req: express.Request, res: express.Response) => {
     })
     .catch((err) => {
       res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
-        message: err.message || process.env.STRING_ERROR_ARTICLES_GET
+        message: err.message || ArticleOperations.ERROR_ARTICLES_GET
       });
     });
 };

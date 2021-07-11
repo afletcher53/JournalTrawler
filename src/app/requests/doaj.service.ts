@@ -8,7 +8,7 @@ export const fetchArticleExistsByISSNDOAJ = async (
   return data;
 };
 
-export const fetchAbstractByDOI = async (doi: string): Promise<any> => {
+export const fetchAbstractByDOIDOAJ = async (doi: string): Promise<any> => {
   const doiSearch = 'doi:' + encodeURIComponent(doi);
   const url = 'articles/' + doiSearch;
   const { data } = await http.get(url);
