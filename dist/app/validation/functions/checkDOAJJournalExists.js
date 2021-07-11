@@ -5,11 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const doaj_logger_1 = __importDefault(require("../../loggers/doaj.logger."));
 const doaj_service_1 = require("../../requests/doaj.service");
-/**
- * Checks if a valid journal exists from DOAJ API
- * @param {string} issn to be searched
- * @returns {Promise<boolean>} true = exists on api, false = doesnt exist
- */
 const checkDOAJJournalExistsDOAJ = async (issn) => {
     try {
         const data = await doaj_service_1.fetchArticleExistsByISSNDOAJ(issn);
@@ -22,6 +17,7 @@ const checkDOAJJournalExistsDOAJ = async (issn) => {
     }
     catch (e) {
         doaj_logger_1.default.error(e);
+        return false;
     }
 };
 exports.default = checkDOAJJournalExistsDOAJ;

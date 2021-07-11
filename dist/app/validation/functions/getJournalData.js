@@ -2,11 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const crossref_service_1 = require("../../requests/crossref.service");
 const assignJournal_1 = require("./assignJournal");
-/**
- * Gets journal data
- * @param issn issn of the journal
- * @returns Journal object
- */
 const getJournalDataCrossref = async (issn) => {
     const data = await crossref_service_1.fetchJournalByISSN(issn);
     let issnElectronic;

@@ -18,7 +18,7 @@ redis.on('connect', function () {
     const httpServer = http_1.default.createServer(app_1.default);
     const httpsServer = https_1.default.createServer({
         key: fs_1.default.readFileSync(path_1.default.join('cert', 'key.pem')),
-        cert: fs_1.default.readFileSync(path_1.default.join('cert', 'cert.pem')),
+        cert: fs_1.default.readFileSync(path_1.default.join('cert', 'cert.pem'))
     }, app_1.default);
     try {
         httpServer.listen(PORT, () => {

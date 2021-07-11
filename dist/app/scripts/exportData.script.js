@@ -7,9 +7,6 @@ const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const system_logger_1 = __importDefault(require("../loggers/system.logger"));
 const mongoose_service_1 = require("../requests/mongoose.service");
-/**
- * Generates backups of all the mongoose collection models
- */
 const exportData = async () => {
     const ts = Date.now();
     const dateOb = new Date(ts);
@@ -29,9 +26,8 @@ const exportData = async () => {
             });
         }
     });
-    Promise.all(
-    // Delete all previous backups
-    [mongoose_service_1.mongoFetchAllArticles().then((data) => {
+    Promise.all([
+        mongoose_service_1.mongoFetchAllArticles().then((data) => {
             const sendData = JSON.stringify(data);
             const fileName = `data/backup_Article_${year}-${month}-${date}.csv`;
             fs_1.default.writeFile(fileName, sendData, function (error) {
@@ -60,6 +56,7 @@ const exportData = async () => {
                 }
                 system_logger_1.default.info(`Backup to  ${fileName} was a success`);
             });
-        })]);
+        })
+    ]);
 };
 exports.default = exportData;

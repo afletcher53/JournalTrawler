@@ -9,7 +9,7 @@ const db = {
   url: url
 };
 
-if (process.env.NODE_ENV === 'test') {
+if (process.env['NODE_ENV'] === 'test') {
   db.url = testurl;
 } else {
   db.url = url;

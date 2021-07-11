@@ -1,10 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Gets requestion duration in Milliseconds
- * @param start system HR time
- * @returns number
- */
 exports.default = (start) => {
     const NS_PER_SEC = 1e9;
     const NS_TO_MS = 1e6;

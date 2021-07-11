@@ -81,18 +81,23 @@ class Http {
     switch (status) {
       case HttpStatusCode.INTERNAL_SERVER_ERROR: {
         this.generateError(error);
+        break;
       }
       case HttpStatusCode.FORBIDDEN: {
         this.generateError(error);
+        break;
       }
       case HttpStatusCode.UNAUTHORIZED: {
         this.generateError(error);
+        break;
       }
       case HttpStatusCode.TOO_MANY_REQUESTS: {
         this.generateError(error);
+        break;
       }
       case HttpStatusCode.NOT_FOUND: {
         this.generateError(error);
+        break;
       }
       default:
         this.generateError(error);

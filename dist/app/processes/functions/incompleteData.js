@@ -5,17 +5,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.incompleteData = void 0;
 const models_1 = __importDefault(require("../../models"));
-const JobCode_enum_1 = __importDefault(require("../../static/JobCode.enum"));
-const integrity_process_1 = require("../integrity.process");
+const JobCode_enum_1 = __importDefault(require("../../Typescript/Enums/JobCode.enum"));
+const convert_1 = __importDefault(require("./convert"));
 const Article = models_1.default.articles;
 const Integrity = models_1.default.integrity;
-/**
- * Calculates incomplete data from an issn
- */
+const Journal = models_1.default.journals;
 async function incompleteData(job) {
-    // grab all articles with the ISSN
-    const journal = await integrity_process_1.Journal.findOne({ $or: [{ issn_electronic: job.data.issn }, { issn_print: job.data.issn }] });
-    const articles = await Article.find({ 'journal': journal._id });
+    const journal = await Journal.findOne({
+        $or: [{ issn_electronic: job.data.issn }, { issn_print: job.data.issn }]
+    });
+    const articles = await Article.find({ journal: journal._id });
     const totalFieldCount = articles.length * Object.keys(Article.schema.paths).length;
     let totalFieldCountNotNull = 0;
     const individualFields = {
@@ -122,18 +121,18 @@ async function incompleteData(job) {
             individualFields.__v++;
         }
     });
-    const percentageFilled = totalFieldCountNotNull / totalFieldCount * 100;
+    const percentageFilled = (totalFieldCountNotNull / totalFieldCount) * 100;
     const resultObj = {
         articlesParsed: articles.length,
         totalArticleFieldsAvailable: totalFieldCount,
         totalPercentageFieldsFilled: percentageFilled,
-        dataBreakdown: integrity_process_1.convert(individualFields, articles.length)
+        dataBreakdown: convert_1.default(individualFields, articles.length)
     };
     const integrity = new Integrity({
         code: JobCode_enum_1.default.DATA_COMPLETENESS_SINGLE,
         message: `Out of ${articles.length} articles, with a total of ${totalFieldCount} Article fields available, ${percentageFilled}% were filled`,
         journal: journal._id,
-        data: resultObj,
+        data: resultObj
     });
     integrity.save(integrity);
 }

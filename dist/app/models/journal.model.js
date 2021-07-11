@@ -8,7 +8,6 @@ const elasticsearch_config_1 = __importDefault(require("../config/elasticsearch.
 const mongoDB_logger_1 = __importDefault(require("../loggers/mongoDB.logger"));
 const system_logger_1 = __importDefault(require("../loggers/system.logger"));
 exports.default = (mongoose) => {
-    // eslint-disable-next-line new-cap
     const schema = mongoose.Schema({
         title: String,
         publisher: String,
@@ -23,7 +22,8 @@ exports.default = (mongoose) => {
         counts_backfiledois: Number,
         cr_last_status_check_time: Date,
         cr_parsed: Boolean,
-        abstract_source_doaj: Boolean
+        abstract_source_doaj: Boolean,
+        abstract_source_springer: Boolean
     }, { timestamps: true });
     schema.method('toJSON', function () {
         const { __v, _id, ...object } = this.toObject();
@@ -44,9 +44,9 @@ exports.default = (mongoose) => {
     });
     schema.plugin(mongoosastic_1.default, elasticsearch_config_1.default);
     const Journal = mongoose.model('journal', schema);
-    var stream = Journal.synchronize();
+    const stream = Journal.synchronize();
     stream.on('error', function (err) {
-        system_logger_1.default.error("Error while synchronizing" + err);
+        system_logger_1.default.error(`Error while synchronizing ${err}`);
     });
     stream.on('data', function (err, doc) {
         system_logger_1.default.info('indexing: done');

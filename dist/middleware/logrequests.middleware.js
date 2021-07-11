@@ -5,12 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const system_logger_1 = __importDefault(require("../app/loggers/system.logger"));
 const getActualRequestDurationInMilliseconds_1 = __importDefault(require("./functions/getActualRequestDurationInMilliseconds"));
-/**
- * Middleware to log requests to the systemLogger
- * @param req Express request
- * @param res Express response
- * @param next Express NextFunction
- */
 const logRequests = (req, res, next) => {
     const { method } = req;
     const url = req.url;

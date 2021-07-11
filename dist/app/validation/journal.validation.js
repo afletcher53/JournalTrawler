@@ -11,23 +11,17 @@ const journalPostValidation = (data) => {
             .min(minStringLength)
             .pattern(new RegExp(pattern))
             .required(),
-        title: Joi.string()
-            .min(minStringLength),
-        id: Joi.string(),
+        title: Joi.string().min(minStringLength),
+        id: Joi.string()
     });
     return schema.validate(data);
 };
 exports.journalPostValidation = journalPostValidation;
 const journalSingleValidation = (data) => {
     const schema = Joi.object({
-        id: Joi
-            .objectId()
-            .required(),
-        publisher: Joi
-            .string(),
-        issn_electronic: Joi
-            .string()
-            .min(minStringLength),
+        id: Joi.objectId().required(),
+        publisher: Joi.string(),
+        issn_electronic: Joi.string().min(minStringLength)
     });
     return schema.validate(data);
 };

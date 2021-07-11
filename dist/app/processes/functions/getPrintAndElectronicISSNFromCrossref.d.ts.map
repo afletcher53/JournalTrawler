@@ -1,1 +1,1 @@
-{"version":3,"file":"getPrintAndElectronicISSNFromCrossref.d.ts","sourceRoot":"","sources":["../../../../src/app/processes/functions/getPrintAndElectronicISSNFromCrossref.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AACH,eAAO,MAAM,yBAAyB,eAAgB,MAAM;;;CAa3D,CAAC"}
+{"version":3,"file":"getPrintAndElectronicISSNFromCrossref.d.ts","sourceRoot":"","sources":["../../../../src/app/processes/functions/getPrintAndElectronicISSNFromCrossref.ts"],"names":[],"mappings":"AAKA,QAAA,MAAM,yBAAyB,eAAgB,MAAM;;;CAkBpD,CAAC;AAEF,eAAe,yBAAyB,CAAC"}

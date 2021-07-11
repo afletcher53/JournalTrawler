@@ -28,19 +28,10 @@ const fetchJournalByISSN = async (issn) => {
 };
 exports.fetchJournalByISSN = fetchJournalByISSN;
 const fetchDOIsFromISSN = async (issn) => {
-    // const data = await getDOIsfromISSNSample(issn, 5)
     const data = await getDOIsfromISSN(issn);
     return data;
 };
 exports.fetchDOIsFromISSN = fetchDOIsFromISSN;
-/**
- * Search CrossRef API via ISSN to return list of DOIs from it.
- * @param {String} issn ISSN to be searched on the CrossRefAPI
- * @param {Number} rows The number of results to be returned (range: 10-1000?), default 1000
- * @param {String} cursor Starting point for API search, URI string (* for start search, given by API), default *
- * @param {List} data List of DOIS generated from API search
- * @returns {List} data List of DOIS from the CrossRefAPISearch
- */
 const getDOIsfromISSN = async (issn, rows, cursor, data = []) => {
     const defaultRows = 1000;
     if (cursor === undefined) {
@@ -50,7 +41,12 @@ const getDOIsfromISSN = async (issn, rows, cursor, data = []) => {
         rows = defaultRows;
     }
     cursor = cursor.toString();
-    const url = '/journals/' + issn + '/works?rows=' + rows + '&cursor=' + encodeURIComponent(cursor);
+    const url = '/journals/' +
+        issn +
+        '/works?rows=' +
+        rows +
+        '&cursor=' +
+        encodeURIComponent(cursor);
     const response = await axios_crossref_vendors_1.http.get(url);
     if (response.data.message['next-cursor'] === cursor) {
         return data;
@@ -58,16 +54,3 @@ const getDOIsfromISSN = async (issn, rows, cursor, data = []) => {
     data.push(...response.data.message.items);
     return getDOIsfromISSN(issn, rows, response.data.message['next-cursor'], data);
 };
-/**
- * Search CrossRef API via ISSN to return sample of DOIs from it.
- * @param {String} issn ISSN to be searched on the CrossRefAPI
- * @param {List} data List of DOIS generated from API search
- * @returns {Array} data List of DOIS from the CrossRefAPISearch
- */
-// const getDOIsfromISSNSample = async(issn: String, sampleSize: Number)=>  {
-//   let data = []
-//   let url = '/journals/' + issn + '/works?sample=' + sampleSize
-//   const response = await http.get(url);
-//   data.push(...response.data.message.items);
-//   return data;
-// }

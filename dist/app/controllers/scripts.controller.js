@@ -9,14 +9,14 @@ const wipeData_script_1 = __importDefault(require("../scripts/wipeData.script"))
 const models_1 = __importDefault(require("../models"));
 const nuclearWipe = async (req, res) => {
     wipeData_script_1.default(models_1.default);
-    res.json({ 'message': 'Everything has been wipped' });
+    res.json({ message: 'Everything has been wipped' });
 };
 const backup = async (req, res) => {
     exportData_script_1.default();
     sendEmail_script_1.default();
-    res.json({ 'message': 'Backups are being prepared' });
+    res.json({ message: 'Backups are being prepared' });
 };
 exports.default = {
     nuclearWipe,
-    backup,
+    backup
 };

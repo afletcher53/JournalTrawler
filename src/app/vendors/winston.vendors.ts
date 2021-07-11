@@ -9,7 +9,7 @@ export const levels = {
 };
 
 export const level = () => {
-  const env = process.env.NODE_ENV || 'development';
+  const env = process.env['NODE_ENV'] || 'development';
   const isDevelopment = env === 'development';
   return isDevelopment ? 'debug' : 'warn';
 };
@@ -28,7 +28,7 @@ export const format = winston.format.combine(
   winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
   winston.format.colorize({ all: true }),
   winston.format.printf(
-    (info) => `${info.timestamp} ${info.level}: ${info.message}`
+    (info) => `${info['timestamp']} ${info.level}: ${info.message}`
   )
 );
 

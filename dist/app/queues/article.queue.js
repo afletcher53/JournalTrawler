@@ -12,13 +12,13 @@ const article_process_1 = __importDefault(require("../processes/article.process"
 const articleQueue = new bull_1.default('articleQueue', {
     redis: {
         host: String(redis_config_1.redisHost),
-        port: Number(redis_config_1.redisPort),
-    },
+        port: Number(redis_config_1.redisPort)
+    }
 });
 exports.articleQueue = articleQueue;
 const options = {
     attempts: 2,
-    delay: 100,
+    delay: 100
 };
 const addArticle = async (data) => {
     const job = await articleQueue.add(data, options);

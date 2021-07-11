@@ -3,9 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// /**
-//  * Wipes the entire databases - Mongoose, Redis and Logs
-//  */
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const article_queue_1 = require("../queues/article.queue");
@@ -25,7 +22,6 @@ const wipeall = (db) => {
     Integrity.deleteMany({}, function (err) {
         system_logger_1.default.info('Integrities collection removed');
     });
-    //remove the logs
     let appDir = path_1.default.dirname(require.main.filename);
     appDir = appDir.substring(0, appDir.lastIndexOf('\\'));
     const logdir = appDir + '\\logs';
@@ -33,7 +29,6 @@ const wipeall = (db) => {
     const errordir = logdir + '\\error';
     rimraf(activitydir);
     rimraf(errordir);
-    //flushREDISQUeue
     article_queue_1.articleQueue.clean(0, 'delayed');
     article_queue_1.articleQueue.clean(0, 'wait');
     article_queue_1.articleQueue.clean(0, 'active');
@@ -50,11 +45,6 @@ const wipeall = (db) => {
     integrity_queue_1.integrityQueue.clean(0, 'completed');
     integrity_queue_1.integrityQueue.clean(0, 'failed');
 };
-/**
- * Remove directory recursively
- * @param {string} dirPath
- * @see https://stackoverflow.com/a/42505874/3027390
- */
 function rimraf(dirPath) {
     fs_1.default.rmdir(dirPath, { recursive: true }, (err) => {
         system_logger_1.default.info(`${dirPath} logs deleted!`);

@@ -1,1 +1,1 @@
-{"version":3,"file":"getJournalData.d.ts","sourceRoot":"","sources":["../../../../src/app/validation/functions/getJournalData.ts"],"names":[],"mappings":"AAIA;;;;GAIG;AACH,QAAA,MAAM,sBAAsB,SAAgB,MAAM,iBA6BjD,CAAC;AAEF,eAAe,sBAAsB,CAAC"}
+{"version":3,"file":"getJournalData.d.ts","sourceRoot":"","sources":["../../../../src/app/validation/functions/getJournalData.ts"],"names":[],"mappings":"AAQA,QAAA,MAAM,sBAAsB,SAAgB,MAAM,iBA2BjD,CAAC;AAEF,eAAe,sBAAsB,CAAC"}

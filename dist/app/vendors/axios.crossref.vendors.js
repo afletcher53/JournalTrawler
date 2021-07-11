@@ -8,17 +8,12 @@ const axios_1 = __importDefault(require("axios"));
 const axios_request_throttle_1 = __importDefault(require("axios-request-throttle"));
 const crossref_config_1 = require("../config/crossref.config");
 const crossref_logger_1 = __importDefault(require("../loggers/crossref.logger"));
-var StatusCode;
-(function (StatusCode) {
-    StatusCode[StatusCode["Unauthorized"] = 401] = "Unauthorized";
-    StatusCode[StatusCode["Forbidden"] = 403] = "Forbidden";
-    StatusCode[StatusCode["TooManyRequests"] = 429] = "TooManyRequests";
-    StatusCode[StatusCode["InternalServerError"] = 500] = "InternalServerError";
-    StatusCode[StatusCode["NotFound"] = 404] = "NotFound";
-})(StatusCode || (StatusCode = {}));
+const HttpStatusCode_enum_1 = __importDefault(require("../Typescript/Enums/HttpStatusCode.enum"));
 const headers = crossref_config_1.crossrefHeaders;
 class Http {
-    instance = null;
+    constructor() {
+        this.instance = null;
+    }
     get http() {
         return this.instance != null ? this.instance : this.initHttp();
     }
@@ -26,7 +21,7 @@ class Http {
         const http = axios_1.default.create({
             baseURL: crossref_config_1.crossrefBaseurl,
             withCredentials: true,
-            headers,
+            headers
         });
         http.interceptors.response.use((response) => {
             crossref_logger_1.default.info(`[RESPONSE: ${response.config.method} ${response.status}] URL:${response.config.url}]`);
@@ -56,24 +51,22 @@ class Http {
     head(url, config) {
         return this.http.head(url, config);
     }
-    // Handle global app errors
-    // We can handle generic app errors depending on the status code
     handleError(error) {
         const { status } = error;
         switch (status) {
-            case StatusCode.InternalServerError: {
+            case HttpStatusCode_enum_1.default.INTERNAL_SERVER_ERROR: {
                 this.generateError(error);
             }
-            case StatusCode.Forbidden: {
+            case HttpStatusCode_enum_1.default.FORBIDDEN: {
                 this.generateError(error);
             }
-            case StatusCode.Unauthorized: {
+            case HttpStatusCode_enum_1.default.UNAUTHORIZED: {
                 this.generateError(error);
             }
-            case StatusCode.TooManyRequests: {
+            case HttpStatusCode_enum_1.default.TOO_MANY_REQUESTS: {
                 this.generateError(error);
             }
-            case StatusCode.NotFound: {
+            case HttpStatusCode_enum_1.default.NOT_FOUND: {
                 this.generateError(error);
             }
             default:

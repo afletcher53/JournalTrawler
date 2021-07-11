@@ -1,4 +1,4 @@
-import Bull from "bull";
+import Bull from 'bull';
 import winston from 'winston';
 declare const jobLogger: winston.Logger;
 export default jobLogger;

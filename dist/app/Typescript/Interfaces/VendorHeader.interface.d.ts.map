@@ -1,0 +1,1 @@
+{"version":3,"file":"VendorHeader.interface.d.ts","sourceRoot":"","sources":["../../../../src/app/Typescript/Interfaces/VendorHeader.interface.ts"],"names":[],"mappings":"AAAA,MAAM,CAAC,OAAO,WAAW,YAAY;IACnC,MAAM,EAAE,MAAM,CAAC;IACf,cAAc,EAAE,MAAM,CAAC;IACvB,kCAAkC,EAAE,OAAO,CAAC;IAC5C,kBAAkB,EAAE,MAAM,CAAC;IAC3B,YAAY,EAAE,MAAM,CAAC;CACtB"}

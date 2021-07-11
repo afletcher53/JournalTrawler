@@ -1,1 +1,1 @@
-{"version":3,"file":"mongoDB.logger.d.ts","sourceRoot":"","sources":["../../../src/app/loggers/mongoDB.logger.ts"],"names":[],"mappings":"AACA,OAAO,OAAO,MAAM,SAAS,CAAA;AAU7B,QAAA,MAAM,aAAa,gBAKjB,CAAA;AAEF,eAAe,aAAa,CAAA"}
+{"version":3,"file":"mongoDB.logger.d.ts","sourceRoot":"","sources":["../../../src/app/loggers/mongoDB.logger.ts"],"names":[],"mappings":"AAAA,OAAO,OAAO,MAAM,SAAS,CAAC;AAsB9B,QAAA,MAAM,aAAa,gBAKjB,CAAC;AAEH,eAAe,aAAa,CAAC"}

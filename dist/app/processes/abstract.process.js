@@ -1,14 +1,19 @@
 "use strict";
-/** Job which determines which abstract needs to be processed based on the article ISSN */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAbstract = void 0;
+const doaj_service_1 = require("../requests/doaj.service");
 const mongoose_service_1 = require("../requests/mongoose.service");
+const springer_service_1 = require("../requests/springer.service");
 const getAbstract = async (job) => {
-    // check that the article doesnt have an abstract
-    const article = await mongoose_service_1.mongoArticleFindWhere({ doi: job.data.doi });
-    if (!article.abstract) { //TODO: Sort out DOAJ Abstract scraping
-        //check to see what type of abstract is required to be fetched (DOAJ, Springer etc)
-        console.log(article);
+    const article = await mongoose_service_1.mongoArticleFindOneWhere({ doi: job.data.doi });
+    const journal = await mongoose_service_1.mongoFindJournalById(article.journal._id);
+    if (journal.abstract_source_doaj && !article.abstract) {
+        const abstract = await doaj_service_1.fetchAbstractByDOIDOAJ(job.data.doi);
+        await mongoose_service_1.mongoUpdateArticleAbstractById(article._id, abstract);
+    }
+    if (journal.abstract_source_springer && !article.abstract) {
+        const abstract = await springer_service_1.fetchAbstractByDOISpringer(job.data.doi);
+        await mongoose_service_1.mongoUpdateArticleAbstractById(article._id, abstract);
     }
 };
 exports.getAbstract = getAbstract;

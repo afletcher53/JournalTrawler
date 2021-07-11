@@ -10,15 +10,10 @@ const options = {
     allowUnknown: true,
     errors: {
         wrap: {
-            label: '',
-        },
-    },
+            label: ''
+        }
+    }
 };
-/**
- * Validate the response of getting a single article from Crossref API
- * @param data express resposne from API
- * @returns Error if doesnt match
- */
 const articleCrossRefResponseValidation = (data) => {
     const schema = joi_1.default.object({
         message: joi_1.default.object().keys({
@@ -29,8 +24,8 @@ const articleCrossRefResponseValidation = (data) => {
             'reference-count': joi_1.default.required(),
             'is-referenced-by-count': joi_1.default.required(),
             type: joi_1.default.required(),
-            URL: joi_1.default.required(),
-        }),
+            URL: joi_1.default.required()
+        })
     });
     return schema.validate(data, options);
 };

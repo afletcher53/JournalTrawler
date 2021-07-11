@@ -10,13 +10,13 @@ const articles_routes_1 = __importDefault(require("./app/routes/articles.routes"
 const journals_routes_1 = __importDefault(require("./app/routes/journals.routes"));
 const integrities_routes_1 = __importDefault(require("./app/routes/integrities.routes"));
 const scripts_routes_1 = __importDefault(require("./app/routes/scripts.routes"));
+require('events').EventEmitter.defaultMaxListeners = 15;
 const app = express_1.default();
-// Middlewares
 app.use(require('./middleware'));
 models_1.default.mongoose
     .connect(models_1.default.url, {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
+    useUnifiedTopology: true
 })
     .then(() => {
     system_logger_1.default.info('Connected to the database!');
@@ -25,9 +25,8 @@ models_1.default.mongoose
     system_logger_1.default.error('Cannot connect to the database!', err);
     process.exit();
 });
-// Main route
 app.get('/', (req, res) => {
-    res.json({ 'message': 'Welcome to the server' });
+    res.json({ message: 'Welcome to the server' });
 });
 articles_routes_1.default(app);
 integrities_routes_1.default(app);

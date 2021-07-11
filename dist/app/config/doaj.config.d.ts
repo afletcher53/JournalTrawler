@@ -1,9 +1,4 @@
+import VendorHeader from '../Typescript/Interfaces/VendorHeader.interface';
 export declare const doajBaseurl: string;
-export declare const doajHeaders: {
-    Accept: string;
-    'Content-Type': string;
-    'Access-Control-Allow-Credentials': boolean;
-    'X-Requested-With': string;
-    'User-Agent': string;
-};
+export declare const doajHeaders: VendorHeader;
 //# sourceMappingURL=doaj.config.d.ts.map

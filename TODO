@@ -1,11 +1,10 @@
 TODO: 
-find missing abstracts job -> abstract job now running, need to check what journal the article if from (?Create a function to reverse look up article journal?), and fire appropriate abstract grabbing job. 
-
-
+fix type declaration for express (req.params not on it etc)
 Create tests
 remove dist from github
 convert to API.localhost
 look at project structure
+
 
 
 CRON Jobs ran daily **To Implement**

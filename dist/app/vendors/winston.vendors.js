@@ -10,7 +10,7 @@ exports.levels = {
     warn: 1,
     info: 2,
     http: 3,
-    debug: 4,
+    debug: 4
 };
 const level = () => {
     const env = process.env.NODE_ENV || 'development';
@@ -23,7 +23,7 @@ const colors = {
     warn: 'yellow',
     info: 'green',
     http: 'magenta',
-    debug: 'white',
+    debug: 'white'
 };
 winston_1.default.addColors(colors);
 exports.format = winston_1.default.format.combine(winston_1.default.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }), winston_1.default.format.colorize({ all: true }), winston_1.default.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`));

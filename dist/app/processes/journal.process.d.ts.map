@@ -1,1 +1,1 @@
-{"version":3,"file":"journal.process.d.ts","sourceRoot":"","sources":["../../../src/app/processes/journal.process.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,GAAG,EAAE,MAAM,MAAM,CAAC;AAQ3B;;;GAGG;AACH,QAAA,MAAM,cAAc,QAAe,GAAG,kBAErC,CAAC;AAEF,eAAe,cAAc,CAAC"}
+{"version":3,"file":"journal.process.d.ts","sourceRoot":"","sources":["../../../src/app/processes/journal.process.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,GAAG,EAAE,MAAM,MAAM,CAAC;AAO3B,QAAA,MAAM,cAAc,QAAe,GAAG,kBAErC,CAAC;AAEF,eAAe,cAAc,CAAC"}

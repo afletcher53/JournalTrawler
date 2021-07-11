@@ -16,6 +16,7 @@ import {
 import serializer from '../validation/json.validation';
 import HttpStatusCode from '../Typescript/Enums/HttpStatusCode.enum';
 import ArticleOperations from '../Typescript/Enums/ArticleOperations.enum';
+
 const create = async (req: express.Request, res: express.Response) => {
   // Validate request
   const { error } = articlePostValidation(req.body);
@@ -53,17 +54,13 @@ const create = async (req: express.Request, res: express.Response) => {
   );
 };
 
-function escapeRegex(string: string) {
-  return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-}
-
 // Retrieve all Articles from the database.
 const findAll = (req, res: express.Response) => {
   const title = req.query.title;
-  const escapedTitle = escapeRegex(title);
+
   const condition = title
     ? {
-        title: { $regex: new RegExp(escapedTitle), $options: 'i' }
+        title: { $regex: new RegExp(title), $options: 'i' }
       }
     : {};
 
@@ -120,7 +117,7 @@ const update = (req: express.Request, res: express.Response) => {
       .send(serializer.serializeError(error.details[0].message));
   }
   try {
-    const id = req.params.id;
+    const id = req.params['id'];
 
     mongoArticleFindByIdandUpdate(id, req)
       .then((data) => {
@@ -147,7 +144,7 @@ const update = (req: express.Request, res: express.Response) => {
 
 // Delete a Article with the specified id in the request
 const deleteOne = (req: express.Request, res: express.Response) => {
-  const id = req.params.id;
+  const id = req.params['id'];
   mongoArticleDeleteById(id)
     .then((data) => {
       if (!data) {

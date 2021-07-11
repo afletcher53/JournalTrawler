@@ -12,7 +12,7 @@ const db = {
     mongoose: mongoose_1.default,
     url: db_config_1.url
 };
-if (process.env.NODE_ENV == 'test') {
+if (process.env.NODE_ENV === 'test') {
     db.url = db_config_1.testurl;
 }
 else {
