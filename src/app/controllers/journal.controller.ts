@@ -106,53 +106,13 @@ const findOne = async (req, res) => {
   const isISSN = /\b\d{3}[0-9]-\d{3}[0-9]\b/.test(issn);
 
   if (isISSN) {
-    try {
-      await mongofetchJournalByISSN(issn)
-        .then((data) => {
-          if (!data) {
-            res
-              .status(HttpStatusCode.NOT_FOUND)
-              .send({ message: 'Not found Journal with id ' + req.params.id });
-          } else {
-            res.send(serializer.serialize('journal', data));
-          }
-        })
-        .catch((err) => {
-          res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
-            message: 'Error retrieving Journal with id=' + req.params.id
-          });
-        });
-    } catch (e) {
-      res.status(HttpStatusCode.CONFLICT).send({
-        message: StringLiterals.GENERIC_ERROR
-      });
-    }
+    await fetchByISSN(issn, res, req);
   } else {
     const { error } = journalSingleValidation(req.params);
     if (error) {
       return res.status(HttpStatusCode.CONFLICT).send(error.details[0].message);
     }
-    try {
-      mongoFindJournalById(req.params.id)
-        .then((data) => {
-          if (!data) {
-            res
-              .status(HttpStatusCode.NOT_FOUND)
-              .send({ message: 'Not found Journal with id ' + req.params.id });
-          } else {
-            res.send(serializer.serialize('journal', data));
-          }
-        })
-        .catch((err) => {
-          res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
-            message: 'Error retrieving Journal with id=' + req.params.id
-          });
-        });
-    } catch (e) {
-      res.status(HttpStatusCode.CONFLICT).send({
-        message: e.message || StringLiterals.GENERIC_ERROR
-      });
-    }
+    fetchByID(req, res);
   }
 };
 
@@ -287,3 +247,50 @@ export default {
   findAllCRUnscraped,
   deleteOne
 };
+function fetchByID(req: any, res: any) {
+  try {
+    mongoFindJournalById(req.params.id)
+      .then((data) => {
+        if (!data) {
+          res
+            .status(HttpStatusCode.NOT_FOUND)
+            .send({ message: 'Not found Journal with id ' + req.params.id });
+        } else {
+          res.send(serializer.serialize('journal', data));
+        }
+      })
+      .catch((err) => {
+        res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
+          message: 'Error retrieving Journal with id=' + req.params.id
+        });
+      });
+  } catch (e) {
+    res.status(HttpStatusCode.CONFLICT).send({
+      message: e.message || StringLiterals.GENERIC_ERROR
+    });
+  }
+}
+
+async function fetchByISSN(issn: any, res: any, req: any) {
+  try {
+    await mongofetchJournalByISSN(issn)
+      .then((data) => {
+        if (!data) {
+          res
+            .status(HttpStatusCode.NOT_FOUND)
+            .send({ message: 'Not found Journal with id ' + req.params.id });
+        } else {
+          res.send(serializer.serialize('journal', data));
+        }
+      })
+      .catch((err) => {
+        res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
+          message: 'Error retrieving Journal with id=' + req.params.id
+        });
+      });
+  } catch (e) {
+    res.status(HttpStatusCode.CONFLICT).send({
+      message: StringLiterals.GENERIC_ERROR
+    });
+  }
+}
