@@ -2,12 +2,13 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import axiosThrottle from 'axios-request-throttle';
 import { springerBaseurl, springerHeaders } from '../config/springer.config';
 import crossrefLogger from '../loggers/crossref.logger';
-import HttpStatusCode from '../Typescript/Enums/HttpStatusCode.enum';
+import HttpErrors from '../Typescript/Interfaces/HttpErrors.class';
+
 import VendorHeader from '../Typescript/Interfaces/VendorHeader.interface';
 
 const headers: VendorHeader = springerHeaders;
 
-class Http {
+class Http extends HttpErrors {
   private instance: AxiosInstance | null = null;
 
   private get http(): AxiosInstance {
@@ -72,46 +73,5 @@ class Http {
   ): Promise<R> {
     return this.http.head(url, config);
   }
-
-  // Handle global app errors
-  // We can handle generic app errors depending on the status code
-  private handleError(error) {
-    const { status } = error;
-
-    switch (status) {
-      case HttpStatusCode.INTERNAL_SERVER_ERROR: {
-        this.generateError(error);
-        break;
-      }
-      case HttpStatusCode.FORBIDDEN: {
-        this.generateError(error);
-        break;
-      }
-      case HttpStatusCode.UNAUTHORIZED: {
-        this.generateError(error);
-        break;
-      }
-      case HttpStatusCode.TOO_MANY_REQUESTS: {
-        this.generateError(error);
-        break;
-      }
-      case HttpStatusCode.NOT_FOUND: {
-        this.generateError(error);
-        break;
-      }
-      default:
-        this.generateError(error);
-    }
-
-    return Promise.reject(error);
-  }
-
-  private generateError(error) {
-    crossrefLogger.error(error);
-    return crossrefLogger.error(
-      `[${error.status}: ${error.config.method} ${error.config.url}:]`
-    );
-  }
 }
-
 export const http = new Http();
