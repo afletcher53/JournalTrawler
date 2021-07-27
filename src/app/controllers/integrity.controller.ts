@@ -224,7 +224,7 @@ const updateAllISSN = async (req, res) => {
     addIntegrity(jobData);
     res
       .status(HttpStatusCode.OK)
-      .send({ message: StringLiterals.INTEGRITIES_START });
+      .json({ message: StringLiterals.INTEGRITIES_START });
   });
 };
 
@@ -244,10 +244,10 @@ const createISSNforAllMissing = async (req, res) => {
       code: 2
     };
     addIntegrity(jobData);
-    res
-      .status(HttpStatusCode.OK)
-      .send({ message: StringLiterals.INTEGRITIES_START });
   });
+  res
+    .status(HttpStatusCode.OK)
+    .json({ message: StringLiterals.INTEGRITIES_START });
 };
 
 export default {

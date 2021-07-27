@@ -1,33 +1,33 @@
-import { http } from '../vendors/axios.crossref.vendors';
+import axiosCR from '../vendors/crossref.api';
 
 export type Article = {
   doi: string;
 };
 
 export const fetchArticleByDOI = async (doi: string): Promise<any> => {
-  const { data } = await http.get<Article[]>('/works/' + doi);
+  const { data } = await axiosCR.get<Article[]>('/works/' + doi);
   return data;
 };
 
 export const fetchJournalMetadataByISSN = async (
   issn: string
 ): Promise<any> => {
-  const data = await http.get(`/journals/${issn}/works?cursor=*`);
+  const data = await axiosCR.get(`/journals/${issn}/works?cursor=*`);
   return data;
 };
 
 export const fetchArticleHeadByDOI = async (doi: string): Promise<any> => {
-  const data = await http.head(`/works/${doi}`);
+  const data = await axiosCR.head(`/works/${doi}`);
   return data;
 };
 
 export const fetchJournalHeadByISSN = async (ISSN: string): Promise<any> => {
-  const data = await http.head(`/journals/${ISSN}`);
+  const data = await axiosCR.head(`/journals/${ISSN}`);
   return data;
 };
 
 export const fetchJournalByISSN = async (issn: string): Promise<any> => {
-  const data = await http.get(`journals/${issn}`);
+  const data = await axiosCR.get(`journals/${issn}`);
   return data;
 };
 
@@ -66,7 +66,7 @@ const getDOIsfromISSN = async (
     rows +
     '&cursor=' +
     encodeURIComponent(cursor);
-  const response = await http.get(url);
+  const response = await axiosCR.get(url);
   if (response.data.message['next-cursor'] === cursor) {
     return data;
   }

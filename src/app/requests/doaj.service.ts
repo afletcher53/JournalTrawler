@@ -1,4 +1,4 @@
-import { http } from '../vendors/axios.DOAJ.vendors';
+import http from '../vendors/DOAJ.api';
 
 export const fetchArticleExistsByISSNDOAJ = async (
   issn: string

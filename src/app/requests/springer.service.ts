@@ -1,5 +1,5 @@
 import { springerAPIKey } from '../config/springer.config';
-import { http } from '../vendors/axios.springer.vendors';
+import http from '../vendors/springer.api';
 
 /**
  * Determines is an ISSN exist so on the Springer API

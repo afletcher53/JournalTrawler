@@ -1,14 +1,22 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import axiosThrottle from 'axios-request-throttle';
-import { crossrefBaseurl, crossrefHeaders } from '../config/crossref.config';
-import crossrefLogger from '../loggers/crossref.logger';
+import { Logger } from 'winston';
 import HttpErrors from '../Typescript/Interfaces/HttpErrors.class';
+
 import VendorHeader from '../Typescript/Interfaces/VendorHeader.interface';
 
-const headers: VendorHeader = crossrefHeaders;
-
-class Http extends HttpErrors {
+export default class Http extends HttpErrors {
   private instance: AxiosInstance | null = null;
+  baseURL: any;
+  logger: any;
+  headers: VendorHeader;
+
+  constructor(baseURL: String, headers: VendorHeader, logger: Logger) {
+    super();
+    this.baseURL = baseURL;
+    this.logger = logger;
+    this.headers = headers;
+  }
 
   private get http(): AxiosInstance {
     return this.instance != null ? this.instance : this.initHttp();
@@ -16,32 +24,25 @@ class Http extends HttpErrors {
 
   initHttp() {
     const http = axios.create({
-      baseURL: crossrefBaseurl,
+      baseURL: this.baseURL,
       withCredentials: true,
-      headers
+      headers: this.headers
     });
 
-    http.interceptors.response.use(
-      (response) => {
-        crossrefLogger.info(
-          `[RESPONSE: ${response.config.method} ${response.status}] URL:${response.config.url}]`
-        );
-        return response;
-      },
-      (error) => {
-        const { response } = error;
-        crossrefLogger.error(error);
-        return this.handleError(response);
-      }
-    );
+    http.interceptors.response.use((response) => {
+      this.logger.info(
+        `[RESPONSE: ${response.config.method} ${response.status}] URL:${response.config.url}]`
+      );
+      return response;
+    });
 
     http.interceptors.request.use(
       (config) => {
-        crossrefLogger.info(`[REQUEST: ${config.method}] URL:${config.url}]`);
+        this.logger.info(`[REQUEST: ${config.method}] URL:${config.url}]`);
         return config;
       },
       (error) => {
-        crossrefLogger.error(error);
+        this.logger.error(error);
         return Promise.reject(error);
       }
     );
@@ -73,5 +74,3 @@ class Http extends HttpErrors {
     return this.http.head(url, config);
   }
 }
-
-export const http = new Http();
