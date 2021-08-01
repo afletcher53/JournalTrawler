@@ -9,15 +9,18 @@ import {
 import { fetchAbstractByDOISpringer } from '../requests/springer.service';
 
 export const getAbstract = async (job: Job) => {
+  console.log(job);
   const article = await mongoArticleFindOneWhere({ doi: job.data.doi });
   const journal = await mongoFindJournalById(article.journal._id);
 
   if (journal.abstract_source_doaj && !article.abstract) {
+    console.log(article);
     const abstract = await fetchAbstractByDOIDOAJ(job.data.doi);
     await mongoUpdateArticleAbstractById(article._id, abstract);
   }
 
   if (journal.abstract_source_springer && !article.abstract) {
+    console.log(article);
     const abstract = await fetchAbstractByDOISpringer(job.data.doi);
     await mongoUpdateArticleAbstractById(article._id, abstract);
   }

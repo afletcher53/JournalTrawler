@@ -219,7 +219,7 @@ const updateAllISSN = async (req, res) => {
     }
     const jobData = {
       issn: resolvedIssn,
-      code: jobLiterals.MISSING_DOIS
+      code: jobLiterals.UPDATE_ISSN_ALL
     };
     addIntegrity(jobData);
     res

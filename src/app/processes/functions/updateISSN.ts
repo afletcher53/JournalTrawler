@@ -8,6 +8,7 @@ import {
   mongoCheckJournalExistsByISSN,
   mongofetchJournalByISSN
 } from '../../requests/mongoose.service';
+import jobLiterals from '../../Typescript/Enums/JobCode.enum';
 import generateMissingDOIList from './generateMissingDOIList';
 import getPrintAndElectronicISSN from './getPrintAndElectronicISSNFromCrossref';
 const Integrity = db.integrity;
@@ -16,6 +17,7 @@ const Integrity = db.integrity;
  * Updates an ISSN based on the missing DOIs list generated from Integrity check
  */
 const updateISSN = async (job: Job) => {
+  console.log(job);
   const checkJournalExistsMongoDB = await mongoCheckJournalExistsByISSN(
     job.data.issn
   );
@@ -43,7 +45,7 @@ const updateISSN = async (job: Job) => {
     doiLogger.info(logText);
   });
   const integrity = new Integrity({
-    code: 4,
+    code: jobLiterals.UPDATE_ISSN_SINGLE,
     message: `Jounal with ISSN ${job.data.issn} has been updated with ${missingDOIs.length} new additions`,
     data: missingDOIs ? missingDOIs : null
   });

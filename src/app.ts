@@ -6,7 +6,7 @@ import journalRoutes from './app/routes/journals.routes';
 import integrityRoutes from './app/routes/integrities.routes';
 import scriptsRoutes from './app/routes/scripts.routes';
 
-require('events').EventEmitter.defaultMaxListeners = 20;
+require('events').EventEmitter.defaultMaxListeners = 0;
 const app = express();
 
 // Middlewares

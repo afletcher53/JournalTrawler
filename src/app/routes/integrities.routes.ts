@@ -19,8 +19,8 @@ export default (app: express.Application) => {
   // Check issn for missing fields
   router.post('/issn-update', integrities.updateISSN);
 
-  // Update all missing ISSNs
-  router.get('/issn-update-all', integrities.updateAllISSN);
+  // Update all missing DOIS for all ISSNs
+  router.get('/update', integrities.updateAllISSN);
 
   // Retrieve a single journal with id
   router.get('/:id', integrities.findOne);

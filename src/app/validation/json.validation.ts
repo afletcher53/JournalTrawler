@@ -9,6 +9,7 @@ Serializer.register('article', {
       return '/api/articles/' + data.id;
     }
   },
+
   topLevelMeta: (data, extraData) => {
     return {
       count: extraData.count,
