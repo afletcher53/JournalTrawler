@@ -624,6 +624,14 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
+"@mrodrig/json-2-csv-cli@^3.11.1":
+  version "3.11.1"
+  resolved "https://registry.yarnpkg.com/@mrodrig/json-2-csv-cli/-/json-2-csv-cli-3.11.1.tgz#98be58e583eaf2b89898ae490867bd4142fa88a7"
+  integrity sha512-IroKmzvD0vptwLg8U7tva04om7euDNbnaLdJfTYvPy3qmzp5HUzZYL72B/HqOLdh9lZqDwFzj4fC11dQqUXGQg==
+  dependencies:
+    commander "2.20.0"
+    json-2-csv "^3.11.1"
+
 "@panva/asn1.js@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@panva/asn1.js/-/asn1.js-1.0.0.tgz#dd55ae7b8129e02049f009408b97c61ccf9032f6"
@@ -2120,6 +2128,11 @@ combined-stream@^1.0.8:
   dependencies:
     delayed-stream "~1.0.0"
 
+commander@2.20.0:
+  version "2.20.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.0.tgz#d58bb2b5c1ee8f87b0d340027e9e94e222c5a422"
+  integrity sha512-7j2y+40w61zy6YC2iRNpUe/NwhNyoXrYpHMrSunaMG64nRnaf96zO/KMQR4OyN/UnE5KLyEBnKHd4aG3rskjpQ==
+
 commander@^2.20.0:
   version "2.20.3"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.3.tgz#fd485e84c03eb4881c20722ba48035e8531aeb33"
@@ -2424,6 +2437,11 @@ dedent@^0.7.0:
   resolved "https://registry.yarnpkg.com/dedent/-/dedent-0.7.0.tgz#2495ddbaf6eb874abb0e1be9df22d2e5a544326c"
   integrity sha1-JJXduvbrh0q7Dhvp3yLS5aVEMmw=
 
+deeks@2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/deeks/-/deeks-2.4.1.tgz#81bf1814035f34dce9739a52bbed8aaaf56dccbb"
+  integrity sha512-18Zd9f6dqyAFDoPttDdD8w5u7xy9M1IoxhpSsaatFwI4O+wZyUK+rDtwul4s6iYSfUfZBXPfUbxZrKHDqpEQYA==
+
 deep-equal@^1.0.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/deep-equal/-/deep-equal-1.1.1.tgz#b5c98c942ceffaf7cb051e24e1434a25a2e6076a"
@@ -2594,6 +2612,11 @@ dns-txt@^2.0.2:
   integrity sha1-uR2Ab10nGI5Ks+fRB9iBocxGQrY=
   dependencies:
     buffer-indexof "^1.0.0"
+
+doc-path@3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/doc-path/-/doc-path-3.0.1.tgz#81c10f2f5b2178e59d8777f693b24d26e0e1f670"
+  integrity sha512-Z7yrgf71bNXFK7dHqanaJO6QOkDsIemcxQqEyhIVY/Jfcwm8mMmCHV/w7UZyr9NzTFFbo698TFiLc5exfHNvog==
 
 doctrine@^2.1.0:
   version "2.1.0"
@@ -4946,6 +4969,14 @@ jsesc@^2.5.1:
   version "2.5.2"
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-2.5.2.tgz#80564d2e483dacf6e8ef209650a67df3f0c283a4"
   integrity sha512-OYu7XEzjkCQ3C5Ps3QIZsQfNpqoJyZZA99wd9aWd05NCtC5pWOkShK2mkL6HXQR6/Cy2lbNdPlZBpuQHXE63gA==
+
+json-2-csv@^3.11.1:
+  version "3.14.1"
+  resolved "https://registry.yarnpkg.com/json-2-csv/-/json-2-csv-3.14.1.tgz#87f7efb3d633bd6f486cf9f6597432574e6e4284"
+  integrity sha512-Nx84ZyolEOVoft43ztfzmC7fETUo/+6dDlKTLZXPd+hVYHP1YTeE/K6Axx4ipofwywpR6iwMLtKQ9EZwBYWD+A==
+  dependencies:
+    deeks "2.4.1"
+    doc-path "3.0.1"
 
 json-api-serializer@^2.6.2:
   version "2.6.3"

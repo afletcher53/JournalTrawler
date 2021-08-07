@@ -1,4 +1,5 @@
 import {
+  mongoCheckJournalExistsByISSN,
   mongoDeleteAllJournals,
   mongofetchJournalByISSN,
   mongoFindJournalById,
@@ -9,7 +10,10 @@ import {
 } from '../requests/mongoose.service';
 import getJournalData from '../validation/functions/getJournalData';
 import checkExists from '../validation/functions/checkCrossrefJournalExists';
-import { createErrorExistsCrossRef } from '../validation/error.validation';
+import {
+  createErrorExists,
+  createErrorExistsCrossRef
+} from '../validation/error.validation';
 import {
   journalPostValidation,
   journalSingleValidation
@@ -37,11 +41,14 @@ const create = async (req, res) => {
   }
 
   //  Check to see if already exists in MongooseDB
-  // const checkJournalExistsMongoDB = await mongoCheckJournalExistsByISSN(req.body.issn);
-  // if (checkJournalExistsMongoDB) {
-  //   return res.status(HttpStatusCode.CONFLICT)
-  //       .send(createErrorExists(req.body.issn, 'Journal'));
-  // }
+  const checkJournalExistsMongoDB = await mongoCheckJournalExistsByISSN(
+    req.body.issn
+  );
+  if (checkJournalExistsMongoDB) {
+    return res
+      .status(HttpStatusCode.CONFLICT)
+      .send(createErrorExists(req.body.issn, 'Journal'));
+  }
 
   // Check to see if ISSN exists on crossref
   const checkCrossRefExists = await checkExists(req.body.issn);

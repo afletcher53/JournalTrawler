@@ -51,7 +51,7 @@ const getDOIsfromISSN = async (
   cursor?: string,
   data: any = []
 ) => {
-  const defaultRows = 20;
+  const defaultRows = 1000;
   if (cursor === undefined) {
     cursor = '*';
   }
